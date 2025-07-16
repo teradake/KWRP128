@@ -265,7 +265,7 @@ namespace KWRP.Avalonia.Frontend
             services.AddSingleton<ILaneArrangementParameterService, LaneArrangementParameterService>();
             services.AddSingleton<CaptureService>();
             services.AddSingleton<CadScriptService>();
-            services.AddSingleton<IActivityService, ActivityService>(); 
+            services.AddSingleton<IActivityService, ActivityByRollerHeadingService>(); 
             services.AddSingleton<IKWRPApplicationService, KWRPApplicationService>();
             services.AddSingleton<DxfConvertService>();
             services.AddSingleton<DxfHistoryStorageService>();
