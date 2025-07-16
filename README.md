@@ -3,7 +3,7 @@
 - 区割りシステムです。領域データ（xml, csv）を読込み、VRのアクティビティを生成するUIを提供します
 - Avalonia MVVMで実装しています
 
-## プロジェクトの概要
+## プロジェクト概要
 
 ![依存関係](./figs/kwrp_project_dependencies.png)
 
