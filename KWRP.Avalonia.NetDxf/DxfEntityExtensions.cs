@@ -5,7 +5,7 @@ using netDxf;
 
 namespace KWRP.Avalonia.NetDxf
 {
-    public static class DxfEntityExtensions
+    internal static class DxfEntityExtensions
     {
         static (Color color, double lineweight) GetEntityStyle(netDxf.Entities.EntityObject entity)
         {

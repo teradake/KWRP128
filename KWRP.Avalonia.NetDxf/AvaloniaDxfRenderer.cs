@@ -9,13 +9,6 @@ namespace KWRP.Avalonia.NetDxf
 {
     internal class AvaloniaDxfRenderer
     {
-        private readonly string _pngFilePath;
-
-        private AvaloniaDxfRenderer(string pngFilePath)
-        {
-            _pngFilePath = pngFilePath;
-        }
-
         public static async Task<RenderTargetBitmap> RenderAsync(DxfDocument doc, DxfConverterOption option, ILogService? logger=null)
         {
             try

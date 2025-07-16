@@ -9,24 +9,24 @@ namespace KWRP.Avalonia.NetDxf
         public double LineWeight { get; set; } = 1.0;
     }
 
-    public class DxfLine : DxfShape
+    internal class DxfLine : DxfShape
     {
         public Point Start { get; set; }
         public Point End { get; set; }
     }
 
-    public class DxfPolyline : DxfShape
+    internal class DxfPolyline : DxfShape
     {
         public IReadOnlyList<Point> Points { get; set; } = [];
     }
 
-    public class DxfCircle : DxfShape
+    internal class DxfCircle : DxfShape
     {
         public Point Center { get; set; }
         public double Radius { get; set; }
     }
 
-    public class DxfArc : DxfShape
+    internal class DxfArc : DxfShape
     {
         public Point Center { get; set; }
         public double Radius { get; set; }
@@ -34,7 +34,7 @@ namespace KWRP.Avalonia.NetDxf
         public double EndAngle { get; set; }   // Degrees
     }
 
-    public class DxfMText : DxfShape
+    internal class DxfMText : DxfShape
     {
         public string Text { get; set; }
         public Point Position { get; set; }
@@ -42,7 +42,7 @@ namespace KWRP.Avalonia.NetDxf
         public double Rotation { get; set; }
     }
 
-    public class DxfText : DxfShape
+    internal class DxfText : DxfShape
     {
         public string Content { get; set; } = "";
         public Point Position { get; set; }
