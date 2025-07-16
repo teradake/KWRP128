@@ -1,13 +1,37 @@
-## これはなに
-- 区割りシステムです。以下の機能があります（2023年末 記載。適当です。そのうちいい感じに書きます）
-	- 領域データが記入されているxmlファイルを読み込みます
-	- 領域をある太さの長方形で埋め尽くします。
-	- 埋め尽くす長方形の幅や方向などはいい感じに自分で設定できます
-	- 作業エリアをいい感じに整形してアクティビティとして出力できます
+# 区割りシステム
 
-## 振動ローラーのパラメータファイル
-- json形式
-- exeファイルと同じ階層のsettings/MachineInfo.json
+- 区割りシステムです。領域データ（xml, csv）を読込み、VRのアクティビティを生成するUIを提供します
+- Avalonia MVVMで実装しています
+
+## プロジェクトの概要
+
+![依存関係](./figs/kwrp_project_dependencies.png)
+
+### 使用ライブラリ
+
+| ライブラリ名                                 | プロジェクト              | 目的                                                                 |
+|---------------------------------------------|--------------------------|---------------------------------------------------------------------|
+| System.Configuration.ConfigurationManager   | Backend                  | KWRP.configファイルからパラメータ操作のため                           |
+| [Avalonia](https://avaloniaui.net/)関係                                | Frontend／NetDxf         | UIフレームワーク                                                     |
+| Serilog関係                                 | Frontend                 | ロギング                                                              |
+| R3関係                                      | Frontend                 | MVVM用。ReactivePropertyやReactiveCommand、マウス操作実装などに利用     |
+| Microsoft.Extensions.DependencyInjection    | Frontend                 | 依存性注入                                                           |
+| CommunityToolkit.Mvvm                       | Frontend                 | 未使用（Avalonia Mvvmでプロジェクト作成時に自動的にインストールされたやつ） |
+| NetTopologySuite                            | Trdk.Geometry.NTS        | 汎用幾何ライブラリ。ブール演算などに利用                             |
+| netDxf                                      | NetDxf                   | dxfファイルの読込みに使用                                           |
+
+## 設定ファイルの概要
+
+### ./KWRP.config
+
+- `DevMode`
+  - Releaseビルドかつ`value="true"`のとき開発者モードになります
+  - 開発者モードのとき、レーン生成画面でオフセットの値を0未満にしたり、振動ローラの設定値をUI上で変更できます
+
+### ./settings/MachineInfo.json
+
+- 振動ローラの設定値の管理
+- 開発者モードの場合、UI上で変更できます
 
 | 変数名 | 説明 |
 |--------|------|
@@ -30,4 +54,3 @@
 | RefSpeed | 参照速度 (km/h) |
 | EdgeSpeed | 端部速度 (km/h) |
 | RepeatNum | 転圧繰返し回数 |
-
