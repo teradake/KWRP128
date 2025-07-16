@@ -1,0 +1,186 @@
+<Styles xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Design.PreviewWith>
+        <Border Padding="20">
+            <!--  Add Controls for Previewer Here  -->
+            <StackPanel Spacing="5">
+                <RadioButton Classes="menu">
+                    <RadioButton.Content>
+                        <TextBlock Foreground="White" Text="Hello" />
+                    </RadioButton.Content>
+                    <RadioButton.Tag>
+                        <TextBlock Foreground="White" Text="World" />
+                    </RadioButton.Tag>
+                </RadioButton>
+                <RadioButton Classes="menu">
+                    <RadioButton.Content>
+                        <TextBlock Foreground="White" Text="Hello" />
+                    </RadioButton.Content>
+                    <RadioButton.Tag>
+                        <TextBlock Foreground="White" Text="World" />
+                    </RadioButton.Tag>
+                </RadioButton>
+                <RadioButton Classes="menu">
+                    <RadioButton.Content>
+                        <Image Classes="menu" Source="/Assets/Icons/home_line.png" />
+                    </RadioButton.Content>
+                    <RadioButton.Tag>
+                        <Image Classes="menu" Source="/Assets/Icons/home_solid.png" />
+                    </RadioButton.Tag>
+                </RadioButton>
+
+                <Button Classes="ima">
+                    <Button.Content>
+                        <Image Classes="menu" Source="/Assets/Icons/home_line.png" />
+                    </Button.Content>
+                    <Button.Tag>
+                        <Image Classes="menu" Source="/Assets/Icons/home_solid.png" />
+                    </Button.Tag>
+                </Button>
+
+                <Border Width="100" Height="100">
+                    <Canvas>
+                        <Ellipse
+                            Width="50"
+                            Height="50"
+                            Classes="compass"
+                            Stroke="Black"
+                            StrokeThickness="1" />
+                    </Canvas>
+                </Border>
+
+            </StackPanel>
+        </Border>
+    </Design.PreviewWith>
+
+    <!--  Add Styles Here  -->
+    <Styles.Resources>
+        <SolidColorBrush x:Key="indicatorBrush">#C6F1A4</SolidColorBrush>
+        <SolidColorBrush x:Key="menuBackBrush">#1a1a1b</SolidColorBrush>
+        <SolidColorBrush x:Key="indicatorSelectedBrush">#71d220</SolidColorBrush>
+        <SolidColorBrush x:Key="menuSelectedBackBrush">#484849</SolidColorBrush>
+        <SolidColorBrush x:Key="mainBrush">#f1f1f1</SolidColorBrush>
+        <SolidColorBrush x:Key="contentBrush">#ffffff</SolidColorBrush>
+        <SolidColorBrush x:Key="compassBrush">#c611a4</SolidColorBrush>
+    </Styles.Resources>
+
+    <Style Selector="Image.menu">
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Stretch" Value="Uniform" />
+        <Setter Property="Height" Value="28" />
+        <Setter Property="Width" Value="28" />
+        <Setter Property="Margin" Value="1,0,0,0" />
+    </Style>
+
+    <Style Selector=":is(Button).canvasMenu">
+        <Setter Property="Width" Value="40" />
+        <Setter Property="Height" Value="40" />
+        <Setter Property="Background" Value="Cornsilk" />
+        <Setter Property="BorderBrush" Value="PeachPuff" />
+        <Setter Property="Padding" Value="0" />
+        <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="Azure" />
+            <Setter Property="BorderBrush" Value="Blue" />
+        </Style>
+        <Style Selector="^:pressed">
+            <Setter Property="RenderTransform" Value="Scale(0.95)" />
+        </Style>
+        <Style Selector="^:checked">
+            <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+                <Setter Property="Background" Value="PowderBlue" />
+                <Setter Property="BorderBrush" Value="Blue" />
+            </Style>
+        </Style>
+    </Style>
+
+
+    <Style Selector="Button.ima">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="Padding" Value="0" />
+        <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Content" Value="{Binding Path=Tag, RelativeSource={RelativeSource TemplatedParent}}" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+    </Style>
+
+    <Style Selector="Polygon.compass">
+        <Setter Property="Fill" Value="DimGray" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Style Selector="^:pointerover">
+            <Setter Property="Fill" Value="{StaticResource compassBrush}" />
+            <Setter Property="StrokeThickness" Value="2" />
+        </Style>
+    </Style>
+
+    <Style Selector="Ellipse.compass">
+        <Setter Property="Fill" Value="Transparent" />
+        <Style Selector="^:pointerover">
+            <Setter Property="Fill" Value="{StaticResource compassBrush}" />
+            <Setter Property="Opacity" Value="0.1" />
+        </Style>
+    </Style>
+
+
+    <Style Selector="RadioButton.menu">
+        <Setter Property="Cursor" Value="Hand" />
+
+        <Setter Property="Template">
+            <ControlTemplate TargetType="RadioButton">
+                <Border
+                    Name="border"
+                    Width="50"
+                    Height="50"
+                    Background="{StaticResource menuBackBrush}">
+                    <Grid>
+                        <Border
+                            Name="indicator"
+                            Width="3"
+                            Height="40"
+                            Margin="-1,0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            CornerRadius="2"
+                            IsVisible="False" />
+                        <ContentPresenter
+                            Name="content"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Content="{TemplateBinding Content}" />
+                    </Grid>
+                    <Border.Styles>
+                        <Style Selector="RadioButton:checked /template/ Border#border">
+                            <Setter Property="Background" Value="{StaticResource menuSelectedBackBrush}" />
+
+                        </Style>
+                        <Style Selector="RadioButton:pointerover /template/ Border#indicator">
+                            <Setter Property="IsVisible" Value="True" />
+                            <Setter Property="Background" Value="{StaticResource indicatorBrush}" />
+                        </Style>
+                        <Style Selector="RadioButton:checked /template/ Border#indicator">
+                            <Setter Property="IsVisible" Value="True" />
+                            <Setter Property="Margin" Value="0.5 0" />
+                            <Setter Property="Width" Value="5" />
+                            <Setter Property="Background" Value="{StaticResource indicatorSelectedBrush}" />
+                        </Style>
+                        <Style Selector="RadioButton:pointerover /template/ ContentPresenter#content">
+                            <Setter Property="Content" Value="{Binding Path=Tag, RelativeSource={RelativeSource TemplatedParent}}" />
+                        </Style>
+                        <Style Selector="RadioButton:checked /template/ ContentPresenter#content">
+                            <Setter Property="Content" Value="{Binding Path=Tag, RelativeSource={RelativeSource TemplatedParent}}" />
+                        </Style>
+                    </Border.Styles>
+                </Border>
+
+
+            </ControlTemplate>
+
+        </Setter>
+
+
+    </Style>
+
+
+
+</Styles>

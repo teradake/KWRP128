@@ -1,0 +1,196 @@
+<UserControl
+    x:Class="KWRP.Avalonia.Frontend.Views.StartUpPage.DxfPageItemView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:logmodel="using:KWRP.Avalonia.Backend.Model"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:KWRP.Avalonia.Frontend.ViewModels.StartUpPage"
+    d:DesignHeight="650"
+    d:DesignWidth="600"
+    x:CompileBindings="False"
+    x:DataType="vm:DxfPageItemViewModel"
+    mc:Ignorable="d">
+
+    <UserControl.Styles>
+
+        <Style Selector="TextBlock.title">
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="FontSize" Value="20" />
+        </Style>
+
+        <Style Selector="TextBlock.header">
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+        <Style Selector="TextBlock.description">
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="Foreground" Value="Gray" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+        </Style>
+
+        <Style Selector="NumericUpDown.content">
+            <Setter Property="MinWidth" Value="130" />
+            <Setter Property="Margin" Value="10,0,0,0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="FormatString" Value="0.000" />
+            <Setter Property="Increment" Value="0.1" />
+            <Setter Property="Minimum" Value="0" />
+            <Setter Property="ShowButtonSpinner" Value="{Binding !$self.IsReadOnly}" />
+            <Setter Property="Background" Value="{Binding $self.IsReadOnly, Converter={StaticResource ReadOnlyToTransparentConverter}}" />
+        </Style>
+
+        <Style Selector="TextBox.content">
+            <Setter Property="MinWidth" Value="130" />
+            <Setter Property="Margin" Value="10,0,0,0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="Background" Value="{Binding $self.IsReadOnly, Converter={StaticResource ReadOnlyToTransparentConverter}}" />
+        </Style>
+
+
+    </UserControl.Styles>
+
+    <Grid RowDefinitions="auto, *">
+
+        <StackPanel>
+
+            <Grid Margin="0,4" ColumnDefinitions="*, Auto">
+                <StackPanel
+                    Grid.Column="0"
+                    VerticalAlignment="Center"
+                    Spacing="2">
+                    <TextBlock Classes="header" Text="設定名" />
+                </StackPanel>
+                <TextBox
+                    Grid.Column="1"
+                    Classes="content"
+                    Text="{Binding Name.Value, FallbackValue=setting}" />
+            </Grid>
+
+            <Grid Margin="0,4" ColumnDefinitions="*, Auto">
+                <StackPanel
+                    Grid.Column="0"
+                    VerticalAlignment="Center"
+                    Spacing="2">
+                    <TextBlock Classes="header" Text="切り取り範囲" />
+                </StackPanel>
+                <WrapPanel Grid.Column="1">
+                    <StackPanel
+                        Margin="10,3"
+                        Orientation="Horizontal"
+                        Spacing="5">
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            Classes="header"
+                            Text="縦" />
+                        <TextBox Classes="content" Text="{Binding MapHeight.Value, FallbackValue=3.0}" />
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            Classes="header"
+                            Text="(m)" />
+                    </StackPanel>
+                    <StackPanel
+                        Margin="10,3"
+                        Orientation="Horizontal"
+                        Spacing="5">
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            Classes="header"
+                            Text="横" />
+                        <TextBox Classes="content" Text="{Binding MapWidth.Value, FallbackValue=3.0}" />
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            Classes="header"
+                            Text="(m)" />
+                    </StackPanel>
+
+                </WrapPanel>
+
+            </Grid>
+
+            <Grid Margin="0,4" ColumnDefinitions="*, Auto">
+                <StackPanel
+                    Grid.Column="0"
+                    VerticalAlignment="Center"
+                    Spacing="2">
+                    <TextBlock Classes="header" Text="現場中心座標" />
+                </StackPanel>
+                <WrapPanel Grid.Column="1">
+                    <StackPanel
+                        Margin="10,3"
+                        Orientation="Horizontal"
+                        Spacing="5">
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            Classes="header"
+                            Text="X" />
+                        <TextBox Classes="content" Text="{Binding MapHeight.Value, FallbackValue=3.0}" />
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            Classes="header"
+                            Text="(m)" />
+                    </StackPanel>
+                    <StackPanel
+                        Margin="10,3"
+                        Orientation="Horizontal"
+                        Spacing="5">
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            Classes="header"
+                            Text="Y" />
+                        <TextBox Classes="content" Text="{Binding MapWidth.Value, FallbackValue=3.0}" />
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            Classes="header"
+                            Text="(m)" />
+                    </StackPanel>
+
+                </WrapPanel>
+
+            </Grid>
+
+            <Grid Margin="0,4" ColumnDefinitions="*, Auto">
+                <StackPanel
+                    Grid.Column="0"
+                    VerticalAlignment="Center"
+                    Spacing="2">
+                    <TextBlock Classes="header" Text="背景図ファイル名" />
+                </StackPanel>
+                <TextBox
+                    Grid.Column="1"
+                    Classes="content"
+                    Text="{Binding DxfPath.Value}"
+                    Watermark="右のボタンからDXFファイルを選択">
+                    <TextBox.InnerRightContent>
+                        <Button
+                            Padding="15,5"
+                            Command="{Binding SetDxfPathCommand}"
+                            Content="..." />
+                    </TextBox.InnerRightContent>
+                </TextBox>
+            </Grid>
+
+            <Grid Margin="0,4" ColumnDefinitions="*, Auto">
+                <StackPanel
+                    Grid.Column="0"
+                    VerticalAlignment="Center"
+                    Spacing="2">
+                    <TextBlock Classes="header" Text="1.0m あたりのピクセル数" />
+                </StackPanel>
+                <NumericUpDown
+                    Grid.Column="1"
+                    Classes="content"
+                    FormatString="0"
+                    Increment="1"
+                    Maximum="15"
+                    Minimum="1"
+                    Value="{Binding Ratio.Value, FallbackValue=5}" />
+            </Grid>
+
+        </StackPanel>
+
+    </Grid>
+
+</UserControl>

@@ -1,0 +1,87 @@
+<UserControl
+    x:Class="KWRP.Avalonia.Frontend.Views.EditorPage.EditorLayoutView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:KWRP.Avalonia.Frontend.ViewModels.EditorPage"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:CompileBindings="True"
+    x:DataType="vm:EditorLayoutViewModel"
+    mc:Ignorable="d">
+    <Grid RowDefinitions="auto *">
+
+        <Border
+            Grid.Row="0"
+            Margin="2,5"
+            Background="{StaticResource mainBrush}">
+
+            <Grid ColumnDefinitions="auto, *">
+
+                <StackPanel
+                    Grid.Column="0"
+                    Margin="10,10,10,2"
+                    Orientation="Horizontal">
+                    <Button
+                        Padding="15,5"
+                        Command="{Binding NavigateTopCommand}"
+                        Content="Top" />
+                </StackPanel>
+
+                <StackPanel
+                    Grid.Column="1"
+                    Margin="10,10,10,2"
+                    FlowDirection="RightToLeft"
+                    IsVisible="{Binding IsLaneEditor.Value}"
+                    Orientation="Horizontal"
+                    Spacing="5">
+
+                    <Button
+                        Padding="15,5"
+                        Command="{Binding SaveLaneArrangementParamCommand}"
+                        Content="パラメータ保存" />
+                    <Button
+                        Padding="15,5"
+                        Command="{Binding LoadLaneArrangementParamCommand}"
+                        Content="パラメータ読み込み" />
+                    <Button
+                        Padding="15,5"
+                        Command="{Binding LaneArrangementCommand}"
+                        Content="レーン割実行" />
+
+                </StackPanel>
+
+            </Grid>
+
+
+        </Border>
+
+        <Grid Grid.Row="1" ColumnDefinitions="* auto auto">
+
+            <Border Grid.Column="0" Classes="controlBorder">
+                <ContentControl Content="{Binding LeftViewModel.Value}">
+                    <!--<ContentControl.ContextFlyout>
+                        <MenuFlyout>
+                            <MenuItem Header="a" />
+                            <MenuItem Header="b" />
+                            <MenuItem Header="c" />
+                        </MenuFlyout>
+                    </ContentControl.ContextFlyout>-->
+                </ContentControl>
+            </Border>
+
+            <GridSplitter
+                Grid.Column="1"
+                Width="5"
+                HorizontalAlignment="Center"
+                ResizeBehavior="PreviousAndNext" />
+
+            <Border Grid.Column="2" Classes="controlBorder">
+                <TransitioningContentControl Margin="1" Content="{Binding RightViewModel.Value, FallbackValue=no editor panel..}" />
+            </Border>
+
+        </Grid>
+
+    </Grid>
+</UserControl>

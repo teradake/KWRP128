@@ -1,0 +1,35 @@
+<Application
+    x:Class="KWRP.Avalonia.Frontend.App"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="using:KWRP.Avalonia.Frontend.Converters"
+    xmlns:local="using:KWRP.Avalonia.Frontend"
+    xmlns:sty="using:FluentAvalonia.Styling"
+    RequestedThemeVariant="Light">
+    <!--  "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options.  -->
+
+    <Application.DataTemplates>
+        <local:ViewLocator />
+    </Application.DataTemplates>
+
+    <Application.Styles>
+        <!--<FluentTheme />-->
+        <sty:FluentAvaloniaTheme />
+        <StyleInclude Source="/Styles/RadioButton.menu.axaml" />
+        <StyleInclude Source="/Styles/Sample.axaml" />
+        <StyleInclude Source="/Styles/WindowStyle.axaml" />
+        <StyleInclude Source="avares://Notification.Avalonia/Themes/Generic.xaml" />
+    </Application.Styles>
+
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries />
+        </ResourceDictionary>
+
+        <converters:LogTypeToBrushConverter x:Key="LogTypeToBrushConverter" />
+        <converters:ReadOnlyToTransparentConverter x:Key="ReadOnlyToTransparentConverter" />
+        <converters:ValueHalfConverter x:Key="ValueHalfConverter" />
+    </Application.Resources>
+
+
+</Application>

@@ -1,0 +1,139 @@
+<UserControl
+    x:Class="KWRP.Avalonia.Frontend.Views.StartUpPage.SettingPageView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:KWRP.Avalonia.Frontend.ViewModels.StartUpPage"
+    MinWidth="380"
+    HorizontalAlignment="Left"
+    x:CompileBindings="True"
+    x:DataType="vm:SettingPageViewModel"
+    mc:Ignorable="d">
+
+
+    <UserControl.Styles>
+
+        <Style Selector="TextBlock.title">
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="FontSize" Value="20" />
+        </Style>
+
+        <Style Selector="TextBlock.header">
+            <Setter Property="FontWeight" Value="SemiBold" />
+        </Style>
+
+        <Style Selector="TextBlock.description">
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="Foreground" Value="Gray" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+        </Style>
+
+        <Style Selector="NumericUpDown.content">
+            <Setter Property="MinWidth" Value="130" />
+            <Setter Property="Margin" Value="10,0,0,0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="FormatString" Value="0.000" />
+            <Setter Property="Increment" Value="0.1" />
+            <Setter Property="Minimum" Value="0" />
+            <Setter Property="ShowButtonSpinner" Value="{Binding !$self.IsReadOnly}" />
+            <Setter Property="Background" Value="{Binding $self.IsReadOnly, Converter={StaticResource ReadOnlyToTransparentConverter}}" />
+        </Style>
+
+
+    </UserControl.Styles>
+
+
+    <ScrollViewer>
+        <StackPanel Margin="20" Spacing="16">
+            <TextBlock
+                Margin="0,0,0,10"
+                HorizontalAlignment="Center"
+                FontSize="24"
+                FontWeight="Bold"
+                Text="計算設定" />
+
+            <Expander IsExpanded="True">
+                <Expander.Header>
+                    <TextBlock Classes="title" Text="レーン生成パラメータ" />
+                </Expander.Header>
+                <StackPanel>
+
+                    <Grid Margin="0,4" ColumnDefinitions="*, Auto">
+                        <StackPanel
+                            Grid.Column="0"
+                            VerticalAlignment="Center"
+                            Spacing="2">
+                            <TextBlock Classes="header" Text="ラップ調整" />
+                            <TextBlock Classes="description" Text="非転圧領域が少なくなるようレーンラップ量を調整します" />
+                        </StackPanel>
+
+                        <ToggleSwitch
+                            Grid.Column="1"
+                            Margin="10,0,0,0"
+                            VerticalAlignment="Center"
+                            IsChecked="{Binding EnableLapAdjustment}" />
+                    </Grid>
+
+                    <Grid Margin="0,4" ColumnDefinitions="*, Auto">
+                        <StackPanel
+                            Grid.Column="0"
+                            VerticalAlignment="Center"
+                            Spacing="2">
+                            <TextBlock Classes="header" Text="作業進捗方向の最適化" />
+                            <TextBlock Classes="description" Text="方向選択モード時に最適な作業進捗方向を計算します" />
+                        </StackPanel>
+
+                        <ToggleSwitch
+                            Grid.Column="1"
+                            Margin="10,0,0,0"
+                            VerticalAlignment="Center"
+                            IsChecked="{Binding EnableOptimize}" />
+                    </Grid>
+
+                </StackPanel>
+            </Expander>
+
+
+            <Expander IsExpanded="True">
+                <Expander.Header>
+                    <TextBlock Classes="title" Text="ペアレーン生成パラメータ" />
+                </Expander.Header>
+                <StackPanel>
+
+                    <Grid Margin="0,4" ColumnDefinitions="*, Auto">
+                        <StackPanel
+                            Grid.Column="0"
+                            VerticalAlignment="Center"
+                            Spacing="2">
+                            <TextBlock Classes="header" Text="ペア基準値　前方 (m)" />
+                            <TextBlock Classes="description" Text="隣接するレーンの前方のずれがペア基準値より長い場合ペアにしないようにします" />
+                        </StackPanel>
+                        <NumericUpDown
+                            Grid.Column="1"
+                            Classes="content"
+                            Value="{Binding LaneGapToleranceFront, FallbackValue=3.0}" />
+                    </Grid>
+
+                    <Grid Margin="0,4" ColumnDefinitions="*, Auto">
+                        <StackPanel
+                            Grid.Column="0"
+                            VerticalAlignment="Center"
+                            Spacing="2">
+                            <TextBlock Classes="header" Text="ペア基準値　後方 (m)" />
+                            <TextBlock Classes="description" Text="隣接するレーンの後方のずれがペア基準値より長い場合ペアにしないようにします" />
+                        </StackPanel>
+                        <NumericUpDown
+                            Grid.Column="1"
+                            Classes="content"
+                            Value="{Binding LaneGapToleranceRear, FallbackValue=3.0}" />
+                    </Grid>
+
+                </StackPanel>
+            </Expander>
+
+
+        </StackPanel>
+    </ScrollViewer>
+
+</UserControl>

@@ -1,0 +1,112 @@
+<UserControl
+    x:Class="KWRP.Avalonia.Frontend.Views.StartUpPage.StartUpView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:KWRP.Avalonia.Frontend.ViewModels.StartUpPage"
+    d:DesignHeight="450"
+    d:DesignWidth="500"
+    x:CompileBindings="True"
+    x:DataType="vm:StartUpViewModel"
+    mc:Ignorable="d">
+
+    <Grid>
+        <Border Background="{StaticResource mainBrush}" CornerRadius="8">
+            <Grid ColumnDefinitions="auto, *">
+                <Grid HorizontalAlignment="Left">
+                    <Border
+                        Margin="8"
+                        Background="{StaticResource menuBackBrush}"
+                        CornerRadius="8">
+                        <StackPanel Margin="0,20">
+                            <RadioButton
+                                Name="homeRadioButton"
+                                Classes="menu"
+                                Command="{Binding HomePageCommand}">
+                                <RadioButton.Content>
+                                    <Image Classes="menu" Source="/Assets/Icons/home_line.png" />
+                                </RadioButton.Content>
+                                <RadioButton.Tag>
+                                    <Image Classes="menu" Source="/Assets/Icons/home_solid.png" />
+                                </RadioButton.Tag>
+                            </RadioButton>
+                            <RadioButton
+                                Name="machineRadioButton"
+                                Classes="menu"
+                                Command="{Binding MachinePageCommand}">
+                                <RadioButton.Content>
+                                    <Image Classes="menu" Source="/Assets/Icons/roller_line.png" />
+                                </RadioButton.Content>
+                                <RadioButton.Tag>
+                                    <Image Classes="menu" Source="/Assets/Icons/roller_solid.png" />
+                                </RadioButton.Tag>
+                            </RadioButton>
+                            <RadioButton
+                                Name="settingRadioButton"
+                                Classes="menu"
+                                Command="{Binding SettingPageCommand}">
+                                <RadioButton.Content>
+                                    <Image Classes="menu" Source="/Assets/Icons/setting_line.png" />
+                                </RadioButton.Content>
+                                <RadioButton.Tag>
+                                    <Image Classes="menu" Source="/Assets/Icons/setting_fill.png" />
+                                </RadioButton.Tag>
+                            </RadioButton>
+
+                            <RadioButton
+                                Name="dxfRadioButton"
+                                Classes="menu"
+                                Command="{Binding DxfPageCommand}">
+                                <RadioButton.Content>
+                                    <!--<Image Classes="menu" Source="/Assets/Icons/setting_line.png" />-->
+                                    <TextBlock
+                                        FontWeight="Light"
+                                        Foreground="White"
+                                        Text="Dxf" />
+                                </RadioButton.Content>
+                                <RadioButton.Tag>
+                                    <!--<Image Classes="menu" Source="/Assets/Icons/setting_fill.png" />-->
+                                    <TextBlock
+                                        FontWeight="Bold"
+                                        Foreground="White"
+                                        Text="Dxf" />
+                                </RadioButton.Tag>
+                            </RadioButton>
+
+                            <RadioButton
+                                Name="logRadioButton"
+                                Classes="menu"
+                                Command="{Binding LogPageCommand}">
+                                <RadioButton.Content>
+                                    <TextBlock
+                                        FontWeight="Light"
+                                        Foreground="White"
+                                        Text="LOG" />
+                                </RadioButton.Content>
+                                <RadioButton.Tag>
+                                    <TextBlock
+                                        FontWeight="Bold"
+                                        Foreground="White"
+                                        Text="LOG" />
+                                </RadioButton.Tag>
+                            </RadioButton>
+
+                        </StackPanel>
+                    </Border>
+                </Grid>
+
+                <Border
+                    Grid.Column="1"
+                    Margin="0,8,8,8"
+                    Background="{StaticResource contentBrush}"
+                    CornerRadius="8">
+                    <TransitioningContentControl Content="{Binding CurrentPage.Value, FallbackValue=ViewModel Not Attached}" />
+                </Border>
+
+            </Grid>
+
+        </Border>
+    </Grid>
+
+</UserControl>

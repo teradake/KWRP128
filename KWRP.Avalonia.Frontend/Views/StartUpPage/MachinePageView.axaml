@@ -1,0 +1,427 @@
+<UserControl
+    x:Class="KWRP.Avalonia.Frontend.Views.StartUpPage.MachinePageView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="using:FluentAvalonia.UI.Controls"
+    xmlns:vm="using:KWRP.Avalonia.Frontend.ViewModels.StartUpPage"
+    Width="600"
+    MinWidth="450"
+    HorizontalAlignment="Left"
+    x:CompileBindings="True"
+    x:DataType="vm:MachinePageViewModel"
+    mc:Ignorable="d">
+
+    <UserControl.Styles>
+
+        <Style Selector="TextBlock.title">
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="FontSize" Value="20" />
+        </Style>
+
+        <Style Selector="TextBlock.header">
+            <Setter Property="FontWeight" Value="SemiBold" />
+        </Style>
+
+        <Style Selector="TextBlock.description">
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="Foreground" Value="Gray" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+        </Style>
+
+        <Style Selector="SelectableTextBlock.description">
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="Foreground" Value="Gray" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="SelectionBrush" Value="#454545" />
+            <Setter Property="SelectionForegroundBrush" Value="LightGray" />
+        </Style>
+
+        <Style Selector="NumericUpDown.content">
+            <Setter Property="MinWidth" Value="130" />
+            <Setter Property="Margin" Value="10,0,0,0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="FormatString" Value="0.000" />
+            <Setter Property="Increment" Value="0.1" />
+            <Setter Property="Minimum" Value="0" />
+            <Setter Property="IsReadOnly" Value="{Binding !#editmode.IsChecked}" />
+            <Setter Property="ShowButtonSpinner" Value="{Binding !$self.IsReadOnly}" />
+            <Setter Property="Background" Value="{Binding $self.IsReadOnly, Converter={StaticResource ReadOnlyToTransparentConverter}}" />
+        </Style>
+
+        <Style Selector="TextBlock.content">
+            <Setter Property="Margin" Value="10,0,0,0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+    </UserControl.Styles>
+
+
+    <ScrollViewer>
+        <StackPanel Margin="20" Spacing="16">
+
+            <Grid ColumnDefinitions="*, auto">
+                <TextBlock
+                    Margin="0,0,0,10"
+                    HorizontalAlignment="Center"
+                    FontSize="24"
+                    FontWeight="Bold"
+                    Text="ローラ設定" />
+
+                <ToggleSwitch
+                    Name="editmode"
+                    Grid.Column="1"
+                    Content="編集モード"
+                    OffContent="OFF"
+                    OnContent="ON">
+                    <ToggleSwitch.IsVisible>
+                        <MultiBinding Converter="{x:Static BoolConverters.Or}">
+                            <Binding Path="IsDebugMode" />
+                            <Binding Path="IsDevMode" />
+                        </MultiBinding>
+                    </ToggleSwitch.IsVisible>
+                </ToggleSwitch>
+            </Grid>
+
+
+            <Expander IsExpanded="True">
+                <Expander.Header>
+                    <StackPanel
+                        Margin="0,10"
+                        VerticalAlignment="Center"
+                        Spacing="2">
+                        <TextBlock Classes="title" Text="{Binding MachineName, FallbackValue=fv重機名称}" />
+                        <TextBlock Classes="description" Text="{Binding Description, FallbackValue=description}" />
+                    </StackPanel>
+                </Expander.Header>
+                <StackPanel>
+
+                    <!--  ローラ種別  -->
+                    <Grid Margin="0,4" ColumnDefinitions="*, Auto">
+                        <StackPanel
+                            Grid.Column="0"
+                            VerticalAlignment="Center"
+                            Spacing="2">
+                            <TextBlock Classes="header" Text="ローラ種別" />
+                        </StackPanel>
+                        <TextBlock
+                            Grid.Column="1"
+                            Classes="content"
+                            Text="{Binding WheelType, FallbackValue=fvSingle}" />
+                    </Grid>
+
+                    <!--  設定ファイルパス  -->
+                    <Grid Margin="0,4" ColumnDefinitions="*, Auto">
+                        <StackPanel Grid.Column="0" Spacing="2">
+                            <TextBlock Classes="header" Text="設定ファイルパス" />
+                            <SelectableTextBlock Classes="description" Text="{Binding FilePath, FallbackValue=fvPath}" />
+                        </StackPanel>
+                    </Grid>
+
+                </StackPanel>
+            </Expander>
+
+            <Expander IsExpanded="True">
+                <Expander.Header>
+                    <TextBlock Classes="title" Text="車体の寸法情報" />
+                </Expander.Header>
+                <StackPanel>
+
+                    <Grid Margin="0,4" ColumnDefinitions="*, Auto">
+                        <StackPanel
+                            Grid.Column="0"
+                            VerticalAlignment="Center"
+                            Spacing="2">
+                            <TextBlock Classes="header" Text="ホイールベース (m)" />
+                        </StackPanel>
+                        <NumericUpDown
+                            Grid.Column="1"
+                            Classes="content"
+                            Value="{Binding Wheelbase, FallbackValue=3.0}" />
+                    </Grid>
+
+                    <Grid Margin="0,4" ColumnDefinitions="*, Auto">
+                        <StackPanel
+                            Grid.Column="0"
+                            VerticalAlignment="Center"
+                            Spacing="2">
+                            <TextBlock Classes="header" Text="鉄倫幅 (m)" />
+                        </StackPanel>
+                        <NumericUpDown
+                            Grid.Column="1"
+                            Classes="content"
+                            Value="{Binding LaneWidth, FallbackValue=3.0}" />
+                    </Grid>
+
+                    <Grid Margin="0,4" ColumnDefinitions="*, Auto">
+                        <StackPanel
+                            Grid.Column="0"
+                            VerticalAlignment="Center"
+                            Spacing="2">
+                            <TextBlock Classes="header" Text="フロントオーバーハング (m)" />
+                        </StackPanel>
+                        <NumericUpDown
+                            Grid.Column="1"
+                            Classes="content"
+                            Value="{Binding FrontOverhang, FallbackValue=3.0}" />
+                    </Grid>
+
+                    <Grid Margin="0,4" ColumnDefinitions="*, Auto">
+                        <StackPanel
+                            Grid.Column="0"
+                            VerticalAlignment="Center"
+                            Spacing="2">
+                            <TextBlock Classes="header" Text="リアオーバーハング (m)" />
+                        </StackPanel>
+                        <NumericUpDown
+                            Grid.Column="1"
+                            Classes="content"
+                            Value="{Binding RearOverhang, FallbackValue=3.0}" />
+                    </Grid>
+
+
+
+                </StackPanel>
+            </Expander>
+
+
+            <Expander IsExpanded="True">
+                <Expander.Header>
+                    <TextBlock Classes="title" Text="計画パラメータ" />
+                </Expander.Header>
+                <StackPanel>
+
+                    <Grid Margin="0,4" ColumnDefinitions="*, Auto">
+                        <StackPanel
+                            Grid.Column="0"
+                            VerticalAlignment="Center"
+                            Spacing="2">
+                            <TextBlock Classes="header" Text="前後方向マージン (m)" />
+                        </StackPanel>
+                        <NumericUpDown
+                            Grid.Column="1"
+                            Classes="content"
+                            Value="{Binding FrontRearMargin, FallbackValue=3.0}" />
+                    </Grid>
+
+                    <Grid Margin="0,4" ColumnDefinitions="*, Auto">
+                        <StackPanel
+                            Grid.Column="0"
+                            VerticalAlignment="Center"
+                            Spacing="2">
+                            <TextBlock Classes="header" Text="左右方向マージン (m)" />
+                        </StackPanel>
+                        <NumericUpDown
+                            Grid.Column="1"
+                            Classes="content"
+                            Value="{Binding LeftRightMargin, FallbackValue=3.0}" />
+                    </Grid>
+
+                    <Grid Margin="0,4" ColumnDefinitions="*, Auto">
+                        <StackPanel
+                            Grid.Column="0"
+                            VerticalAlignment="Center"
+                            Spacing="2">
+                            <TextBlock Classes="header" Text="レーンラップ幅 (m)" />
+                        </StackPanel>
+                        <NumericUpDown
+                            Grid.Column="1"
+                            Classes="content"
+                            Value="{Binding LapWidth, FallbackValue=3.0}" />
+                    </Grid>
+
+                    <Grid Margin="0,4" ColumnDefinitions="*, Auto">
+                        <StackPanel
+                            Grid.Column="0"
+                            VerticalAlignment="Center"
+                            Spacing="2">
+                            <TextBlock Classes="header" Text="作業可能長さ (m)" />
+                        </StackPanel>
+                        <NumericUpDown
+                            Grid.Column="1"
+                            Classes="content"
+                            Value="{Binding LaneChangeLength, FallbackValue=3.0}" />
+                    </Grid>
+
+                    <Grid Margin="0,4" ColumnDefinitions="*, Auto">
+                        <StackPanel
+                            Grid.Column="0"
+                            VerticalAlignment="Center"
+                            Spacing="2">
+                            <TextBlock Classes="header" Text="前方　端部余裕代 (m)" />
+                        </StackPanel>
+                        <NumericUpDown
+                            Grid.Column="1"
+                            Classes="content"
+                            Value="{Binding FrontEdgeOffset, FallbackValue=3.0}" />
+                    </Grid>
+
+                    <Grid Margin="0,4" ColumnDefinitions="*, Auto">
+                        <StackPanel
+                            Grid.Column="0"
+                            VerticalAlignment="Center"
+                            Spacing="2">
+                            <TextBlock Classes="header" Text="後方　端部余裕代 (m)" />
+                        </StackPanel>
+                        <NumericUpDown
+                            Grid.Column="1"
+                            Classes="content"
+                            Value="{Binding RearEdgeOffset, FallbackValue=3.0}" />
+                    </Grid>
+
+                    <Grid Margin="0,4" ColumnDefinitions="*, Auto">
+                        <StackPanel
+                            Grid.Column="0"
+                            VerticalAlignment="Center"
+                            Spacing="2">
+                            <TextBlock Classes="header" Text="転圧エリアラップ調整値 (m)" />
+                        </StackPanel>
+                        <NumericUpDown
+                            Grid.Column="1"
+                            Classes="content"
+                            Value="{Binding WorkAreaLapLength, FallbackValue=3.0}" />
+                    </Grid>
+
+
+                </StackPanel>
+            </Expander>
+
+
+            <Expander IsExpanded="True">
+                <Expander.Header>
+                    <StackPanel
+                        Margin="0,10"
+                        VerticalAlignment="Center"
+                        Spacing="2">
+                        <TextBlock Classes="title" Text="占有エリア余裕代" />
+                        <TextBlock Classes="description" Text="作業エリアに対して占有エリアをどれだけ拡幅するかの情報。計画パラメータから自動計算されます" />
+                    </StackPanel>
+                </Expander.Header>
+                <StackPanel>
+
+                    <Grid Margin="0,4" ColumnDefinitions="*, Auto">
+                        <StackPanel
+                            Grid.Column="0"
+                            VerticalAlignment="Center"
+                            Spacing="2">
+                            <TextBlock Classes="header" Text="前方余裕代 (m)" />
+                            <TextBlock Classes="description" Text="{Binding FrontAllowanceDescription, FallbackValue=fvPath}" />
+                        </StackPanel>
+                        <NumericUpDown
+                            Grid.Column="1"
+                            Classes="content"
+                            IsReadOnly="True"
+                            Value="{Binding FrontAllowance, FallbackValue=3.0}" />
+                    </Grid>
+
+                    <Grid Margin="0,4" ColumnDefinitions="*, Auto">
+                        <StackPanel
+                            Grid.Column="0"
+                            VerticalAlignment="Center"
+                            Spacing="2">
+                            <TextBlock Classes="header" Text="後方余裕代 (m)" />
+                            <TextBlock Classes="description" Text="{Binding RearAllowanceDescription, FallbackValue=fvPath}" />
+                        </StackPanel>
+                        <NumericUpDown
+                            Grid.Column="1"
+                            Classes="content"
+                            IsReadOnly="True"
+                            Value="{Binding RearAllowance, FallbackValue=3.0}" />
+                    </Grid>
+
+                    <Grid Margin="0,4" ColumnDefinitions="*, Auto">
+                        <StackPanel
+                            Grid.Column="0"
+                            VerticalAlignment="Center"
+                            Spacing="2">
+                            <TextBlock Classes="header" Text="左右余裕代 (m)" />
+                            <TextBlock Classes="description" Text="{Binding LeftRightAllowanceDescription, FallbackValue=fvPath}" />
+                        </StackPanel>
+                        <NumericUpDown
+                            Grid.Column="1"
+                            Classes="content"
+                            IsReadOnly="True"
+                            Value="{Binding LeftRightAllowance, FallbackValue=3.0}" />
+                    </Grid>
+
+
+
+                </StackPanel>
+            </Expander>
+
+
+            <Expander IsExpanded="True">
+                <Expander.Header>
+                    <StackPanel
+                        Margin="0,10"
+                        VerticalAlignment="Center"
+                        Spacing="2">
+                        <TextBlock Classes="title" Text="初期配置用 占有エリア拡幅幅" />
+                        <TextBlock Classes="description" Text="最初の移動アクティビティの占有エリアをどれだけ拡幅するかの情報" />
+                    </StackPanel>
+                </Expander.Header>
+                <StackPanel>
+
+                    <Grid Margin="0,4" ColumnDefinitions="*, Auto">
+                        <StackPanel
+                            Grid.Column="0"
+                            VerticalAlignment="Center"
+                            Spacing="2">
+                            <TextBlock Classes="header" Text="前方 (m)" />
+                        </StackPanel>
+                        <NumericUpDown
+                            Grid.Column="1"
+                            Classes="content"
+                            Value="{Binding InitialMoveMarginFront, FallbackValue=3.0}" />
+                    </Grid>
+
+                    <Grid Margin="0,4" ColumnDefinitions="*, Auto">
+                        <StackPanel
+                            Grid.Column="0"
+                            VerticalAlignment="Center"
+                            Spacing="2">
+                            <TextBlock Classes="header" Text="後方 (m)" />
+                        </StackPanel>
+                        <NumericUpDown
+                            Grid.Column="1"
+                            Classes="content"
+                            Value="{Binding InitialMoveMarginRear, FallbackValue=3.0}" />
+                    </Grid>
+
+                    <Grid Margin="0,4" ColumnDefinitions="*, Auto">
+                        <StackPanel
+                            Grid.Column="0"
+                            VerticalAlignment="Center"
+                            Spacing="2">
+                            <TextBlock Classes="header" Text="進捗方向側 (m)" />
+                        </StackPanel>
+                        <NumericUpDown
+                            Grid.Column="1"
+                            Classes="content"
+                            Value="{Binding InitialMoveMarginPrev, FallbackValue=3.0}" />
+                    </Grid>
+
+                    <Grid Margin="0,4" ColumnDefinitions="*, Auto">
+                        <StackPanel
+                            Grid.Column="0"
+                            VerticalAlignment="Center"
+                            Spacing="2">
+                            <TextBlock Classes="header" Text="進捗方向反対側 (m)" />
+                        </StackPanel>
+                        <NumericUpDown
+                            Grid.Column="1"
+                            Classes="content"
+                            Value="{Binding InitialMoveMarginNext, FallbackValue=3.0}" />
+                    </Grid>
+
+
+
+                </StackPanel>
+            </Expander>
+
+
+        </StackPanel>
+    </ScrollViewer>
+
+</UserControl>

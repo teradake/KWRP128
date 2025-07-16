@@ -1,0 +1,57 @@
+<UserControl
+    x:Class="KWRP.Avalonia.Frontend.Views.StartUpPage.LogPageView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:logmodel="using:KWRP.Avalonia.Backend.Model"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:KWRP.Avalonia.Frontend.ViewModels.StartUpPage"
+    d:DesignHeight="650"
+    d:DesignWidth="600"
+    x:CompileBindings="True"
+    x:DataType="vm:LogPageViewModel"
+    mc:Ignorable="d">
+
+    <Grid RowDefinitions="auto, *">
+
+        <ScrollViewer Grid.Row="1">
+
+            <ItemsControl ItemsSource="{Binding Logs}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="logmodel:KWRPLog">
+                        <Border
+                            Margin="2"
+                            Padding="4"
+                            Background="{Binding Type, Converter={StaticResource LogTypeToBrushConverter}}"
+                            CornerRadius="4">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal" Spacing="10">
+                                    <TextBlock
+                                        FontSize="12"
+                                        FontWeight="Bold"
+                                        Text="{Binding Timestamp}" />
+                                    <TextBlock FontSize="12">
+                                        <Run Foreground="Gray" Text="{Binding Type}" />
+                                        <Run Text=" | " />
+                                        <Run Text="{Binding CalledFileName}" />
+                                        <Run Text=" (" />
+                                        <Run Text="{Binding CalledMemberName}" />
+                                        <Run Text=":" />
+                                        <Run Text="{Binding CalledLineNumber}" />
+                                        <Run Text=") [Thread: " />
+                                        <Run Text="{Binding ThreadId}" />
+                                        <Run Text="]" />
+                                    </TextBlock>
+                                </StackPanel>
+                                <TextBlock Text="{Binding Message}" TextWrapping="Wrap" />
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+        </ScrollViewer>
+
+    </Grid>
+
+</UserControl>

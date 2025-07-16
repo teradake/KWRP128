@@ -1,0 +1,35 @@
+<Styles xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Design.PreviewWith>
+
+        <!--  Add Controls for Previewer Here  -->
+        <Border Padding="20">
+            <StackPanel Spacing="10">
+                <Border Classes="controlBorder">
+                    <TextBlock Text="I will have red background when hovered." />
+                </Border>
+                <Button Content="I will have red text when pressed." />
+                <DropDownButton Classes="emp" Content="I will have red text when pressed." />
+            </StackPanel>
+        </Border>
+    </Design.PreviewWith>
+
+    <!--  Add Styles Here  -->
+    <Style Selector="Button.sample:pressed /template/ ContentPresenter">
+        <Setter Property="TextBlock.Foreground" Value="Red" />
+    </Style>
+    <Style Selector="Border.sample:pointerover">
+        <Setter Property="Background" Value="Red" />
+    </Style>
+
+    <Style Selector="DropDownButton.emp:pointerover /template/ ContentPresenter">
+        <Setter Property="TextBlock.FontWeight" Value="Bold" />
+    </Style>
+
+    <Style Selector="Border.controlBorder">
+        <Setter Property="Margin" Value="5" />
+        <Setter Property="BorderBrush" Value="Black" />
+        <Setter Property="BorderThickness" Value="0.2" />
+    </Style>
+
+	
+</Styles>

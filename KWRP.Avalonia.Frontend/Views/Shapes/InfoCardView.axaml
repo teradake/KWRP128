@@ -1,0 +1,52 @@
+<UserControl
+    x:Class="KWRP.Avalonia.Frontend.Views.Shapes.InfoCardView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:shape="using:KWRP.Avalonia.Frontend.ViewModels.Shapes"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:DataType="shape:InfoCardViewModel"
+    ClipToBounds="False"
+    mc:Ignorable="d">
+
+    <Grid>
+        <Grid.RenderTransform>
+            <TranslateTransform X="{Binding Origin.X}" Y="{Binding Origin.Y}" />
+        </Grid.RenderTransform>
+        <Grid RenderTransformOrigin="0% 0%">
+            <Grid.RenderTransform>
+                <RotateTransform Angle="{Binding Angle}" />
+            </Grid.RenderTransform>
+            <Grid RenderTransformOrigin="0% 0%">
+                <Grid.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform ScaleY="-1" />
+                        <ScaleTransform ScaleX="{Binding Scale}" ScaleY="{Binding Scale}" />
+                    </TransformGroup>
+                </Grid.RenderTransform>
+                <Grid Background="#74f545EE" RowDefinitions="auto auto auto">
+                    <Grid.RenderTransform>
+                        <RotateTransform Angle="0" />
+                    </Grid.RenderTransform>
+                    <TextBlock
+                        Grid.Row="0"
+                        Margin="0"
+                        HorizontalAlignment="Center"
+                        Text="{Binding AreaID}" />
+                    <TextBlock
+                        Grid.Row="1"
+                        Margin="0,-5"
+                        HorizontalAlignment="Center"
+                        Text="{Binding AreaLength}" />
+                    <TextBlock
+                        Grid.Row="2"
+                        Margin="0"
+                        HorizontalAlignment="Center"
+                        Text="{Binding AreaWidth}" />
+                </Grid>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>

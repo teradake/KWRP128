@@ -1,0 +1,61 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34018.315
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ソリューション項目", "ソリューション項目", "{59D468AA-DD6D-4DB6-B30C-368B8798D385}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+		Trdk.Geometry.NTSExtensions\Trdk.Geometry.NTS.csproj = Trdk.Geometry.NTSExtensions\Trdk.Geometry.NTS.csproj
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KWRP.Infra", "KWRP.Infra\KWRP.Infra.csproj", "{074834DF-7290-4F5D-BCA0-74FB9A665B60}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trdk.Geometry", "Trdk.Geometry\Trdk.Geometry.csproj", "{530F448B-E5B8-AE9D-9091-783F06E8D46C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trdk.Geometry.NTS", "Trdk.Geometry.NTSExtensions\Trdk.Geometry.NTS.csproj", "{2348E829-93B0-64B6-C13D-C64402719D4C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KWRP.Backend", "KWRP.Avalonia.Backend\KWRP.Backend.csproj", "{5D60E395-0756-DC3E-9E39-1CC1D17BD385}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KWRP.Frontend", "KWRP.Avalonia.Frontend\KWRP.Frontend.csproj", "{B5121260-FE71-3F72-D2B5-02B95EC89A72}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KWRP.NetDxf", "KWRP.Avalonia.NetDxf\KWRP.NetDxf.csproj", "{87A7924B-9370-2D75-0E58-7D047D19947B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{074834DF-7290-4F5D-BCA0-74FB9A665B60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{074834DF-7290-4F5D-BCA0-74FB9A665B60}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{074834DF-7290-4F5D-BCA0-74FB9A665B60}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{074834DF-7290-4F5D-BCA0-74FB9A665B60}.Release|Any CPU.Build.0 = Release|Any CPU
+		{530F448B-E5B8-AE9D-9091-783F06E8D46C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{530F448B-E5B8-AE9D-9091-783F06E8D46C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{530F448B-E5B8-AE9D-9091-783F06E8D46C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{530F448B-E5B8-AE9D-9091-783F06E8D46C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2348E829-93B0-64B6-C13D-C64402719D4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2348E829-93B0-64B6-C13D-C64402719D4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2348E829-93B0-64B6-C13D-C64402719D4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2348E829-93B0-64B6-C13D-C64402719D4C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D60E395-0756-DC3E-9E39-1CC1D17BD385}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D60E395-0756-DC3E-9E39-1CC1D17BD385}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D60E395-0756-DC3E-9E39-1CC1D17BD385}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D60E395-0756-DC3E-9E39-1CC1D17BD385}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5121260-FE71-3F72-D2B5-02B95EC89A72}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5121260-FE71-3F72-D2B5-02B95EC89A72}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5121260-FE71-3F72-D2B5-02B95EC89A72}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5121260-FE71-3F72-D2B5-02B95EC89A72}.Release|Any CPU.Build.0 = Release|Any CPU
+		{87A7924B-9370-2D75-0E58-7D047D19947B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87A7924B-9370-2D75-0E58-7D047D19947B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87A7924B-9370-2D75-0E58-7D047D19947B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87A7924B-9370-2D75-0E58-7D047D19947B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1D10D090-399D-4C78-8E25-95C6965FC138}
+	EndGlobalSection
+EndGlobal

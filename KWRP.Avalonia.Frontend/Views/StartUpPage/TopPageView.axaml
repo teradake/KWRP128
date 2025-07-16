@@ -1,0 +1,146 @@
+<UserControl
+    x:Class="KWRP.Avalonia.Frontend.Views.StartUpPage.TopPageView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:enums="using:KWRP.Avalonia.Backend.Enums"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:KWRP.Avalonia.Frontend.ViewModels.StartUpPage"
+    d:DesignHeight="500"
+    d:DesignWidth="600"
+    x:CompileBindings="True"
+    x:DataType="vm:TopPageViewModel"
+    mc:Ignorable="d">
+
+    <UserControl.Styles />
+
+    <Grid RowDefinitions="auto　 auto auto *">
+        <TextBlock
+            Grid.Row="0"
+            Margin="20,30"
+            Text="Top Page"
+            Theme="{StaticResource TitleTextBlockStyle}" />
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal">
+
+            <DropDownButton
+                Classes="emp"
+                ClickMode="Press"
+                Content="転圧領域ファイルを選択">
+                <DropDownButton.Flyout>
+                    <MenuFlyout Placement="Bottom">
+                        <MenuItem
+                            Command="{Binding LoadCommand}"
+                            CommandParameter="{x:Static enums:FileType.XML}"
+                            Header="XML"
+                            ToolTip.HorizontalOffset="15"
+                            ToolTip.ShowDelay="1"
+                            ToolTip.VerticalOffset="0">
+                            <ToolTip.Tip>
+                                <TextBlock Text="座標取得システムで作成したXMLを選択してください" />
+                            </ToolTip.Tip>
+                        </MenuItem>
+                        <MenuItem
+                            Command="{Binding LoadCommand}"
+                            CommandParameter="{x:Static enums:FileType.CSV}"
+                            Header="CSV"
+                            ToolTip.HorizontalOffset="35"
+                            ToolTip.ShowDelay="10"
+                            ToolTip.VerticalOffset="10">
+                            <ToolTip.Tip>
+                                <StackPanel>
+                                    <TextBlock>
+                                        <Run Text="csvフォーマット↓" />
+                                        <LineBreak />
+                                        <Run Text="先頭の「X,Y」の行は無くてもOKです" />
+                                    </TextBlock>
+                                    <Image Source="/Assets/Figures/csv_sample.png" Stretch="None" />
+                                </StackPanel>
+                            </ToolTip.Tip>
+                        </MenuItem>
+                        <MenuItem
+                            Command="{Binding LoadFromPathCommand}"
+                            CommandParameter="C:\Users\Y97606\Documents\くびれ鍵smallsmall_VR.xml"
+                            Header="くびれ鍵smallsmall_VR.xml"
+                            IsVisible="{Binding IsDebugMode}" />
+                        <MenuItem
+                            Command="{Binding LoadFromPathCommand}"
+                            CommandParameter="C:\Users\Y97606\Documents\くびれ鍵smallsmall_strip_VR.xml"
+                            Header="くびれ鍵smallsmall_strip_VR.xml"
+                            IsVisible="{Binding IsDebugMode}" />
+                        <MenuItem
+                            Command="{Binding LoadFromPathCommand}"
+                            CommandParameter="C:\Users\Y97606\Documents\くびれ鍵smallsmall_欠け_VR.xml"
+                            Header="くびれ鍵smallsmall_欠け_VR.xml"
+                            IsVisible="{Binding IsDebugMode}" />
+                        <MenuItem
+                            Command="{Binding LoadFromPathCommand}"
+                            CommandParameter="C:\Users\Y97606\Documents\しかくより.xml"
+                            Header="しかくより.xml"
+                            IsVisible="{Binding IsDebugMode}" />
+                        <MenuItem
+                            Command="{Binding LoadFromPathCommand}"
+                            CommandParameter="C:\Users\Y97606\Documents\しかく.xml"
+                            Header="しかく.xml"
+                            IsVisible="{Binding IsDebugMode}" />
+                        <MenuItem
+                            Command="{Binding LoadFromPathCommand}"
+                            CommandParameter="C:\Users\Y97606\Documents\たてなが.csv"
+                            Header="たてなが.csv"
+                            IsVisible="{Binding IsDebugMode}" />
+                        <MenuItem
+                            Command="{Binding LoadFromPathCommand}"
+                            CommandParameter="C:\Users\Y97606\Documents\Visual Studio repos\KWRP4-master\KWRP.Avalonia.Backend\Resources\InputData\Automated\rec_VR.xml"
+                            Header="rec_VR.xml"
+                            IsVisible="{Binding IsDebugMode}" />
+                        <MenuItem
+                            Command="{Binding LoadFromPathCommand}"
+                            CommandParameter="C:\Users\Y97606\Documents\Visual Studio repos\KWRP4-master\KWRP.Avalonia.Backend\Resources\InputData\Automated\rec_diag_VR.xml"
+                            Header="rec_diag_VR.xml"
+                            IsVisible="{Binding IsDebugMode}" />
+                        <MenuItem
+                            Command="{Binding LoadFromPathCommand}"
+                            CommandParameter="C:\Users\Y97606\Documentss\dummy.csv"
+                            Header="存在しないファイル"
+                            IsVisible="{Binding IsDebugMode}" />
+                    </MenuFlyout>
+                </DropDownButton.Flyout>
+            </DropDownButton>
+
+            <TextBlock
+                Margin="10,0"
+                VerticalAlignment="Center"
+                Text="{Binding FilePath.Value, FallbackValue=ファイルパス}" />
+
+        </StackPanel>
+
+
+        <StackPanel
+            Grid.Row="2"
+            Margin="10"
+            Spacing="5">
+
+            <TextBlock VerticalAlignment="Center" Text="{Binding RollerName, StringFormat='振動ローラ : {0}', FallbackValue=ローラ名}" />
+            <TextBlock VerticalAlignment="Center" Text="{Binding DxfTitleName.Value, StringFormat='背景図 : {0}', FallbackValue=背景図}" />
+
+        </StackPanel>
+
+
+        <Grid Grid.Row="3" ColumnDefinitions="* * *">
+
+            <Button
+                Grid.Column="1"
+                MaxWidth="200"
+                MaxHeight="200"
+                Margin="20"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                Command="{Binding NextCommand}">
+                <Button.Content>
+                    <TextBlock FontSize="30" Text="Next" />
+                </Button.Content>
+            </Button>
+
+        </Grid>
+    </Grid>
+</UserControl>

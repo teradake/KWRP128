@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<CompactionAreaItems xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <LaneProgressDirection>2.0943951023931953</LaneProgressDirection>
+  <IsRollerHeadingToRight>false</IsRollerHeadingToRight>
+  <CompactionArea>
+    <Shell>
+      <Points>
+        <Point3D>
+          <X>22.4404</X>
+          <Y>160.9449</Y>
+          <Z>0</Z>
+        </Point3D>
+        <Point3D>
+          <X>130.6936</X>
+          <Y>223.4449</Y>
+          <Z>0</Z>
+        </Point3D>
+        <Point3D>
+          <X>158.6936</X>
+          <Y>174.9474</Y>
+          <Z>0</Z>
+        </Point3D>
+        <Point3D>
+          <X>50.4404</X>
+          <Y>112.4474</Y>
+          <Z>0</Z>
+        </Point3D>
+        <Point3D>
+          <X>22.4404</X>
+          <Y>160.9449</Y>
+          <Z>0</Z>
+        </Point3D>
+      </Points>
+    </Shell>
+    <Holes />
+  </CompactionArea>
+</CompactionAreaItems>

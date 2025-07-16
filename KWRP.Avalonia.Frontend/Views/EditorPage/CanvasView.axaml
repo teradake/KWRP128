@@ -1,0 +1,832 @@
+<UserControl
+    x:Class="KWRP.Avalonia.Frontend.Views.EditorPage.CanvasView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:cc="using:KWRP.Avalonia.Frontend.Views.Shapes"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:shape="using:KWRP.Avalonia.Frontend.ViewModels.Shapes"
+    xmlns:ui="using:FluentAvalonia.UI.Controls"
+    xmlns:vm="using:KWRP.Avalonia.Frontend.ViewModels.EditorPage"
+    d:DesignHeight="650"
+    d:DesignWidth="500"
+    x:DataType="vm:CanvasViewModel"
+    Focusable="True"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <VisualBrush
+            x:Key="TemplateCheckerBoard"
+            DestinationRect="0,0,20,20"
+            SourceRect="0,0,20,20"
+            TileMode="Tile">
+            <VisualBrush.Visual>
+                <Path Data="M 0,0 L 0,10 L 10,10 L 10,0 Z M 10,10 L 10,20 L 20,20 L 20,10 Z" Fill="#FFFaFaFa" />
+            </VisualBrush.Visual>
+        </VisualBrush>
+    </UserControl.Resources>
+
+    <UserControl.KeyBindings>
+        <KeyBinding Command="{Binding RemovePochiCommand}" Gesture="Back" />
+        <KeyBinding Command="{Binding CloseDirectionSelectionModeCommand}" Gesture="Escape" />
+        <KeyBinding Command="{Binding OpenDirectionSelectionModeCommand}" Gesture="D" />
+        <KeyBinding
+            Command="{Binding CaptureClipboardCommand}"
+            CommandParameter="{Binding #subGrid}"
+            Gesture="Ctrl+C" />
+    </UserControl.KeyBindings>
+
+
+    <Border
+        Margin="8"
+        Background="White"
+        ClipToBounds="True"
+        CornerRadius="8">
+
+        <Grid Name="mainGrid" Background="{DynamicResource TemplateCheckerBoard}">
+
+
+
+            <Grid
+                Name="subGrid"
+                Background="Transparent"
+                ClipToBounds="True">
+                <Grid.RenderTransform>
+                    <ScaleTransform ScaleY="-1" />
+                </Grid.RenderTransform>
+
+                <Canvas
+                    Name="mainCanvas"
+                    ClipToBounds="False"
+                    RenderTransform="{Binding Affine.Value}"
+                    RenderTransformOrigin="0% 0%">
+
+                    <Canvas.Styles>
+                        <Style Selector="ItemsControl">
+                            <Setter Property="ClipToBounds" Value="False" />
+                        </Style>
+                    </Canvas.Styles>
+
+                    <!--  背景図  -->
+                    <Border
+                        Canvas.Left="{Binding PlanViewOption.Value.Xmin}"
+                        Canvas.Top="{Binding PlanViewOption.Value.Ymin}"
+                        Background="White">
+                        <Border.IsVisible>
+                            <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                <Binding Path="#planViewVisible.IsChecked" />
+                                <Binding Path="#planViewVisible.IsVisible" />
+                            </MultiBinding>
+                        </Border.IsVisible>
+                        <Image
+                            Width="{Binding PlanViewOption.Value.MapWidth}"
+                            Height="{Binding PlanViewOption.Value.MapHeight}"
+                            Source="{Binding PlanView.Value}" />
+                    </Border>
+
+                    <!--  原点、x,y軸  -->
+                    <Path
+                        Data="M-5,-5L5,5M5,-5L-5,5"
+                        Stroke="Black"
+                        StrokeThickness="2" />
+                    <Line
+                        Stroke="Black"
+                        StrokeThickness="1"
+                        StartPoint="0, -50000"
+                        EndPoint="0, 50000" />
+                    <Line
+                        Stroke="Black"
+                        StrokeThickness="1"
+                        StartPoint="-50000, 0"
+                        EndPoint="50000, 0" />
+
+                    <!--<Polygon
+                        Fill="{Binding Box.Value.Fill}"
+                        IsVisible="{Binding Box, Converter={x:Static ObjectConverters.IsNotNull}}"
+                        Points="{Binding Box.Value.Points}" />-->
+
+                    <Polygon
+                        Fill="{Binding DragRect.Value.Fill}"
+                        IsVisible="{Binding DragRect.Value.IsVisible}"
+                        Points="{Binding DragRect.Value.Points}"
+                        Stroke="{Binding DragRect.Value.Stroke}"
+                        StrokeThickness="{Binding LaneThick.Value}"
+                        ZIndex="123456" />
+
+                    <ItemsControl IsVisible="True" ItemsSource="{Binding CompactionAreas}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <Grid />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="shape:CompactionAreaViewModel">
+                                <Polygon
+                                    Fill="{Binding Fill}"
+                                    Points="{Binding Points}"
+                                    Stroke="{Binding Stroke}"
+                                    StrokeThickness="{Binding $parent[Canvas].((vm:CanvasViewModel)DataContext).Thick.Value}" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <!--<ItemsControl ItemsSource="{Binding OffsetCompactionAreas}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <Grid />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="shape:CompactionAreaViewModel">
+                                <Polygon
+                                    Points="{Binding Points}"
+                                    Stroke="{Binding Stroke}"
+                                    StrokeDashArray="1,2,1"
+                                    StrokeThickness="{Binding $parent[Canvas].((vm:CanvasViewModel)DataContext).Thick.Value}" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>-->
+
+
+                    <ItemsControl ItemsSource="{Binding Obstacles}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <Grid />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="shape:CompactionAreaViewModel">
+                                <Polygon
+                                    Fill="{Binding Fill}"
+                                    Points="{Binding Points}"
+                                    Stroke="{Binding Stroke}"
+                                    StrokeThickness="{Binding $parent[Canvas].((vm:CanvasViewModel)DataContext).Thick.Value}" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <ItemsControl IsVisible="{Binding #laneVisible.IsChecked}" ItemsSource="{Binding Lanes}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <Grid />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="shape:LaneViewModel">
+                                <Polygon
+                                    Fill="{Binding Fill}"
+                                    Points="{Binding Points}"
+                                    Stroke="{Binding Stroke}"
+                                    StrokeThickness="{Binding $parent[Canvas].((vm:CanvasViewModel)DataContext).LaneThick.Value}" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <ItemsControl IsVisible="{Binding #pairedLaneVisible.IsChecked}" ItemsSource="{Binding PairedLanes}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <Grid />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="shape:PairedLaneViewModel">
+                                <Grid>
+                                    <!--  エリア  -->
+                                    <Polygon
+                                        Fill="{Binding Fill}"
+                                        Points="{Binding Points}"
+                                        Stroke="{Binding Stroke}"
+                                        StrokeThickness="{Binding $parent[Canvas].((vm:CanvasViewModel)DataContext).PairedLaneThick.Value}" />
+                                    <!--  矢印  -->
+                                    <Line
+                                        Stroke="Black"
+                                        StrokeThickness="0.5"
+                                        StartPoint="{Binding Arrow.StartPoint}"
+                                        EndPoint="{Binding Arrow.EndPoint}" />
+                                    <Polygon
+                                        Fill="Black"
+                                        IsVisible="{Binding Arrow.IsVisible}"
+                                        Points="{Binding Arrow.ArrowHeadPoints}" />
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <ItemsControl ItemsSource="{Binding WorkAreas}">
+                        <ItemsControl.IsVisible>
+                            <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                <Binding Path="#workAreaVisible.IsChecked" />
+                            </MultiBinding>
+                        </ItemsControl.IsVisible>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <Grid />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="shape:WorkAreaViewModel">
+                                <Grid>
+                                    <!--  エリア  -->
+                                    <Polygon
+                                        Fill="{Binding Fill}"
+                                        Points="{Binding Points}"
+                                        Stroke="{Binding Stroke}"
+                                        StrokeThickness="{Binding $parent[Canvas].((vm:CanvasViewModel)DataContext).PairedLaneThick.Value}" />
+                                    <!--  矢印  -->
+                                    <Line
+                                        Stroke="Black"
+                                        StrokeThickness="0.5"
+                                        StartPoint="{Binding Arrow.StartPoint}"
+                                        EndPoint="{Binding Arrow.EndPoint}" />
+                                    <Polygon Fill="Black" Points="{Binding Arrow.ArrowHeadPoints}" />
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <ItemsControl ItemsSource="{Binding WorkAreas}">
+                        <ItemsControl.IsVisible>
+                            <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                <Binding Path="#goalAreaVisible.IsChecked" />
+                            </MultiBinding>
+                        </ItemsControl.IsVisible>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <Grid />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="shape:WorkAreaViewModel">
+                                <Polygon
+                                    Fill="{Binding GoalArea.Fill}"
+                                    Points="{Binding GoalArea.Points}"
+                                    Stroke="{Binding GoalArea.Stroke}"
+                                    StrokeThickness="{Binding $parent[Canvas].((vm:CanvasViewModel)DataContext).Thick.Value}" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <ItemsControl ItemsSource="{Binding SelectedActivityGroup}">
+                        <ItemsControl.IsVisible>
+                            <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                <Binding Path="#activityVisible.IsChecked" />
+                            </MultiBinding>
+                        </ItemsControl.IsVisible>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <Grid />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="shape:ActivityViewModel">
+                                <Polygon
+                                    Points="{Binding PointsDummy}"
+                                    Stroke="Black"
+                                    StrokeThickness="{Binding $parent[UserControl].((vm:CanvasViewModel)DataContext).SelectedActivityThick.Value}" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+
+                    <!--  アクティビティの状態表示用。ネストの深さが激ヤバなのでカスタムコントロール貼り付け  -->
+                    <ItemsControl ItemsSource="{Binding Cards}">
+                        <ItemsControl.IsVisible>
+                            <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                <Binding Path="#activityVisible.IsChecked" />
+                            </MultiBinding>
+                        </ItemsControl.IsVisible>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <Grid />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="shape:InfoCardViewModel">
+                                <cc:InfoCardView />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <!--  アクティビティ可視化用  -->
+                    <Grid>
+                        <Grid.IsVisible>
+                            <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                <Binding Converter="{x:Static ObjectConverters.IsNotNull}" Path="SelectedActivity.Value" />
+                                <Binding Path="#activityVisible.IsChecked" />
+                            </MultiBinding>
+                        </Grid.IsVisible>
+                        <Polygon
+                            IsEnabled="{Binding SelectedActivity.Value, Converter={x:Static ObjectConverters.IsNotNull}}"
+                            Points="{Binding SelectedActivity.Value.PointsWorkArea}"
+                            Stroke="{Binding SelectedActivity.Value.StrokeWorkArea}"
+                            StrokeDashArray="{Binding SelectedActivity.Value.StrokeDashArrayWorkArea}"
+                            StrokeThickness="{Binding ActivityThick.Value}" />
+                        <Polygon
+                            IsEnabled="{Binding SelectedActivity.Value, Converter={x:Static ObjectConverters.IsNotNull}}"
+                            Points="{Binding SelectedActivity.Value.PointsGoalArea}"
+                            Stroke="{Binding SelectedActivity.Value.StrokeGoalArea}"
+                            StrokeDashArray="{Binding SelectedActivity.Value.StrokeDashArrayGoalArea}"
+                            StrokeThickness="{Binding ActivityThick.Value}" />
+                        <Polygon
+                            IsEnabled="{Binding SelectedActivity.Value, Converter={x:Static ObjectConverters.IsNotNull}}"
+                            Points="{Binding SelectedActivity.Value.PointsOccArea}"
+                            Stroke="{Binding SelectedActivity.Value.StrokeOccArea}"
+                            StrokeDashArray="{Binding SelectedActivity.Value.StrokeDashArrayOccArea}"
+                            StrokeThickness="{Binding ActivityThick.Value}" />
+                    </Grid>
+
+                    <ItemsControl ItemsSource="{Binding PochiLinks}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <Grid />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="shape:PochiLinkViewModel">
+                                <Canvas>
+                                    <Line
+                                        Stroke="{Binding Stroke}"
+                                        StrokeThickness="{Binding $parent[UserControl].((vm:CanvasViewModel)DataContext).Thick.Value}"
+                                        StartPoint="{Binding Start}"
+                                        EndPoint="{Binding End}" />
+                                    <TextBlock
+                                        Background="{Binding BackGround}"
+                                        FontSize="12"
+                                        Foreground="{Binding Foreground}"
+                                        RenderTransformOrigin="0%,0%"
+                                        Text="{Binding Length}">
+                                        <TextBlock.RenderTransform>
+                                            <TransformGroup>
+                                                <RotateTransform Angle="{Binding $parent[UserControl].((vm:CanvasViewModel)DataContext).CanvasRotation.Value.DegreeValue}" />
+                                                <ScaleTransform ScaleY="-1" />
+                                                <ScaleTransform ScaleX="{Binding $parent[UserControl].((vm:CanvasViewModel)DataContext).CanvasScaleInv.Value}" ScaleY="{Binding $parent[UserControl].((vm:CanvasViewModel)DataContext).CanvasScaleInv.Value}" />
+                                                <TranslateTransform X="{Binding Center.X}" Y="{Binding Center.Y}" />
+                                            </TransformGroup>
+                                        </TextBlock.RenderTransform>
+                                    </TextBlock>
+                                </Canvas>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <ItemsControl ItemsSource="{Binding Pochis}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <Canvas />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="shape:PochiViewModel">
+                                <Ellipse
+                                    Name="pochi"
+                                    Width="8"
+                                    Height="8"
+                                    Fill="Transparent"
+                                    Stroke="Blue"
+                                    StrokeThickness="1.5">
+                                    <Ellipse.RenderTransform>
+                                        <TransformGroup>
+                                            <ScaleTransform ScaleX="{Binding $parent[UserControl].((vm:CanvasViewModel)DataContext).CanvasScaleInv.Value}" ScaleY="{Binding $parent[UserControl].((vm:CanvasViewModel)DataContext).CanvasScaleInv.Value}" />
+                                            <TranslateTransform X="{Binding X}" Y="{Binding Y}" />
+                                            <TranslateTransform X="{Binding #pochi.Width, Converter={StaticResource ValueHalfConverter}}" Y="{Binding #pochi.Height, Converter={StaticResource ValueHalfConverter}}}" />
+                                        </TransformGroup>
+                                    </Ellipse.RenderTransform>
+                                </Ellipse>
+
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                </Canvas>
+
+            </Grid>
+
+            <StackPanel
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Orientation="Vertical">
+
+                <!--  簡易的な統計  -->
+                <Border
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    CornerRadius="5">
+                    <Expander
+                        Name="expan2"
+                        Background="#96F7C7D2"
+                        IsExpanded="True">
+                        <Expander.Resources>
+                            <x:Double x:Key="ExpanderMinHeight">10</x:Double>
+                            <SolidColorBrush x:Key="ExpanderHeaderBackground">#96F7C7D2</SolidColorBrush>
+                            <SolidColorBrush x:Key="ExpanderHeaderBackgroundPointerOver">#e6F7C7D2</SolidColorBrush>
+                            <SolidColorBrush x:Key="ExpanderHeaderBackgroundPressed">#e6F7C7D2</SolidColorBrush>
+                            <Thickness x:Key="ExpanderChevronMargin">0 -5</Thickness>
+                            <Thickness x:Key="ExpanderContentPadding">0</Thickness>
+                        </Expander.Resources>
+                        <Expander.Styles>
+                            <FluentTheme />
+                        </Expander.Styles>
+                        <Expander.Header>
+                            <TextBlock
+                                Margin="-15,0,0,0"
+                                IsVisible="{Binding !#expan2.IsExpanded}"
+                                Text="統計" />
+                        </Expander.Header>
+                        <SelectableTextBlock Margin="5,0,5,5" SelectionBrush="{Binding #expan2.Background}">
+                            <Run Text="{Binding AreasArea.Value, StringFormat='転圧領域: {0:0.00} m2', FallbackValue=area}" />
+                            <LineBreak />
+                            <Run Text="{Binding LanesArea.Value, StringFormat='有効レーン: {0:0.00} m2', FallbackValue=lanearea}" />
+                            <Run Text="{Binding LanesCount.Value, StringFormat='({0:0} 本)', FallbackValue=lanecnt}" />
+                            <LineBreak />
+                            <Run Text="{Binding Coverage.Value, StringFormat='充填率: {0:0.00} %', FallbackValue=coverage}" />
+                        </SelectableTextBlock>
+                    </Expander>
+
+                </Border>
+
+                <!--  アクティビティ情報  -->
+                <Border
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    CornerRadius="5">
+                    <Border.IsVisible>
+                        <MultiBinding Converter="{x:Static BoolConverters.And}">
+                            <Binding Converter="{x:Static ObjectConverters.IsNotNull}" Path="SelectedActivity.Value" />
+                            <Binding Path="#activityVisible.IsChecked" />
+                        </MultiBinding>
+                    </Border.IsVisible>
+                    <Expander
+                        Name="expaninf"
+                        Background="#bb88CCDD"
+                        IsExpanded="True">
+                        <Expander.Resources>
+                            <x:Double x:Key="ExpanderMinHeight">10</x:Double>
+                            <SolidColorBrush x:Key="ExpanderHeaderBackground">#bb88CCDD</SolidColorBrush>
+                            <SolidColorBrush x:Key="ExpanderHeaderBackgroundPointerOver">#ee88CCDD</SolidColorBrush>
+                            <SolidColorBrush x:Key="ExpanderHeaderBackgroundPressed">#ee88CCDD</SolidColorBrush>
+                            <Thickness x:Key="ExpanderChevronMargin">0 -5</Thickness>
+                            <Thickness x:Key="ExpanderContentPadding">0</Thickness>
+                        </Expander.Resources>
+                        <Expander.Styles>
+                            <FluentTheme />
+                        </Expander.Styles>
+                        <Expander.Header>
+                            <TextBlock
+                                Margin="-15,0,0,0"
+                                IsVisible="{Binding !#expaninf.IsExpanded}"
+                                Text="アクティビティ情報" />
+                        </Expander.Header>
+                        <SelectableTextBlock Margin="5,0,5,5" SelectionBrush="{Binding #expaninf.Background}">
+                            <Run Text="{Binding SelectedActivity.Value.ActivityId, StringFormat='ID: {0}', FallbackValue=id}" />
+                            <LineBreak />
+                            <Run Text="{Binding SelectedActivity.Value.WorkType, StringFormat='作業: {0}', FallbackValue=work}" />
+                            <LineBreak />
+                            <Run Text="{Binding SelectedActivity.Value.PathID, StringFormat='作業グループ: {0}', FallbackValue=groupId}" />
+                            <LineBreak />
+                            <Run Text="{Binding SelectedActivity.Value.Dir, StringFormat='VR進行方向: {0}', FallbackValue=dir}" />
+                            <LineBreak />
+                            <Run Text="{Binding SelectedActivity.Value.RefSpeed, StringFormat='参照速度: {0}', FallbackValue=ref}" />
+                            <LineBreak />
+                            <Run Text="{Binding SelectedActivity.Value.EdgeSpeed, StringFormat='端部速度: {0}', FallbackValue=edge}" />
+                            <LineBreak />
+                            <Run Text="{Binding SelectedActivity.Value.RepeatNum, StringFormat='転圧回数: {0}', FallbackValue=num}" />
+                            <LineBreak />
+                            <Run Text="{Binding SelectedActivity.Value.Comp, StringFormat='起振: {0}', FallbackValue=comp}" />
+                            <LineBreak />
+                            <Run Text="{Binding SelectedActivity.Value.EdgeFront, StringFormat='前方端部フラグ: {0}', FallbackValue=ef}" />
+                            <LineBreak />
+                            <Run Text="{Binding SelectedActivity.Value.EdgeRear, StringFormat='後方端部フラグ: {0}', FallbackValue=er}" />
+                            <LineBreak />
+                            <Run Text="{Binding SelectedActivity.Value.Length, StringFormat='エリア長さ: {0}', FallbackValue=len}" />
+                            <LineBreak />
+                            <Run Text="{Binding SelectedActivity.Value.Width, StringFormat='エリア幅: {0}', FallbackValue=wid}" />
+                        </SelectableTextBlock>
+                    </Expander>
+
+                </Border>
+
+
+
+            </StackPanel>
+
+
+            <StackPanel
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                Orientation="Horizontal">
+
+
+
+
+                <!--  コンパス  -->
+                <Border
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top"
+                    CornerRadius="5">
+                    <Expander
+                        Name="expan"
+                        Background="#55008000"
+                        IsExpanded="True">
+                        <Expander.Resources>
+                            <x:Double x:Key="ExpanderMinHeight">10</x:Double>
+                            <SolidColorBrush x:Key="ExpanderHeaderBackground">#55008000</SolidColorBrush>
+                            <SolidColorBrush x:Key="ExpanderHeaderBackgroundPointerOver">#77008000</SolidColorBrush>
+                            <SolidColorBrush x:Key="ExpanderHeaderBackgroundPressed">#77008000</SolidColorBrush>
+                            <Thickness x:Key="ExpanderChevronMargin">0 -5</Thickness>
+                            <Thickness x:Key="ExpanderContentPadding">0</Thickness>
+                        </Expander.Resources>
+                        <Expander.Styles>
+                            <FluentTheme />
+                        </Expander.Styles>
+                        <Expander.Header>
+                            <TextBlock
+                                Margin="-15,0,0,0"
+                                IsVisible="{Binding !#expan.IsExpanded}"
+                                Text="方角,表示ボタン" />
+                        </Expander.Header>
+                        <StackPanel Margin="5">
+                            <Grid Width="120" Margin="0,-15,0,5">
+                                <Grid
+                                    Width="100"
+                                    Height="100"
+                                    Margin="10,0,10,10">
+                                    <Grid.RenderTransform>
+                                        <TransformGroup>
+                                            <RotateTransform Angle="{Binding CanvasRotation.Value.DegreeValue}" />
+                                            <ScaleTransform ScaleY="-1" />
+                                        </TransformGroup>
+                                    </Grid.RenderTransform>
+                                    <Ellipse
+                                        Width="100"
+                                        Height="100"
+                                        Fill="White" />
+                                    <Image
+                                        Width="100"
+                                        Height="100"
+                                        Focusable="False"
+                                        Source="/Assets/Figures/compass3.png">
+                                        <Image.RenderTransform>
+                                            <ScaleTransform ScaleY="-1" />
+                                        </Image.RenderTransform>
+                                    </Image>
+                                    <Ellipse
+                                        Width="100"
+                                        Height="100"
+                                        Classes="compass">
+                                        <Interaction.Behaviors>
+                                            <EventTrigger EventName="PointerPressed">
+                                                <InvokeCommandAction Command="{Binding RotateCanvasEastToRightCommand}" />
+                                            </EventTrigger>
+                                        </Interaction.Behaviors>
+                                    </Ellipse>
+                                    <Polygon
+                                        Name="compassArrow"
+                                        Classes="compass"
+                                        Points="20,15 12,15 24,3 -35,3 -35,-3 24,-3 12,-15 20,-15 35,0 20,15"
+                                        Stroke="Black">
+                                        <Polygon.RenderTransform>
+                                            <TransformGroup>
+                                                <TranslateTransform X="50" Y="50" />
+                                                <ScaleTransform ScaleX="1.2" ScaleY="1.2" />
+                                                <RotateTransform Angle="{Binding ProgressDir.Value.DegreeValue}" />
+                                            </TransformGroup>
+                                        </Polygon.RenderTransform>
+                                        <Interaction.Behaviors>
+                                            <EventTriggerBehavior EventName="PointerPressed">
+                                                <InvokeCommandAction Command="{Binding RotateCanvasProgressDirectionToRightCommand}" />
+                                            </EventTriggerBehavior>
+                                        </Interaction.Behaviors>
+                                    </Polygon>
+                                </Grid>
+                                <Button
+                                    Width="40"
+                                    Height="40"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Bottom"
+                                    Classes="ima"
+                                    Command="{Binding RotateCanvasCommand}"
+                                    CommandParameter="ccw">
+                                    <Button.Content>
+                                        <Image Source="/Assets/Figures/rot_ccw_blue.png" />
+                                    </Button.Content>
+                                    <Button.Tag>
+                                        <Image Source="/Assets/Figures/rot_ccw_red.png" />
+                                    </Button.Tag>
+                                </Button>
+                                <Button
+                                    Width="40"
+                                    Height="40"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Bottom"
+                                    Background="Transparent"
+                                    BorderBrush="Transparent"
+                                    Classes="ima"
+                                    Command="{Binding RotateCanvasCommand}"
+                                    CommandParameter="cw">
+                                    <Button.Content>
+                                        <Image Source="/Assets/Figures/rot_cw_blue.png" />
+                                    </Button.Content>
+                                    <Button.Tag>
+                                        <Image Source="/Assets/Figures/rot_cw_red.png" />
+                                    </Button.Tag>
+                                </Button>
+                            </Grid>
+
+                            <CheckBox
+                                Name="planViewVisible"
+                                Content="背景表示"
+                                IsChecked="{Binding PlanViewVisible.Value}"
+                                IsVisible="{Binding PlanView.Value, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                            <CheckBox
+                                Name="laneVisible"
+                                Content="レーン表示"
+                                IsChecked="{Binding LaneVisible.Value}" />
+                            <CheckBox
+                                Name="pairedLaneVisible"
+                                Content="レーンのペア表示"
+                                IsChecked="{Binding PairedLaneVisible.Value}" />
+                            <CheckBox
+                                Name="workAreaVisible"
+                                Content="作業エリア表示"
+                                IsChecked="{Binding WorkAreaVisible.Value}"
+                                IsVisible="{Binding !IsLaneDesign.Value}" />
+                            <CheckBox
+                                Name="goalAreaVisible"
+                                Content="ゴール表示"
+                                IsChecked="{Binding GoalAreaVisible.Value}"
+                                IsVisible="{Binding !IsLaneDesign.Value}" />
+                            <CheckBox
+                                Name="activityVisible"
+                                Content="アクティビティ表示"
+                                IsChecked="{Binding ActivityVisible.Value}"
+                                IsVisible="{Binding IsActivityDesign.Value}" />
+                        </StackPanel>
+                    </Expander>
+
+                </Border>
+
+
+            </StackPanel>
+
+
+
+
+            <StackPanel
+                Margin="5"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"
+                Spacing="3">
+                <StackPanel.Styles>
+                    <Style Selector="Button">
+                        <Setter Property="HorizontalAlignment" Value="Right" />
+                    </Style>
+                </StackPanel.Styles>
+
+                <ui:ProgressRing
+                    HorizontalAlignment="Right"
+                    IsVisible="{Binding IsOptimizing.Value}"
+                    RenderTransform="Scale(1.5)"
+					Margin="10"/>
+
+                <Button Name="scaleUpButton" Classes="canvasMenu">
+                    <Image Source="/Assets/Icons/big.png" />
+                </Button>
+                <Button Name="scaleDownButton" Classes="canvasMenu">
+                    <Image Source="/Assets/Icons/small.png" />
+                </Button>
+                <Button Name="canvasAdjustButton" Classes="canvasMenu">
+                    <Image Margin="5" Source="/Assets/Icons/pan2.png" />
+                </Button>
+                <Button
+                    Classes="canvasMenu"
+                    Command="{Binding CaptureCommand}"
+                    CommandParameter="{Binding #subGrid}"
+                    ToolTip.Placement="Left">
+                    <Image Margin="5" Source="/Assets/Icons/photo2.png" />
+                    <ToolTip.Tip>
+                        保存先を指定し、キャプチャをpngファイルとして保存します。
+                        （Ctrl+Cキーを押すことで、キャプチャをクリップボードに保存できます）
+                    </ToolTip.Tip>
+                </Button>
+
+                <TextBlock Name="mousePosition" Margin="5,0" />
+
+
+
+                <Button
+                    Name="directionModeButton"
+                    Classes="canvasMenu"
+                    Command="{Binding OpenDirectionSelectionModeCommand}"
+                    Content="select direction"
+                    IsEnabled="{Binding !IsOptimizing.Value}"
+                    IsVisible="{Binding IsLaneDesign.Value}">
+                    <ToolTip.Tip>
+                        作業進捗方向選択モードです。UI上を押して離すことで作業進捗方向を取得できます
+                    </ToolTip.Tip>
+                </Button>
+            </StackPanel>
+
+            <StackPanel
+                Margin="5"
+                VerticalAlignment="Bottom"
+                Orientation="Vertical"
+                Spacing="3">
+                <StackPanel.Styles>
+                    <Style Selector="Button">
+                        <Setter Property="HorizontalAlignment" Value="Left" />
+                    </Style>
+                </StackPanel.Styles>
+
+                <ToggleButton Name="rulerToggleButton" Classes="canvasMenu">
+                    <Image Margin="2" Source="/Assets/Icons/ruler.png" />
+                    <ToolTip.Tip>
+                        画面上をポチポチして、2点間の距離を取得することができます
+                    </ToolTip.Tip>
+                </ToggleButton>
+                <Button Name="rulerClearButton" Classes="canvasMenu">
+                    <Image Margin="5" Source="/Assets/Icons/clean.png" />
+                    <ToolTip.Tip>
+                        画面上をポチポチをクリアします
+                    </ToolTip.Tip>
+                </Button>
+
+            </StackPanel>
+
+
+            <!--  方向選択用画面  -->
+            <Grid Name="directionSelectionGrid">
+                <Grid.IsVisible>
+                    <MultiBinding Converter="{x:Static BoolConverters.And}">
+                        <Binding FallbackValue="{x:False}" Path="IsDirectionSelectionMode.Value" />
+                        <Binding FallbackValue="{x:False}" Path="IsLaneDesign.Value" />
+                    </MultiBinding>
+                </Grid.IsVisible>
+
+                <Canvas Name="directionSelectionCanvas" Background="#aacdcdcd">
+                    <Canvas.RenderTransform>
+                        <ScaleTransform ScaleY="-1" />
+                    </Canvas.RenderTransform>
+
+                    <!--  矢印  -->
+                    <Line
+                        Name="ArrowLine"
+                        IsVisible="{Binding DirectionArrow.Value.IsVisible}"
+                        Stroke="Red"
+                        StrokeThickness="2"
+                        StartPoint="{Binding DirectionArrow.Value.StartPoint}"
+                        EndPoint="{Binding DirectionArrow.Value.EndPoint}" />
+                    <Polygon
+                        Name="ArrowHead"
+                        Fill="Red"
+                        IsVisible="{Binding DirectionArrow.Value.IsVisible}"
+                        Points="{Binding DirectionArrow.Value.ArrowHeadPoints}" />
+
+
+                </Canvas>
+
+                <Button
+                    Padding="15"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top"
+                    Background="Transparent"
+                    Command="{Binding CloseDirectionSelectionModeCommand}">
+                    <Button.Styles>
+                        <FluentTheme />
+                    </Button.Styles>
+                    <Path
+                        Width="50"
+                        Height="50"
+                        Data="M18.3,5.71L12.59,11.42L6.88,5.71A1,1,0,0,0,5.46,7.12L11.17,12.83L5.46,18.54A1,1,0,0,0,6.88,19.96L12.59,14.25L18.3,19.96A1,1,0,0,0,19.72,18.54L14,12.83L19.72,7.12A1,1,0,0,0,18.3,5.71Z"
+                        Fill="Black"
+                        Stretch="Uniform" />
+                    <ToolTip.Tip>
+                        <TextBlock Text="閉じる" />
+                    </ToolTip.Tip>
+                </Button>
+
+                <TextBlock
+                    Margin="0,0,0,80"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Bottom"
+                    TextAlignment="Center"
+                    Theme="{StaticResource SubtitleTextBlockStyle}">
+                    <Run Text="方向を指定してください" />
+                    <LineBreak />
+                    <Border
+                        Background="LightGray"
+                        BorderBrush="Black"
+                        BorderThickness="1">
+                        <TextBlock
+                            Padding="8,0,10,3"
+                            FontWeight="Bold"
+                            Text="Esc" />
+                    </Border>
+                    <TextBlock Padding="0,0,0,3" Text="閉じる" />
+                </TextBlock>
+            </Grid>
+
+        </Grid>
+
+    </Border>
+
+</UserControl>

@@ -1,0 +1,111 @@
+<Window
+    x:Class="KWRP.Avalonia.Frontend.Views.MainWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Avalonia.Notification.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:KWRP.Avalonia.Frontend.ViewModels"
+    Title="{Binding Title}"
+    Width="1200"
+    Height="800"
+    x:CompileBindings="True"
+    x:DataType="vm:MainWindowViewModel"
+    Design.Height="500"
+    Design.Width="500"
+    ExtendClientAreaChromeHints="NoChrome"
+    ExtendClientAreaToDecorationsHint="True"
+    Icon="/Assets/kajima.ico"
+    IsEnabled="{Binding !IsBusy.Value}"
+    WindowStartupLocation="CenterScreen"
+    mc:Ignorable="d">
+
+    <Grid ColumnDefinitions="* *">
+        <Grid Grid.ColumnSpan="2" RowDefinitions="auto * auto auto auto">
+
+            <Border BorderBrush="Gray" BorderThickness="1">
+                <Grid
+                    Height="35"
+                    Background="#1a1a1b"
+                    PointerPressed="TitleBarPressed">
+                    <SelectableTextBlock
+                        Grid.Row="0"
+                        HorizontalAlignment="Center"
+                        Foreground="Red"
+                        IsVisible="{Binding IsDebugMode}"
+                        Text="###### DEBUG MODE ######"
+                        Theme="{StaticResource TitleTextBlockStyle}" />
+                    <TextBlock
+                        Margin="10,2"
+                        VerticalAlignment="Center"
+                        Foreground="LightGray"
+                        IsVisible="{Binding !IsDebugMode}"
+                        Text="{Binding Title}" />
+                    <StackPanel
+                        Margin="0,0,10,0"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal"
+                        Spacing="4">
+
+                        <Button
+                            Margin="0"
+                            Padding="8"
+                            Classes="TitleBarButton"
+                            Click="MinimizeClick"
+                            Content="0"
+                            FontFamily="Marlett" />
+                        <Button
+                            Name="stateToggler"
+                            Margin="0"
+                            Padding="8"
+                            Classes="TitleBarButton"
+                            Click="ToggleClick"
+                            Content="1"
+                            FontFamily="Marlett" />
+                        <Button
+                            Margin="0"
+                            Padding="8"
+                            Classes="CloseButton"
+                            Click="CloseClick"
+                            Content="r"
+                            FontFamily="Marlett" />
+
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <ContentControl
+                Grid.Row="1"
+                Margin="0"
+                Content="{Binding CurrentViewModel.Value, FallbackValue=No ViewModel Attached...}" />
+
+            <Border Grid.Row="2" Background="#1a1a1b">
+                <Grid Margin="10,3,10,8" ColumnDefinitions="* auto auto">
+                    <Grid.Styles>
+                        <Style Selector="TextBlock">
+                            <Setter Property="Foreground" Value="LightGray" />
+                            <Setter Property="VerticalAlignment" Value="Center" />
+                        </Style>
+                    </Grid.Styles>
+                    <TextBlock Grid.Column="0" Text="{Binding StatusMessage.Value, FallbackValue=hello}" />
+                    <TextBlock
+                        Grid.Column="1"
+                        HorizontalAlignment="Right"
+                        Text="{Binding AreaFilePath.Value, FallbackValue=filepath}" />
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" IsVisible="{Binding IsDevMode}">
+                        <TextBlock Margin="5,0" Text="|" />
+                        <TextBlock
+                            FontWeight="SemiBold"
+                            Foreground="#ffff88"
+                            Text="DevMode" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <Border Grid.Column="0" VerticalAlignment="Bottom">
+            <controls:NotificationMessageContainer Margin="10,2" Manager="{Binding Manager}" />
+        </Border>
+    </Grid>
+</Window>
