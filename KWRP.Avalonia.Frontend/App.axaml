@@ -29,6 +29,7 @@
         <converters:LogTypeToBrushConverter x:Key="LogTypeToBrushConverter" />
         <converters:ReadOnlyToTransparentConverter x:Key="ReadOnlyToTransparentConverter" />
         <converters:ValueHalfConverter x:Key="ValueHalfConverter" />
+		<converters:WheelTypeConverter x:Key="WheelTypeConverter" />
     </Application.Resources>
 
 
