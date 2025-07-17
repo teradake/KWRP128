@@ -85,9 +85,11 @@ namespace KWRP.Avalonia.Frontend.ViewModels.EditorPage
                     {
                         _applicationStore.IsBusy.Value = true;
                         _logService.LogDebug("load params");
-                        await _laneArrangementParameterService.LoadParamsAsync();
-                        _logService.LogInfo($"パラメータを読込みました");
-                        _notificationService.Notify(KWRPNotification.Create("パラメータを読込みました", Backend.Enums.NotifyMessageType.Info, 3));
+                        if (await _laneArrangementParameterService.LoadParamsAsync())
+                        {
+                            _logService.LogInfo($"パラメータを読込みました");
+                            _notificationService.Notify(KWRPNotification.Create("パラメータを読込みました", Backend.Enums.NotifyMessageType.Info, 3));
+                        }
                     }
                     catch (Exception ex)
                     {
