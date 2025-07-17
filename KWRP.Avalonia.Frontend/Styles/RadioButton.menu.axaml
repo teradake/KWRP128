@@ -48,6 +48,10 @@
                     </Canvas>
                 </Border>
 
+                <Button Classes="image">
+                    <Image Height="20" Source="/Assets/Icons/close_red.png" />
+                </Button>
+
             </StackPanel>
         </Border>
     </Design.PreviewWith>
@@ -119,6 +123,16 @@
         <Style Selector="^:pointerover">
             <Setter Property="Fill" Value="{StaticResource compassBrush}" />
             <Setter Property="Opacity" Value="0.1" />
+        </Style>
+    </Style>
+
+    <Style Selector="Button.image">
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Opacity" Value="1" />
+        <Style Selector="^:pointerover">
+            <Setter Property="Opacity" Value="0.5" />
         </Style>
     </Style>
 

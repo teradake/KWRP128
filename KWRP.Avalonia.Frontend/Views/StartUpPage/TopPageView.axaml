@@ -118,10 +118,19 @@
         <StackPanel
             Grid.Row="2"
             Margin="10"
-            Spacing="5">
+            Spacing="10">
 
             <TextBlock VerticalAlignment="Center" Text="{Binding RollerName, StringFormat='振動ローラ : {0}', FallbackValue=ローラ名}" />
-            <TextBlock VerticalAlignment="Center" Text="{Binding DxfTitleName.Value, StringFormat='背景図 : {0}', FallbackValue=背景図}" />
+
+            <StackPanel Orientation="Horizontal" Spacing="1">
+                <TextBlock VerticalAlignment="Center" Text="{Binding DxfTitleName.Value, StringFormat='背景図 : {0}', FallbackValue=背景図}" />
+                <Button
+                    Classes="image"
+                    Command="{Binding ClearDxfCommand}"
+                    IsVisible="{Binding IsDxfExist.Value}">
+                    <Image Height="20" Source="/Assets/Icons/close_red.png" />
+                </Button>
+            </StackPanel>
 
         </StackPanel>
 

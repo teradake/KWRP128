@@ -23,11 +23,12 @@ namespace KWRP.Avalonia.Frontend.ViewModels.StartUpPage
         public ReactiveCommand NextCommand { get; }
         public ReactiveCommand<FileType> LoadCommand { get; }   // ダイアログを開いてファイルを選択
         public ReactiveCommand<string> LoadFromPathCommand { get; } // デバッグ用。xamlから渡されたパスのファイルを選択する
+        public ReactiveCommand ClearDxfCommand { get; }
 
-        public IReadOnlyBindableReactiveProperty<string> FilePath { get; }
         public string RollerName => _machineStore.CurrentRoller.MachineName;
-        //public string DxfTitleName => _dxfStore.SelectedOption.Value?.Title ?? "未登録";
+        public IReadOnlyBindableReactiveProperty<string> FilePath { get; }
         public IReadOnlyBindableReactiveProperty<string> DxfTitleName { get; }
+        public BindableReactiveProperty<bool> IsDxfExist { get; }
 
         public TopPageViewModel(
             INavigationService navigationService,
@@ -51,10 +52,20 @@ namespace KWRP.Avalonia.Frontend.ViewModels.StartUpPage
                 .ToReadOnlyBindableReactiveProperty(_applicationStore.SpatialDataPath.Value)
                 .AddTo(Disposables);
 
+            IsDxfExist = _dxfStore
+                .SelectedOption
+                .Select(v => v != null)
+                .ToBindableReactiveProperty(_dxfStore.SelectedOption.Value != null)
+                .AddTo(Disposables);
+
             DxfTitleName = _dxfStore
                 .SelectedOption
                 .Select(v => v?.Title ?? "未登録")
                 .ToReadOnlyBindableReactiveProperty(_dxfStore.SelectedOption.Value?.Title ?? "未登録")
+                .AddTo(Disposables);
+
+            ClearDxfCommand = IsDxfExist
+                .ToReactiveCommand(_ => _dxfStore.SelectedOption.Value = null)
                 .AddTo(Disposables);
 
             NextCommand = _applicationStore
