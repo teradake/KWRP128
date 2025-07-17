@@ -32,7 +32,7 @@ namespace KWRP.Avalonia.Frontend.Models.Stores
                 (area, lift, insertDate) =>
                 {
                     var sb = new StringBuilder().Append("WorkList_");
-                    if (insertDate) sb.Append($"{DateTime.Now.ToString("yyyyMMdd")}_");
+                    if (insertDate) sb.Append($"{DateTime.Now.ToString("yyyyMMddHHmmss")}_");
                     if (!string.IsNullOrEmpty(area)) sb.Append($"{area}_");
                     if (!string.IsNullOrEmpty(lift)) sb.Append($"{lift}_");
                     return sb.ToString()[..^1];
