@@ -60,7 +60,7 @@ namespace KWRP.Avalonia.Frontend.Services
 
             if (!_applicationStore.LaneArrangementConfigs.EnableOptimize)
             {
-                _parameterStore.ProgresssDirectionRadian.Value = arrow.Direction.RadianValue;
+                _parameterStore.ProgresssDirectionRadian.Value = arrow.Direction.RadianValue - _canvasStateStore.Rot.CurrentValue.RadianValue;
                 return;
             }
 
