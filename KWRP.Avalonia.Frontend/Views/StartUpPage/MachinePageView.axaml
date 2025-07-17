@@ -3,6 +3,7 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:enum="using:KWRP.Avalonia.Backend.Enums"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="using:FluentAvalonia.UI.Controls"
     xmlns:vm="using:KWRP.Avalonia.Frontend.ViewModels.StartUpPage"
@@ -108,7 +109,19 @@
                         <TextBlock
                             Grid.Column="1"
                             Classes="content"
+							IsVisible="{Binding !#editmode.IsChecked}"
                             Text="{Binding WheelType, FallbackValue=fvSingle}" />
+                        <ComboBox
+                            Grid.Column="1"
+                            ItemsSource="{Binding WheelTypes}"
+							IsVisible="{Binding #editmode.IsChecked}"
+                            SelectedItem="{Binding Type, Mode=TwoWay}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding ., Converter={StaticResource WheelTypeConverter}}" />
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
                     </Grid>
 
                     <!--  設定ファイルパス  -->

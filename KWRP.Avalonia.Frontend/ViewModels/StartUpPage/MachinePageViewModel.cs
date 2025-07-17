@@ -3,6 +3,7 @@ using KWRP.Avalonia.Backend.Models.Roller;
 using KWRP.Avalonia.Backend.Services;
 using KWRP.Avalonia.Frontend.Models.Stores;
 using R3;
+using System.Collections.Generic;
 
 namespace KWRP.Avalonia.Frontend.ViewModels.StartUpPage
 {
@@ -14,6 +15,8 @@ namespace KWRP.Avalonia.Frontend.ViewModels.StartUpPage
         private readonly ParameterStore _parameterStore;
 
         private bool updated = false;
+        private readonly List<RollerWheelType> _wheelTypes;
+        public List<RollerWheelType> WheelTypes => _wheelTypes;
 
 
         public MachinePageViewModel(
@@ -26,6 +29,8 @@ namespace KWRP.Avalonia.Frontend.ViewModels.StartUpPage
             _logService = logService;
             _machineStore = machineStore;
             _parameterStore = parameterStore;
+
+            _wheelTypes = [RollerWheelType.Single, RollerWheelType.Tandem];
 
             _logService.SetStatusMessage("重機情報 : 振動ローラーの寸法や自動化作業領域等に関するパラメータが参照できます");
             _logService.LogDebug("init");
@@ -57,6 +62,19 @@ namespace KWRP.Avalonia.Frontend.ViewModels.StartUpPage
 
         public bool IsTandem => VR.MachineInfo.RollerWheelType == RollerWheelType.Tandem;
         public string WheelType => IsTandem ? "両鉄輪" : "片鉄輪";
+
+        public RollerWheelType Type
+        {
+            get => VR.MachineInfo.RollerWheelType;
+            set
+            {
+                VR.MachineInfo.RollerWheelType = value;
+                OnPropertyChanged(nameof(Type));
+                OnPropertyChanged(nameof(WheelType));
+                OnPropertyChanged(nameof(RearAllowance));
+                OnPropertyChanged(nameof(RearAllowanceDescription));
+            }
+        }
 
         //public double LaneWidth => VR.MachineInfo.LaneWidth;
         //public double FrontOverhang => VR.MachineInfo.FrontOverhang;
