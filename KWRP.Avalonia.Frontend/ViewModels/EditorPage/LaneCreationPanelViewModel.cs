@@ -111,7 +111,7 @@ namespace KWRP.Avalonia.Frontend.ViewModels.EditorPage
 
                 LaneArrangementCommand = TargetRegisterd
                     .Zip(CanArrangeLane, (a, b) => a && b)
-                    .ToReactiveCommand(_ =>
+                    .ToReactiveCommand(async _ =>
                     {
                         try
                         {
@@ -121,7 +121,7 @@ namespace KWRP.Avalonia.Frontend.ViewModels.EditorPage
                             foreach (var target in _canvasItemStore.TargetPolygons)
                             {
                                 _laneArrangementService.AllocateDirections(_parameterStore.ProgresssDirectionRadian.Value);
-                                _laneArrangementService.ArrangeLanesAsync(target);
+                                await　_laneArrangementService.ArrangeLanesAsync(target);
                             }
                         }
                         catch (Exception ex)
