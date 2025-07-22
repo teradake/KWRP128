@@ -26,6 +26,7 @@ using MsBox.Avalonia.Enums;
 using KWRP.Avalonia.Backend.Constants;
 using KWRP.Avalonia.Frontend.Services.Dxf;
 using Avalonia.Interactivity;
+using System.Threading;
 
 namespace KWRP.Avalonia.Frontend
 {
@@ -55,7 +56,10 @@ namespace KWRP.Avalonia.Frontend
 
         public override void OnFrameworkInitializationCompleted()
         {
-            
+            if (!SingletonApplication.Start())
+            {
+                System.Environment.Exit(0);
+            }
 
             // アプリケーションの起動
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
@@ -65,7 +69,7 @@ namespace KWRP.Avalonia.Frontend
                 DisableAvaloniaDataAnnotationValidation();
 
                 // 起動時のログ
-                _serviceProvider.GetRequiredService<ILogService>().LogInfo($"#############__区割りシステムを起動します{(KWRPConfigs.IsDevMode ? "(開発者モード)": "")}__#############");
+                _serviceProvider.GetRequiredService<ILogService>().LogInfo($"#############__区割りシステムを起動します{(KWRPConfigs.IsDevMode ? "(開発者モード)" : "")}__#############");
 
                 // アプリケーションウィンドウを初期化
                 desktop.MainWindow = new MainWindow
@@ -108,7 +112,7 @@ namespace KWRP.Avalonia.Frontend
             {
                 await viewModel.SaveLaneArrangementConfigAsync();
                 await viewModel.SaveDxfHistoryAsync();
-            
+
                 var machineChanged = _serviceProvider.GetRequiredService<MachineStore>().IsPropertyChanged;
                 if (machineChanged)
                 {
@@ -139,8 +143,8 @@ namespace KWRP.Avalonia.Frontend
             }
         }
 
-       
-        
+
+
         private void DisableAvaloniaDataAnnotationValidation()
         {
             // Get an array of plugins to remove
@@ -265,7 +269,7 @@ namespace KWRP.Avalonia.Frontend
             services.AddSingleton<ILaneArrangementParameterService, LaneArrangementParameterService>();
             services.AddSingleton<CaptureService>();
             services.AddSingleton<CadScriptService>();
-            services.AddSingleton<IActivityService, ActivityByRollerHeadingService>(); 
+            services.AddSingleton<IActivityService, ActivityByRollerHeadingService>();
             services.AddSingleton<IKWRPApplicationService, KWRPApplicationService>();
             services.AddSingleton<DxfConvertService>();
             services.AddSingleton<DxfHistoryStorageService>();
@@ -292,15 +296,23 @@ namespace KWRP.Avalonia.Frontend
                     DataContext = p.GetRequiredService<MainWindowViewModel>()
                 };
             });
+        }
+    }
 
-            //services.AddSingleton<MachineStore>();
+    public static class SingletonApplication
+    {
+        private static Mutex? mutex;
 
+        public static bool Start()
+        {
+            mutex = new Mutex(true, "kajima_kwrp", out bool createdNew);
+            return createdNew;
+        }
 
-            //services.AddSingleton<MachinePageViewModel>();
-            //services.AddSingleton<AppSettingsPageViewModel>();
-
-            //services.AddTransient<AViewModel>();
-            //services.AddTransient<BViewModel>();
+        public static void Stop()
+        {
+            mutex?.ReleaseMutex();
+            mutex = null;
         }
     }
 }
