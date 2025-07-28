@@ -331,8 +331,18 @@ namespace KWRP.Avalonia.Frontend.Services.Activity
                 }
 
                 var prefix = _activityStore.OutputFolderPrefix.CurrentValue;
-                await ExportAreasAsync(_canvasItemStore.CompactionAreas, prefix, "法肩ライン", outputDirectoryPath);
-                await ExportAreasAsync(_canvasItemStore.Holes, prefix, "法肩ライン障害物", outputDirectoryPath);
+                var outputAreasTask = ExportAreasAsync(_canvasItemStore.CompactionAreas, prefix, "法肩ライン", outputDirectoryPath);
+                var outputObstacleTask = ExportAreasAsync(_canvasItemStore.Holes, prefix, "法肩ライン障害物", outputDirectoryPath);
+
+                var occs = _activityStore
+                    .ActivityGroups
+                    .Where(g => g.Length > 0)
+                    .Select(g => g.First())
+                    .Where(act => act.ActivityType == Backend.Enums.RollerActivityType.Move)
+                    .Select(act => act.OccArea.Shape);
+                var outputStartOccAreaTask = ExportOccAreaAsync(occs, prefix, "初期移動占有エリア", outputDirectoryPath);
+
+                await Task.WhenAll(outputAreasTask, outputObstacleTask, outputStartOccAreaTask);
             }
             catch (Exception e)
             {
@@ -344,7 +354,27 @@ namespace KWRP.Avalonia.Frontend.Services.Activity
         {
             foreach (var (area, index) in areas.Select((a, i) => (a, i)))
             {
-                var fileName = $"{filePrefix}_{fileSuffix}_{index:D2}.csv";
+                var fileName = $"{fileSuffix}_{index:D2}.csv";
+                var path = Path.Combine(outputDirectory, fileName);
+                try
+                {
+                    await using var fs = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None);
+                    await using var writer = new StreamWriter(fs);
+                    await writer.WriteAsync(area.ToSlopeLine());
+                }
+                catch (Exception ex)
+                {
+                    _logService.LogError($"ファイル {fileName} 保存時にエラーが発生しました。{ex}");
+                    throw;
+                }
+            }
+        }
+
+        private async Task ExportOccAreaAsync(IEnumerable<Polygon> areas, string filePrefix, string fileSuffix, string outputDirectory)
+        {
+            foreach (var (area, index) in areas.Select((a, i) => (a, i)))
+            {
+                var fileName = $"{fileSuffix}_Group{index:D2}.csv";
                 var path = Path.Combine(outputDirectory, fileName);
                 try
                 {
