@@ -361,3 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+
+KWRP.Avalonia.Backend/Resources/InputData/WorkList*
