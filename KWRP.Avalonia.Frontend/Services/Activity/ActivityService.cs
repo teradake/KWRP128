@@ -52,7 +52,7 @@ namespace KWRP.Avalonia.Frontend.Services.Activity
             _logService.LogDebug("init");
         }
 
-        public void CreateActivityGroups()
+        public virtual void CreateActivityGroups()
         {
             _logService.LogInfo($"アクティビティを作成します。workArea: {_workAreaStore.WorkAreas.Count}");
 
@@ -155,7 +155,7 @@ namespace KWRP.Avalonia.Frontend.Services.Activity
         }
 
 
-        ActivityModel[] RegisterSequences(int sequenceID, WorkAreaModel[] workAreaSequence)
+        protected ActivityModel[] RegisterSequences(int sequenceID, WorkAreaModel[] workAreaSequence)
         {
             _logService.LogDebug("register");
 

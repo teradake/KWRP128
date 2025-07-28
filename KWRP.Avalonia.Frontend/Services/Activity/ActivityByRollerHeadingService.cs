@@ -14,7 +14,7 @@ using Trdk.Geometry;
 
 namespace KWRP.Avalonia.Frontend.Services.Activity
 {
-    public class ActivityByRollerHeadingService : IActivityService
+    public class ActivityByRollerHeadingService : ActivityService
     {
         private readonly ActivityStore _activityStore;
         private readonly ILogService _logService;
@@ -38,6 +38,7 @@ namespace KWRP.Avalonia.Frontend.Services.Activity
             CaptureService captureService,
             CadScriptService cadScriptService,
             CanvasItemStore canvasItemStore)
+            : base(activityStore, logService, notificationService, workAreaStore, machineStore, pathService, captureService, cadScriptService, canvasItemStore)
         {
             _activityStore = activityStore;
             _logService = logService;
@@ -52,7 +53,7 @@ namespace KWRP.Avalonia.Frontend.Services.Activity
             _logService.LogDebug("init");
         }
 
-        public void CreateActivityGroups()
+        public override void CreateActivityGroups()
         {
             _logService.LogInfo($"アクティビティを作成します。workArea: {_workAreaStore.WorkAreas.Count}");
 
@@ -214,228 +215,6 @@ namespace KWRP.Avalonia.Frontend.Services.Activity
             if (yLap < VR.Zone.LaneChangeLength) return false;
 
             return true;
-        }
-
-
-        ActivityModel[] RegisterSequences(int sequenceID, WorkAreaModel[] workAreaSequence)
-        {
-            _logService.LogDebug("register");
-
-            var activities = new List<ActivityModel>();
-            var representatives = new List<ActivityModel>();
-            var actBuilder = new ActivityBuilder().SetRoller(VR);
-            for (int i = 0; i < workAreaSequence.Length; ++i)
-            {
-                ActivityModel? represent = null;
-                actBuilder.SetCurrentWorkArea(workAreaSequence[i]);
-
-                if (_activityStore.EnableMove)
-                {
-                    activities.Add(actBuilder.BuildMoveActivity(sequenceID, i));
-                }
-
-                if (_activityStore.EnableNonCompaction)
-                {
-                    var act = actBuilder.BuildNonCompactionActivity(sequenceID, i);
-                    activities.Add(act);
-                    represent = act;
-                }
-
-                if (_activityStore.EnableCompaction)
-                {
-                    var act = actBuilder.BuildCompactionActivity(sequenceID, i);
-                    activities.Add(act);
-                    represent = act;
-                }
-
-                if (represent != null)
-                {
-                    representatives.Add(represent);
-                }
-            }
-
-            var acts = activities.ToArray();
-            _activityStore.ActivityGroups.Add(acts);
-            _activityStore.ActivityCards.AddRange(representatives);
-            return acts;
-        }
-
-        public async Task SetOutputFolderPathAsync()
-        {
-            try
-            {
-                var path = await _pathService.GetSaveFolderPathAsync(title: "アクティビティ出力先のフォルダを選択してください");
-                if (path == null)
-                {
-                    _logService.LogInfo("アクティビティ出力先のフォルダ選択をキャンセルしました");
-                    return;
-                }
-
-                _activityStore.OutputFolderPath.Value = path;
-            }
-            catch (Exception ex)
-            {
-                _activityStore.OutputFolderPath.Value = string.Empty;
-                throw;
-            }
-        }
-
-        public ActivityModel? GetActivityModel(int groupId, int index)
-        {
-            int n = _activityStore.ActivityGroups.Count;
-            if (groupId < 0 || groupId >= n)
-            {
-                _activityStore.SelectedAcitivty.Value = null;
-                return null;
-            }
-
-            int m = _activityStore.ActivityGroups[groupId].Length;
-            if (index < 0 || index >= m)
-            {
-                _activityStore.SelectedAcitivty.Value = null;
-                return null;
-            }
-
-            var act = _activityStore.ActivityGroups[groupId][index];
-            _activityStore.SelectedAcitivty.Value = act;
-            return act;
-        }
-
-        public async Task OutputActivitiesAsync()
-        {
-            if (_activityStore.OutputFolderPath.Value == null)
-            {
-                _logService.LogWarn("出力先フォルダが指定されていません。アクティビティ出力を中止します。");
-                return;
-            }
-
-            var targetFolder = Path.Combine(_activityStore.OutputFolderPath.Value, _activityStore.OutputFolderPrefix.CurrentValue);
-            if (Directory.Exists(targetFolder))
-            {
-                _logService.LogWarn(
-                    $"フォルダ「{targetFolder}」がすでに存在します");
-                throw new IOException(
-                    $"フォルダ「{targetFolder}」がすでに存在します。\n" +
-                    $"該当するフォルダを削除するか、保存するフォルダ名を変更してください。");
-            }
-            else
-            {
-                Directory.CreateDirectory(targetFolder);
-            }
-
-            if (!_pathService.TryValidatePath(targetFolder, out string? reason))
-            {
-                _logService.LogWarn($"{reason}。アクティビティ出力を中止します。");
-                throw new IOException(reason);
-            }
-
-            // Output Activity
-            for (int groupId = 0; groupId < _activityStore.ActivityGroups.Count; ++groupId)
-            {
-                var outputFolder = $"Group{groupId}";
-                var outputDirectoryPath = Path.Combine(targetFolder, outputFolder);
-                if (!Directory.Exists(outputDirectoryPath))
-                {
-                    Directory.CreateDirectory(outputDirectoryPath);
-                }
-
-                foreach (ActivityModel act in _activityStore.ActivityGroups[groupId].Where(act => act.GroupId == groupId))
-                {
-                    var fileName = $"{_activityStore.OutputFolderPrefix.CurrentValue}_{act.GroupId:d2}_{act.OutputFIlePrefix}.csv";
-                    var filePath = Path.Combine(outputDirectoryPath, fileName);
-
-                    try
-                    {
-                        await using var fs = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None);
-                        await using var writer = new StreamWriter(fs);
-                        await writer.WriteAsync(act.ToString());
-                    }
-                    catch (Exception ex)
-                    {
-                        _logService.LogError($"ファイル{fileName}保存時にエラーが発生しました。{ex}");
-                        throw;
-                    }
-                }
-            }
-
-            // Output PlanView (png)
-            try
-            {
-                var pngName = $"{_activityStore.OutputFolderPrefix.CurrentValue}_plan.png";
-                var path = Path.Combine(targetFolder, pngName);
-                await _captureService.SavePlanViewAsync(path);
-            }
-            catch (Exception e)
-            {
-                _logService.LogWarn("キャプチャの作成に失敗しました" + e);
-            }
-
-            // Output CadScript (scr)
-            try
-            {
-                var scrName = $"{_activityStore.OutputFolderPrefix.CurrentValue}_plan.scr";
-                var path = Path.Combine(targetFolder, scrName);
-                await _cadScriptService.CreateCadScriptAsync(path);
-            }
-            catch (Exception e)
-            {
-                _logService.LogWarn("CadScriptの作成に失敗しました" + e);
-            }
-
-            // Output Perimeter (csv)
-            try
-            {
-                var outputFolder = $"法肩ライン";
-                var outputDirectoryPath = Path.Combine(targetFolder, outputFolder);
-                if (!Directory.Exists(outputDirectoryPath))
-                {
-                    Directory.CreateDirectory(outputDirectoryPath);
-                }
-
-                var prefix = _activityStore.OutputFolderPrefix.CurrentValue;
-                await ExportAreasAsync(_canvasItemStore.CompactionAreas, prefix, "法肩ライン", outputDirectoryPath);
-                await ExportAreasAsync(_canvasItemStore.Holes, prefix, "法肩ライン障害物", outputDirectoryPath);
-            }
-            catch (Exception e)
-            {
-                _logService.LogWarn("外形線の作成に失敗しました" + e);
-            }
-        }
-
-        private async Task ExportAreasAsync(IEnumerable<Polygon> areas, string filePrefix, string fileSuffix, string outputDirectory)
-        {
-            foreach (var (area, index) in areas.Select((a, i) => (a, i)))
-            {
-                var fileName = $"{filePrefix}_{fileSuffix}_{index:D2}.csv";
-                var path = Path.Combine(outputDirectory, fileName);
-                try
-                {
-                    await using var fs = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None);
-                    await using var writer = new StreamWriter(fs);
-                    await writer.WriteAsync(area.ToSlopeLine());
-                }
-                catch (Exception ex)
-                {
-                    _logService.LogError($"ファイル {fileName} 保存時にエラーが発生しました。{ex}");
-                    throw;
-                }
-            }
-        }
-
-        public void SetCurrentGroup(int groupId)
-        {
-            if (_activityStore.ActivityGroups.Count == 0) return;
-
-            int n = _activityStore.ActivityGroups.Count;
-            groupId = (groupId % n + n) % n;
-            _activityStore.CurrentGroupItems.Clear();
-
-            var acts = _activityStore.ActivityGroups[groupId].Where(area => area.ActivityType == Backend.Enums.RollerActivityType.Compaction);
-            if (!acts.Any())
-            {
-                acts = _activityStore.ActivityGroups[groupId].Where(area => area.ActivityType == Backend.Enums.RollerActivityType.NonCompaction);
-            }
-            _activityStore.CurrentGroupItems.AddRange(acts);
         }
     }
 }
