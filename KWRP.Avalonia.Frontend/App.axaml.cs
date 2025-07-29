@@ -72,10 +72,7 @@ namespace KWRP.Avalonia.Frontend
                 _serviceProvider.GetRequiredService<ILogService>().LogInfo($"#############__区割りシステムを起動します{(KWRPConfigs.IsDevMode ? "(開発者モード)" : "")}__#############");
 
                 // アプリケーションウィンドウを初期化
-                desktop.MainWindow = new MainWindow
-                {
-                    DataContext = _serviceProvider.GetRequiredService<MainWindowViewModel>(),
-                };
+                desktop.MainWindow = _serviceProvider.GetRequiredService<Window>();
 
                 // 起動時、終了時の処理を登録
                 desktop.MainWindow.Loaded += async (sender, e) => await OnWindowLoaded(desktop.MainWindow, e);
