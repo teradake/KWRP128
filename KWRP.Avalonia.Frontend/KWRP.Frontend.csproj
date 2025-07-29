@@ -78,9 +78,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Views\StartUpPage\DxfPageItemView.axaml.cs">
-      <DependentUpon>DxfPageItemView.axaml</DependentUpon>
-    </Compile>
     <Compile Update="Views\StartUpPage\DxfPageView.axaml.cs">
       <DependentUpon>DxfPageView.axaml</DependentUpon>
     </Compile>
