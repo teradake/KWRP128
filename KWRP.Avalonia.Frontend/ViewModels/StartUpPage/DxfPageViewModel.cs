@@ -130,7 +130,12 @@ namespace KWRP.Avalonia.Frontend.ViewModels.StartUpPage
                     try
                     {
                         _applicationStore.IsBusy.Value = true;
-                        SelectedOption.Value!.DxfFilePath = await _pathService.GetOpenFilePathAsync(Backend.Enums.FileType.DXF, "DXFファイルを選択してください");
+                        var path = await _pathService.GetOpenFilePathAsync(Backend.Enums.FileType.DXF, "DXFファイルを選択してください");
+                        if (path != null && SelectedOption.Value != null)
+                        {
+                            SelectedOption.Value.DxfFilePath = path;
+                            _logService.LogInfo($"dxfファイルを選択 : {path}");
+                        }
                     }
                     catch (Exception e)
                     {
