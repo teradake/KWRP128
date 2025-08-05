@@ -20,7 +20,7 @@ namespace KWRP.Avalonia.Backend.Model.Shapes.WorkArea
                 IsDirectionSwap = false,
                 GoalAreaLocation = GoalAreaLocation.Prev,
                 LaneTrimTypeFront = WorkAreaLaneTrimType.None,
-                LaneTrimTypeRear = WorkAreaLaneTrimType.Cut,
+                LaneTrimTypeRear = WorkAreaLaneTrimType.None,
             };
 
         public WorkAreaAttribute Copy()
