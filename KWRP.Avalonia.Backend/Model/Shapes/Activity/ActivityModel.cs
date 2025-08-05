@@ -39,22 +39,25 @@ namespace KWRP.Avalonia.Backend.Model.Shapes.Activity
             sb.AppendLine($"activityId,{ActivityId}");
             sb.AppendLine($"workType,{WorkType}");
 
-            var occ = OccArea.Shape.ToClockWise();
-            for (int i = 0; i < occ.Points.Count; ++i)
+            //var occ = OccArea.Shape.ToClockWise();
+            var occ = OccArea.Shape.ToCounterClockwise().Points.ReorderPointsToWorkList(Dir);
+            for (int i = 0; i < occ.Count; ++i)
             {
-                sb.AppendLine($"occArea[{i}],{occ.Points[i].X:F5},{occ.Points[i].Y:F5}");
+                sb.AppendLine($"occArea[{i}],{occ[i].X:F5},{occ[i].Y:F5}");
             }
 
-            var goal = GoalArea.Shape.ToClockWise();
-            for (int i = 0; i < goal.Points.Count; ++i)
+            //var goal = GoalArea.Shape.ToClockWise();
+            var goal = GoalArea.Shape.ToCounterClockwise().Points.ReorderPointsToWorkList(Dir);
+            for (int i = 0; i < goal.Count; ++i)
             {
-                sb.AppendLine($"goalArea[{i}],{goal.Points[i].X:F5},{goal.Points[i].Y:F5}");
+                sb.AppendLine($"goalArea[{i}],{goal[i].X:F5},{goal[i].Y:F5}");
             }
 
-            var work = WorkArea.Shape.ToClockWise();
-            for (int i = 0; i < work.Points.Count; ++i)
+            //var work = WorkArea.Shape.ToClockWise();
+            var work = WorkArea.Shape.ToCounterClockwise().Points.ReorderPointsToWorkList(Dir);
+            for (int i = 0; i < work.Count; ++i)
             {
-                sb.AppendLine($"workArea[{i}],{work.Points[i].X:F5} , {work.Points[i].Y:F5}");
+                sb.AppendLine($"workArea[{i}],{work[i].X:F5} , {work[i].Y:F5}");
             }
 
             sb.AppendLine($"refSpeed,{RefSpeed:F5}");
@@ -116,4 +119,41 @@ namespace KWRP.Avalonia.Backend.Model.Shapes.Activity
         }
     }
 
+
+    /// <summary>
+    /// アクティビティモデルに関する拡張メソッド
+    /// </summary>
+    public static class ActivityExtensions
+    {
+        public static IList<Vec2> ReorderPointsToWorkList(this IReadOnlyList<Vec2> points, double dirRadian)
+        {
+            var temp = points
+                .Select(p => p.Rot(-dirRadian))
+                .ToList();
+
+            int p = 0;
+            Vec2 start = temp.First();
+            for (int i = 0; i < temp.Count; ++i)
+            {
+                if (Utils.IsPositive(temp[i].Y - start.Y))
+                {
+                    p = i;
+                    start = temp[i];
+                    continue;
+                }
+
+                if (Utils.IsZero(temp[i].Y - start.Y) && Utils.IsNegative(temp[i].X - start.X))
+                {
+                    p = i;
+                    start = temp[i];
+                    continue;
+                }
+            }
+
+            return Enumerable.Range(0, temp.Count)
+                .Select(i => (i + p) % temp.Count)
+                .Select(i => points[i])
+                .ToList();
+        }
+    }
 }
