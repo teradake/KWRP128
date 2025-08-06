@@ -94,12 +94,12 @@ namespace Trdk.Geometry
 
             return new Polygon(points) { _area = area };
         }
-        public static Polygon AsClockwise(Vec2[] points, bool simplify = true, double tolerance=0)
+        public static Polygon AsClockwise(Vec2[] points, bool simplify = true, double tolerance = 0)
             => simplify
             ? CreatePolygon(points.EliminateDuplicatePoint().EliminateNearPoint(tolerance).EliminateColinearPoint().ToArray(), true)
             : CreatePolygon(points, true);
 
-        public static Polygon AsCounterClockwise(Vec2[] points, bool simplify = true, double tolerance=0)
+        public static Polygon AsCounterClockwise(Vec2[] points, bool simplify = true, double tolerance = 0)
             => simplify
             ? CreatePolygon(points.EliminateDuplicatePoint().EliminateNearPoint(tolerance).EliminateColinearPoint().ToArray(), false)
             : CreatePolygon(points, false);
@@ -158,65 +158,51 @@ namespace Trdk.Geometry
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IEnumerable<Vec2> EliminateNearPoint(this IEnumerable<Vec2> points, double tolerance=0.05)
+        public static IEnumerable<Vec2> EliminateNearPoint(this IEnumerable<Vec2> points, double tolerance = 0.05)
         {
             if (Math.Abs(tolerance) <= Constants.C_EPS)
                 return points;
 
-            var pnts = points.Append(points.First()).ToArray();
+            var pnts = points.ToArray();
             var lim = tolerance * tolerance;
+            bool updated = false;
 
-            var result = new List<Vec2>();
-            int i;
-            for (i = 0; i < pnts.Length;)
+            do
             {
-                var cur = pnts[i];
-                var nxt = pnts[(i + 1) % pnts.Length];
-                if (isNear(cur, nxt))
+                updated = false;
+                int n = pnts.Length;
+                var result = new List<Vec2>();
+                for (int i = 0; i < n;)
                 {
-                    result.Add((cur + nxt) * 0.5);
-                    i += 2;
+                    var cur = pnts[i];
+                    var nxt = pnts[(i + 1) % n];
+                    if (isNear(cur, nxt))
+                    {
+                        result.Add(nxt);
+                        i += 2;
+                        updated = true;
+                    }
+                    else
+                    {
+                        result.Add(cur);
+                        i += 1;
+                    }
                 }
-                else
+
+                if (result.Count > 2 && isNear(result.First(), result.Last()))
                 {
-                    result.Add(cur);
-                    if (i == pnts.Length - 1)
-                        result.Remove(result.First());
-                    i++;
+                    result.RemoveAt(result.Count - 1);
+                    updated = true;
                 }
+
+                pnts = result.ToArray();
             }
-            return result;
-            
-            //foreach (var point in points)
-            //{
-            //    if (result.Count == 0)
-            //    {
-            //        result.Add(point);
-            //    }
-            //    if (result.Count >= 2 && isNear(result[^1], result[^2]))
-            //    {
-            //        var p = (result[^1] + result[^2]) * 0.5;
-            //        result.Remove(result.Last());
-            //        result.Remove(result.Last());
-            //        result.Add(p);
-            //    }
-            //    else
-            //    {
-            //        result.Add(point);
-            //    }
-            //}
-            //while (result.Count >= 2 && isNear(result.Last(), result.First()))
-            //{
-            //    //var p = (result.First() + result.Last()) * 0.5;
-            //    //result.Remove(result.First());
-            //    //result.Remove(result.Last());
-            //    //result.Add(p);
-            //    result.Remove(result.Last());
-            //}
-            //return result;
+            while (updated);
+
+            return pnts;
 
             bool isNear(Vec2 a, Vec2 b) => (a - b).Dot(a - b) < lim;
-            
+
         }
 
         public static BoundingBox GetBoundingBox(this IEnumerable<Vec2> points)
@@ -230,6 +216,6 @@ namespace Trdk.Geometry
             };
         }
 
-        
+
     }
 }
