@@ -13,7 +13,7 @@
             var union = new NetTopologySuite.Operation.Union.UnaryUnionOp(ntsPolygons).Union();
             if (union is NetTopologySuite.Geometries.Polygon mergedPolygon)
             {
-                return mergedPolygon.ToPolygonWithHoles(PolygonMergerOptions.Tolerance).Shell;
+                return mergedPolygon.ToPolygonWithHoles(PolygonMergerOptions.VertexSimplificationDistance).Shell;
             }
             else
             {

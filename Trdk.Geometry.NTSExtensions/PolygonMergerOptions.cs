@@ -3,7 +3,7 @@
     public static class PolygonMergerOptions
     {
         private static double _tolerance = 0.0;
-        public static double Tolerance
+        public static double VertexSimplificationDistance
         {
             get => _tolerance;
             set => _tolerance = Math.Clamp(value, 0.0, 2.0);
