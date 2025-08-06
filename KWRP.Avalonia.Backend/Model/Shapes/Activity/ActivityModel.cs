@@ -39,22 +39,19 @@ namespace KWRP.Avalonia.Backend.Model.Shapes.Activity
             sb.AppendLine($"activityId,{ActivityId}");
             sb.AppendLine($"workType,{WorkType}");
 
-            //var occ = OccArea.Shape.ToClockWise();
-            var occ = OccArea.Shape.ToCounterClockwise().Points.ReorderPointsToWorkList(Dir);
+            var occ = OccArea.Shape.ToClockWise().Points.ReorderPointsToWorkList(Dir);
             for (int i = 0; i < occ.Count; ++i)
             {
                 sb.AppendLine($"occArea[{i}],{occ[i].X:F5},{occ[i].Y:F5}");
             }
 
-            //var goal = GoalArea.Shape.ToClockWise();
-            var goal = GoalArea.Shape.ToCounterClockwise().Points.ReorderPointsToWorkList(Dir);
+            var goal = GoalArea.Shape.ToClockWise().Points.ReorderPointsToWorkList(Dir);
             for (int i = 0; i < goal.Count; ++i)
             {
                 sb.AppendLine($"goalArea[{i}],{goal[i].X:F5},{goal[i].Y:F5}");
             }
 
-            //var work = WorkArea.Shape.ToClockWise();
-            var work = WorkArea.Shape.ToCounterClockwise().Points.ReorderPointsToWorkList(Dir);
+            var work = WorkArea.Shape.ToClockWise().Points.ReorderPointsToWorkList(Dir);
             for (int i = 0; i < work.Count; ++i)
             {
                 sb.AppendLine($"workArea[{i}],{work[i].X:F5} , {work[i].Y:F5}");
