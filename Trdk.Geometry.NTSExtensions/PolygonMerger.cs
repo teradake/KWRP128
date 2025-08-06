@@ -2,7 +2,7 @@
 {
     public static class PolygonMerger
     {
-        public static Trdk.Geometry.Polygon Merge(IEnumerable<Trdk.Geometry.Polygon> polygons)
+        public static Trdk.Geometry.Polygon Merge(IEnumerable<Trdk.Geometry.Polygon> polygons, double tolerance = 0.0)
         {
             if (!polygons.Any())
             {
@@ -13,7 +13,7 @@
             var union = new NetTopologySuite.Operation.Union.UnaryUnionOp(ntsPolygons).Union();
             if (union is NetTopologySuite.Geometries.Polygon mergedPolygon)
             {
-                return mergedPolygon.ToPolygonWithHoles(tolerance: 0.0).Shell;
+                return mergedPolygon.ToPolygonWithHoles(tolerance).Shell;
             }
             else
             {
