@@ -16,7 +16,6 @@
     ExtendClientAreaChromeHints="NoChrome"
     ExtendClientAreaToDecorationsHint="True"
     Icon="/Assets/kajima.ico"
-    IsEnabled="{Binding !IsBusy.Value}"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
 
@@ -69,7 +68,8 @@
                             Classes="CloseButton"
                             Click="CloseClick"
                             Content="r"
-                            FontFamily="Marlett" />
+                            FontFamily="Marlett"
+                            IsEnabled="{Binding !IsBusy.Value}" />
 
                     </StackPanel>
                 </Grid>
@@ -78,9 +78,13 @@
             <ContentControl
                 Grid.Row="1"
                 Margin="0"
-                Content="{Binding CurrentViewModel.Value, FallbackValue=No ViewModel Attached...}" />
+                Content="{Binding CurrentViewModel.Value, FallbackValue=No ViewModel Attached...}"
+                IsEnabled="{Binding !IsBusy.Value}" />
 
-            <Border Grid.Row="2" Background="#1a1a1b">
+            <Border
+                Grid.Row="2"
+                Background="#1a1a1b"
+                IsEnabled="{Binding !IsBusy.Value}">
                 <Grid Margin="10,3,10,8" ColumnDefinitions="* auto auto">
                     <Grid.Styles>
                         <Style Selector="TextBlock">
@@ -93,7 +97,10 @@
                         Grid.Column="1"
                         HorizontalAlignment="Right"
                         Text="{Binding AreaFilePath.Value, FallbackValue=filepath}" />
-                    <StackPanel Grid.Column="2" Orientation="Horizontal" IsVisible="{Binding IsDevMode}">
+                    <StackPanel
+                        Grid.Column="2"
+                        IsVisible="{Binding IsDevMode}"
+                        Orientation="Horizontal">
                         <TextBlock Margin="5,0" Text="|" />
                         <TextBlock
                             FontWeight="SemiBold"
