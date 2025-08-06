@@ -43,7 +43,8 @@ namespace KWRP.Avalonia.NetDxf
                 throw new InvalidOperationException(reason);
             }
 
-            _dxfdoc = DxfDocument.Load(_dxfFilePath);
+            //_dxfdoc = DxfDocument.Load(_dxfFilePath);
+            _dxfdoc = await Task.Run(() => DxfDocument.Load(_dxfFilePath));
             if (_dxfdoc == null)
             {
                 throw new Exception("dxfファイルの読込みに失敗しました");
@@ -60,6 +61,10 @@ namespace KWRP.Avalonia.NetDxf
             catch (Exception e)
             {
                 throw new Exception($"Pngファイル生成に失敗しました + {e.Message}", e);
+            }
+            finally
+            {
+                _dxfdoc = null;
             }
         }
 
