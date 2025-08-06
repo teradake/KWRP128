@@ -24,6 +24,7 @@ namespace KWRP.Avalonia.Frontend.Models.Settings
         [JsonPropertyName("PairLengthDiffFront")] public double LaneGapToleranceFront { get; set; } = 15.0;
 
         [JsonPropertyName("PairLengthDiffRear")] public double LaneGapToleranceRear { get; set; } = 5.0;
+        [JsonPropertyName("VertexSimplificationDistanceMeter")] public double VertexSimplificationDistance { get; set; } = 0.2;
                 
     }
 }

@@ -4,6 +4,7 @@ using KWRP.Avalonia.Frontend.Models.Settings;
 using KWRP.Infra;
 using R3;
 using System;
+using Trdk.Geometry.NTS;
 
 namespace KWRP.Avalonia.Frontend.Models.Stores
 {
@@ -46,6 +47,16 @@ namespace KWRP.Avalonia.Frontend.Models.Stores
         public ReactiveProperty<string> SpatialDataPath { get; }
         public ReactiveProperty<EditorMode> EditorMode { get; } = new(Backend.Enums.EditorMode.None);
 
-        public LaneArrangementConfigs LaneArrangementConfigs { get; }
+
+        private LaneArrangementConfigs _laneArrangementConfigs;
+        public LaneArrangementConfigs LaneArrangementConfigs
+        {
+            get => _laneArrangementConfigs;
+            set
+            {
+                _laneArrangementConfigs = value;
+                PolygonMergerOptions.VertexSimplificationDistance = _laneArrangementConfigs.VertexSimplificationDistance;
+            }
+        }
     }
 }
