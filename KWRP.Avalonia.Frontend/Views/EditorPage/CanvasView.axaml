@@ -683,10 +683,10 @@
                 </StackPanel.Styles>
 
                 <ui:ProgressRing
+                    Margin="10"
                     HorizontalAlignment="Right"
                     IsVisible="{Binding IsOptimizing.Value}"
-                    RenderTransform="Scale(1.5)"
-					Margin="10"/>
+                    RenderTransform="Scale(1.5)" />
 
                 <Button Name="scaleUpButton" Classes="canvasMenu">
                     <Image Source="/Assets/Icons/big.png" />
@@ -704,8 +704,8 @@
                     ToolTip.Placement="Left">
                     <Image Margin="5" Source="/Assets/Icons/photo2.png" />
                     <ToolTip.Tip>
-                        保存先を指定し、キャプチャをpngファイルとして保存します。
-                        （Ctrl+Cキーを押すことで、キャプチャをクリップボードに保存できます）
+                        保存先を指定して画面をキャプチャし、PNG形式で保存します。
+                        Ctrl+Cキーを押すと、キャプチャをクリップボードにコピーできます。
                     </ToolTip.Tip>
                 </Button>
 
@@ -721,7 +721,8 @@
                     IsEnabled="{Binding !IsOptimizing.Value}"
                     IsVisible="{Binding IsLaneDesign.Value}">
                     <ToolTip.Tip>
-                        作業進捗方向選択モードです。UI上を押して離すことで作業進捗方向を取得できます
+                        作業進捗方向を選択するモードに切り替わります。
+                        画面を押してドラッグし、離した位置を終点として作業進捗方向を選択できます。
                     </ToolTip.Tip>
                 </Button>
             </StackPanel>
@@ -740,13 +741,13 @@
                 <ToggleButton Name="rulerToggleButton" Classes="canvasMenu">
                     <Image Margin="2" Source="/Assets/Icons/ruler.png" />
                     <ToolTip.Tip>
-                        画面上をポチポチして、2点間の距離を取得することができます
+                        画面上をポチポチして2点間の距離を測定できます。
                     </ToolTip.Tip>
                 </ToggleButton>
                 <Button Name="rulerClearButton" Classes="canvasMenu">
                     <Image Margin="5" Source="/Assets/Icons/clean.png" />
                     <ToolTip.Tip>
-                        画面上をポチポチをクリアします
+                        画面上のポチポチをクリアします
                     </ToolTip.Tip>
                 </Button>
 
