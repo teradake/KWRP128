@@ -74,14 +74,9 @@ namespace KWRP.Avalonia.NetDxf
                                 * Matrix.CreateRotation(-txt.Rotation * Math.PI / 180.0)
                                 * Matrix.CreateScale(1, -1)
                                 * Matrix.CreateTranslation(txt.Position.X, txt.Position.Y);
-                            
-                            var rotModifier = context.PushTransform(transform);
+
+                            using var modifier = context.PushTransform(transform);
                             context.DrawText(formatted, new Point(txt.Position.X, txt.Position.Y - formatted.Height));  // TEXTはアンカー点が左下。左上になるよう調整
-                            var invRotModifier = context.PushTransform(transform.Invert());
-
-                            invRotModifier.Dispose();
-                            rotModifier.Dispose();
-
                         }
                         break;
                     case DxfMText txt:
@@ -95,18 +90,15 @@ namespace KWRP.Avalonia.NetDxf
                                 foreground: pen.Brush);
 
                             // DXFはY軸正方向が上向きなのに対して、Avaloniaのコントロールでは下向きなので回転+反転処理
-                            var transform = 
+                            var transform =
                                  Matrix.CreateTranslation(-txt.Position.X, -txt.Position.Y)
                                 * Matrix.CreateRotation(-txt.Rotation * Math.PI / 180.0)
                                 * Matrix.CreateScale(1, -1)
                                 * Matrix.CreateTranslation(txt.Position.X, txt.Position.Y);
 
-                            var rotModifier = context.PushTransform(transform);
-                            context.DrawText(formatted, txt.Position);
-                            var invRotModifier = context.PushTransform(transform.Invert());
+                            using var modifier = context.PushTransform(transform);
 
-                            invRotModifier.Dispose();
-                            rotModifier.Dispose();
+                            context.DrawText(formatted, txt.Position);
                         }
                         break;
                     default:
