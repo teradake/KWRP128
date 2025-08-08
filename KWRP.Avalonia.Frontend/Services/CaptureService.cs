@@ -265,6 +265,52 @@ namespace KWRP.Avalonia.Frontend.Services
                 });
             }
 
+            // Information Box
+            {
+                int informationBoxWidth = 150;
+                var bx = _canvasItemStore.CompactionAreas.Select(p => p.AaBB.Xmax).Max();
+                var by = _canvasItemStore.CompactionAreas.Select(p => p.AaBB.Ymax).Max();
+                var loc = mat.Transform(new Point(bx, by));
+
+                var laneArrangementParametersText = new TextBlock
+                {
+                    Width = informationBoxWidth,
+                    FontSize = 45,
+                    ClipToBounds = false,
+                    Text =
+                        "aaaaaaa\n" +
+                        "bbbbbbbbbb\n" +
+                        "ccccccccccccc\n" +
+                        "dddddddddddddddd\n" +
+                        "eeeeeeeeeeeeeeeeeee\n",
+                };
+
+                
+                var grid = new Grid
+                {
+                    Margin = new Thickness(20),
+                    Background = new SolidColorBrush(Color.FromArgb(159, 50, 116, 238)),
+                    RenderTransform = new TranslateTransform { X = box.Xmax, Y = box.Ymin, },
+                    ClipToBounds = false,
+                    Height=100,
+                    Width=154,
+                };
+                grid.RowDefinitions.Add(new RowDefinition(GridLength.Auto));
+                grid.Children.Add(laneArrangementParametersText);
+                Grid.SetRow(laneArrangementParametersText, 0);
+                canvas.Children.Add(grid);
+
+                var tempBox = new Trdk.Geometry.BoundingBox
+                {
+                    Xmin = box.Xmax,
+                    Xmax = box.Xmax + informationBoxWidth,
+                    Ymin = box.Ymax - 30 * 5,
+                    Ymax = box.Ymax,
+                };
+
+                box = box.Update(tempBox);
+            }
+
             // Arrows
             foreach (var workareas in _workAreaStore.WorkAreas.Select(p => p.Value))
             {
@@ -355,7 +401,7 @@ namespace KWRP.Avalonia.Frontend.Services
 
             // 出力
             {
-                box = box.ExpandByRatio(1.02);
+                box = box.ExpandByRatio(1.05);
 
                 var size = new Size(box.Width, box.Height);
                 canvas.Measure(size);
