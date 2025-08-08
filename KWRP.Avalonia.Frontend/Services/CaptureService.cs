@@ -318,11 +318,18 @@ namespace KWRP.Avalonia.Frontend.Services
                         ClipToBounds = false,
                         HorizontalAlignment = HorizontalAlignment.Center,
                     };
+                    var laneCount = new TextBlock
+                    {
+                        Text = $"{act.LaneCount} lanes",
+                        FontSize = 30 * vm.Scale / 0.12,
+                        ClipToBounds = false,
+                        HorizontalAlignment = HorizontalAlignment.Center,
+                    };
 
                     var grid = new Grid
                     {
                         Margin = new Thickness(1, 5),
-                        Background = new SolidColorBrush(Color.FromArgb(69,245,116,238)),
+                        Background = new SolidColorBrush(Color.FromArgb(159,245,116,238)),
                         RenderTransform = new TranslateTransform { X = loc.X, Y = loc.Y, },
                         ClipToBounds = false,
                     };
@@ -330,12 +337,15 @@ namespace KWRP.Avalonia.Frontend.Services
                     grid.RowDefinitions.Add(new RowDefinition(GridLength.Auto));
                     grid.RowDefinitions.Add(new RowDefinition(GridLength.Auto));
                     grid.RowDefinitions.Add(new RowDefinition(GridLength.Auto));
+                    grid.RowDefinitions.Add(new RowDefinition(GridLength.Auto));
                     grid.Children.Add(areaId);
                     grid.Children.Add(AreaLength);
                     grid.Children.Add(areaWidth);
+                    grid.Children.Add(laneCount);
                     Grid.SetRow(areaId, 0);
                     Grid.SetRow(AreaLength, 1);
                     Grid.SetRow(areaWidth, 2);
+                    Grid.SetRow(laneCount, 3);
                     
                     canvas.Children.Add(grid);
                 }
