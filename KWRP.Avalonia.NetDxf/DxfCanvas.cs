@@ -18,7 +18,6 @@ namespace KWRP.Avalonia.NetDxf
                 var bitmap = image.Bitmap;
                 if (bitmap == null)
                 {
-                    // 画像が読み込めない場合はスキップ
                     continue;
                 }
 
