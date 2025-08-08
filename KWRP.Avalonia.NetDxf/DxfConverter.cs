@@ -43,12 +43,12 @@ namespace KWRP.Avalonia.NetDxf
                 throw new InvalidOperationException(reason);
             }
 
-            //_dxfdoc = DxfDocument.Load(_dxfFilePath);
             _dxfdoc = await Task.Run(() => DxfDocument.Load(_dxfFilePath));
             if (_dxfdoc == null)
             {
                 throw new Exception("dxfファイルの読込みに失敗しました");
             }
+            _option!.DxfFilePath = _dxfFilePath;
 
             try
             {
