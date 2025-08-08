@@ -146,8 +146,8 @@ namespace KWRP.Avalonia.NetDxf
             {
                 FilePath = imagePath,
                 Position = new Point(image.Position.X, image.Position.Y),
-                Width = image.Definition.Width,
-                Height = image.Definition.Height,
+                Width = image.Width,
+                Height = image.Height,
                 Rotation = image.Rotation,
             };
         }
