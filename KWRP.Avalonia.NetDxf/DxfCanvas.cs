@@ -12,6 +12,29 @@ namespace KWRP.Avalonia.NetDxf
         {
             base.Render(context);
 
+            // 画像の描画処理を優先的にに行う
+            foreach (var image in Shapes.OfType<DxfImage>())
+            {
+                var bitmap = image.Bitmap;
+                if (bitmap == null)
+                {
+                    // 画像が読み込めない場合はスキップ
+                    continue;
+                }
+
+                var transform =
+                    Matrix.CreateTranslation(-image.Position.X, -image.Position.Y)
+                    * Matrix.CreateRotation(-image.Rotation * Math.PI / 180.0)
+                    * Matrix.CreateScale(1, -1)
+                    * Matrix.CreateTranslation(image.Position.X, image.Position.Y);
+
+                using var modifier = context.PushTransform(transform);
+
+                Rect destination = new Rect(image.Position.X, image.Position.Y - image.Height, image.Width, image.Height);  // IMAGEはアンカー点が左下。左上になるよう調整
+                context.DrawImage(bitmap, destination);
+            }
+
+            // 画像以外の描画処理
             foreach (var shape in Shapes)
             {
                 var pen = new Pen(new SolidColorBrush(shape.Color), shape.LineWeight);
