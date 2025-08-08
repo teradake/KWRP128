@@ -9,7 +9,7 @@ namespace KWRP.Avalonia.NetDxf
 {
     internal class AvaloniaDxfRenderer
     {
-        public static async Task<RenderTargetBitmap> RenderAsync(DxfDocument doc, DxfConverterOption option, ILogService? logger=null)
+        public static async Task<RenderTargetBitmap> RenderAsync(DxfDocument doc, DxfConverterOption option, ILogService? logger = null)
         {
             try
             {
@@ -22,7 +22,7 @@ namespace KWRP.Avalonia.NetDxf
                 };
 
                 logger?.LogInfo("dxfファイルからエンティティのロード開始");
-                var shapes = await Task.Run(() => DxfLoader.Load(doc, box));
+                var shapes = await Task.Run(() => DxfLoader.Load(doc, option.DxfFilePath, box));
                 logger?.LogInfo("dxfファイルからエンティティのロード完了");
 
 
@@ -44,7 +44,7 @@ namespace KWRP.Avalonia.NetDxf
                 new PixelSize(coeff * (int)size.Width, coeff * (int)size.Height),
                 new Vector(coeff * 96.0d, coeff * 96.0d));
                 renderBitmap.Render(dxfCanvas);
-                
+
                 return renderBitmap;
             }
             catch (Exception e)
@@ -58,20 +58,20 @@ namespace KWRP.Avalonia.NetDxf
 
     internal class DxfLoader
     {
-        public static List<DxfShape> Load(string path, BoundingBox? captureRange=null)
+        public static List<DxfShape> Load(string dxfFilePath, BoundingBox? captureRange = null)
         {
-            var doc = DxfDocument.Load(path);
-            return Load(doc, captureRange);
+            var doc = DxfDocument.Load(dxfFilePath);
+            return Load(doc, dxfFilePath, captureRange);
         }
 
-        public static List<DxfShape> Load(DxfDocument doc, BoundingBox? captureRange = null)
+        public static List<DxfShape> Load(DxfDocument doc, string? dxfFliePath = null, BoundingBox? captureRange = null)
         {
-            var shapes = new List<DxfShape>();  
+            var shapes = new List<DxfShape>();
             var entities = doc.Entities;
 
             var ucs = doc.DrawingVariables.CurrentUCS;
             var ucs_transform = ucs.GetTransformation().Inverse();
-            
+
             var rot = Matrix3.RotationZ(0);
             var translate = new Vector3
             {
@@ -80,7 +80,7 @@ namespace KWRP.Avalonia.NetDxf
                 Z = 0.0,
             };
 
-              
+
             foreach (var line in entities.Lines.Where(e => e.Layer.IsVisible && !e.Layer.IsFrozen))
             {
                 line.TransformBy(ucs_transform, -ucs.Origin);
@@ -137,6 +137,12 @@ namespace KWRP.Avalonia.NetDxf
                 shapes.AddRange(insert.ToShapes());
             }
 
+            foreach (var image in entities.Images.Where(e => e.Layer.IsVisible && !e.Layer.IsFrozen))
+            {
+                image.TransformBy(ucs_transform, -ucs.Origin);
+                image.TransformBy(rot, translate);
+                shapes.Add(image.ToShape(dxfFliePath));
+            }
 
             return shapes;
         }
