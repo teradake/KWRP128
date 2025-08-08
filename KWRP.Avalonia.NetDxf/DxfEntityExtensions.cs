@@ -132,6 +132,26 @@ namespace KWRP.Avalonia.NetDxf
             };
         }
 
+        public static DxfImage ToShape(this netDxf.Entities.Image image, string? filePath)
+        {
+            var baseDir = Path.GetDirectoryName(filePath);
+            var imagePath = image.Definition.File;
+
+            if (!string.IsNullOrEmpty(baseDir) && !Path.IsPathRooted(imagePath))
+            {
+                imagePath = Path.Combine(baseDir, imagePath);
+            }
+
+            return new DxfImage
+            {
+                FilePath = imagePath,
+                Position = new Point(image.Position.X, image.Position.Y),
+                Width = image.Definition.Width,
+                Height = image.Definition.Height,
+                Rotation = image.Rotation,
+            };
+        }
+
         public static List<DxfShape> ToShapes(this netDxf.Entities.Insert insert)
         {
             var shapes = new List<DxfShape>();
