@@ -28,6 +28,7 @@ namespace KWRP.Avalonia.Backend.Model.Shapes.Activity
         public double Width { get; set; }
         public Vec2 InfoPos { get; set; } = new Vec2(0, 0);
         public bool HeadToUp { get; set; }
+        public int LaneCount { get; set; }
         #endregion
 
         public override string ToString()

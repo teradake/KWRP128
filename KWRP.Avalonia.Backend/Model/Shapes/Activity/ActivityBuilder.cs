@@ -75,6 +75,7 @@ namespace KWRP.Avalonia.Backend.Services.Activity
                 ActivityId = activityID++,
                 GroupId = pathId,
                 AreaID = areaId,
+                LaneCount = _current.OrthogonalLanes.Count,
                 ActivityType = RollerActivityType.NonCompaction,
                 Length = _current.Height,
                 Width = _current.Width,
@@ -107,6 +108,7 @@ namespace KWRP.Avalonia.Backend.Services.Activity
                 ActivityId = activityID++,
                 GroupId = pathId,
                 AreaID = areaId,
+                LaneCount = _current.OrthogonalLanes.Count,
                 ActivityType = RollerActivityType.Compaction,
                 Length = _current.Height,
                 Width = _current.Width,
@@ -152,6 +154,7 @@ namespace KWRP.Avalonia.Backend.Services.Activity
                 ActivityId = activityID++,
                 GroupId = pathId,
                 AreaID = areaId,
+                LaneCount = -1, // 移動なので
                 ActivityType = RollerActivityType.Move,
                 Length = _current.Height,
                 Width = _current.Width,
