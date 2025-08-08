@@ -79,7 +79,7 @@ namespace KWRP.Avalonia.Frontend.Services.Dxf
                 await new DxfConverter()
                     .SetOption(option)
                     .SetLogger(_logService)
-                    .Load(option.DxfFilePath)
+                    .Load(option.DxfFilePath!)
                     .ConvertTo(pngPath)
                     .ConvertAsync();
 
@@ -88,7 +88,7 @@ namespace KWRP.Avalonia.Frontend.Services.Dxf
             }
             catch(Exception e)
             {
-                _logService.LogError("背景図作成時にエラーが発生しました", e);
+                _logService.LogError($"背景図作成時にエラーが発生しました: {e.Message}", e);
                 throw;
             }
         }
