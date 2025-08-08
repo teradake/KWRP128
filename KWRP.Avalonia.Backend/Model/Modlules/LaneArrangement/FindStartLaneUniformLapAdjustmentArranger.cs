@@ -281,7 +281,7 @@ namespace KWRP.Avalonia.Backend.Model.Modules.LaneArrangement
                 }
                 catch (Exception e)
                 {
-                    throw;
+                    throw new Exception($"区間[{xL}, {xR}]でレーン生成時にエラーが発生しました: {e.Message}", e);
                 }
             }
         }
