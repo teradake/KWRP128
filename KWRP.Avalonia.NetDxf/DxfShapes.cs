@@ -1,5 +1,7 @@
 ﻿using Avalonia;
 using Avalonia.Media;
+using Avalonia.Media.Imaging;
+using KWRP.NetDxf;
 
 namespace KWRP.Avalonia.NetDxf
 {
@@ -36,7 +38,7 @@ namespace KWRP.Avalonia.NetDxf
 
     internal class DxfMText : DxfShape
     {
-        public string Text { get; set; }
+        public string Text { get; set; } = string.Empty;
         public Point Position { get; set; }
         public double Height { get; set; }
         public double Rotation { get; set; }
@@ -44,10 +46,39 @@ namespace KWRP.Avalonia.NetDxf
 
     internal class DxfText : DxfShape
     {
-        public string Content { get; set; } = "";
+        public string Content { get; set; } = string.Empty;
         public Point Position { get; set; }
         public double Height { get; set; }
         public double Rotation { get; set; }
     }
 
+    internal class DxfImage : DxfShape
+    {
+        public string FilePath { get; set; } = string.Empty;
+        public Point Position { get; set; }
+        public double Width { get; set; }
+        public double Height { get; set; }
+        public double Rotation { get; set; }
+
+        private Bitmap? _bitmap;
+        public Bitmap? Bitmap
+        {
+            // 遅延評価
+            get
+            {
+                if (_bitmap == null && File.Exists(FilePath))
+                {
+                    try
+                    {
+                        _bitmap = BitmapLoader.Load(FilePath);
+                    }
+                    catch
+                    {
+                        _bitmap = null;
+                    }
+                }
+                return _bitmap;
+            }
+        }
+    }
 }
