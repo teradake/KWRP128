@@ -196,7 +196,7 @@ namespace KWRP.Avalonia.Frontend.Services
                 var shell = await _polygonCsvParser.LoadAsync(path);
                 var holes = new List<Polygon>();
                 double direction = 0.0;
-                RegisterData(shell, holes, direction, false);
+                RegisterData(shell!, holes, direction, false);
                 return;
             }
             catch (Exception ex)
@@ -238,7 +238,7 @@ namespace KWRP.Avalonia.Frontend.Services
             }
             catch (Exception ex)
             {
-                throw;
+                throw new Exception($"領域データの登録時に例外が発生しました: {ex.Message}", ex);
             }
         }
 
