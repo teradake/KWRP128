@@ -214,6 +214,7 @@ namespace KWRP.Avalonia.Frontend.Services.Activity
             catch (Exception ex)
             {
                 _activityStore.OutputFolderPath.Value = string.Empty;
+                _logService.LogWarn($"アクティビティ出力先フォルダ選択時にエラーが発生しました: {ex.Message}");
                 throw;
             }
         }
