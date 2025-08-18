@@ -9,12 +9,9 @@ using ObservableCollections;
 using R3;
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Tmds.DBus.Protocol;
 
 namespace KWRP.Avalonia.Frontend.ViewModels.EditorPage
 {

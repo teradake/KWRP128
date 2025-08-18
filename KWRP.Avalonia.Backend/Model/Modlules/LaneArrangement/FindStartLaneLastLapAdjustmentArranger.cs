@@ -8,6 +8,7 @@ namespace KWRP.Avalonia.Backend.Model.Modules.LaneArrangement
     /// <summary>
     /// 進捗方向は右であると仮定して、レーンをいい感じに配置する
     /// 生成されるレーンはorthogonal（短辺がX軸平行、長辺がY軸に平行）
+    /// 20250808時点、これ使用中
     /// </summary>
     public class FindStartLaneLastLapAdjustmentArranger
     {
@@ -75,7 +76,6 @@ namespace KWRP.Avalonia.Backend.Model.Modules.LaneArrangement
                 pR = pL + laneWidth;
                 if (Utils.IsPositive(pR - len))
                 {
-                    System.Diagnostics.Debug.WriteLine(pR - len);
                     break;
                 }
                 laneSidePosition.Add((startX + pL, startX + pR));

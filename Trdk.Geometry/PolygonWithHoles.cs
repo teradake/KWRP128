@@ -125,9 +125,9 @@ namespace Trdk.Geometry
 #if DEBUG
                     if (candidate.Count > 0)
                     {
-                        System.Diagnostics.Debug.WriteLine(candidate.Count);
-                        System.Diagnostics.Debug.WriteLine((segments[i].Src, segments[i].Dst));
-                        System.Diagnostics.Debug.WriteLine(monotone);
+                        //System.Diagnostics.Debug.WriteLine(candidate.Count);
+                        //System.Diagnostics.Debug.WriteLine((segments[i].Src, segments[i].Dst));
+                        //System.Diagnostics.Debug.WriteLine(monotone);
                     }
 #endif
 

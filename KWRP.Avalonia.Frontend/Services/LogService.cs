@@ -89,7 +89,6 @@ namespace KWRP.Avalonia.Frontend.Services
         private void Log(LogType type, string message, string? memberName, string? filePath, int lineNumber)
         {
             var log = new KWRPLog(type, message, memberName, filePath, lineNumber);
-            System.Diagnostics.Debug.WriteLine(log);
 
             Logged?.Invoke(log);
 
