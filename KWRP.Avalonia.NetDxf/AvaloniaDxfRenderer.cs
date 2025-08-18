@@ -22,7 +22,7 @@ namespace KWRP.Avalonia.NetDxf
                 };
 
                 logger?.LogInfo("dxfファイルからエンティティのロード開始");
-                var shapes = await Task.Run(() => DxfLoader.Load(doc, option.DxfFilePath, box));
+                var shapes = await Task.Run(() => DxfLoader.Load(doc, option.DxfFilePath, box, logger));
                 logger?.LogInfo("dxfファイルからエンティティのロード完了");
 
 
@@ -58,13 +58,13 @@ namespace KWRP.Avalonia.NetDxf
 
     internal class DxfLoader
     {
-        public static List<DxfShape> Load(string dxfFilePath, BoundingBox? captureRange = null)
+        public static List<DxfShape> Load(string dxfFilePath, BoundingBox? captureRange = null, ILogService? logger = null)
         {
             var doc = DxfDocument.Load(dxfFilePath);
-            return Load(doc, dxfFilePath, captureRange);
+            return Load(doc, dxfFilePath, captureRange, logger);
         }
 
-        public static List<DxfShape> Load(DxfDocument doc, string? dxfFliePath = null, BoundingBox? captureRange = null)
+        public static List<DxfShape> Load(DxfDocument doc, string? dxfFliePath = null, BoundingBox? captureRange = null, ILogService? logger = null)
         {
             var shapes = new List<DxfShape>();
             var entities = doc.Entities;
@@ -141,7 +141,9 @@ namespace KWRP.Avalonia.NetDxf
             {
                 image.TransformBy(ucs_transform, -ucs.Origin);
                 image.TransformBy(rot, translate);
-                shapes.Add(image.ToShape(dxfFliePath));
+                var shape = image.ToShape(dxfFliePath);
+                shapes.Add(shape);
+                logger?.LogInfo($"path: {shape.FilePath}\nposition: {shape.Position}, size: {shape.Width}x{shape.Height}, rotation: {shape.Rotation}");
             }
 
             return shapes;
