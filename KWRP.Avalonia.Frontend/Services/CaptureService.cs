@@ -26,6 +26,7 @@ namespace KWRP.Avalonia.Frontend.Services
         private readonly CanvasItemStore _canvasItemStore;
         private readonly WorkAreaStore _workAreaStore;
         private readonly ParameterStore _parameterStore;
+        private readonly MachineStore _machineStore;
         private readonly ActivityStore _activityStore;
 
         public CaptureService(
@@ -35,7 +36,8 @@ namespace KWRP.Avalonia.Frontend.Services
             CanvasItemStore canvasItemStore,
             WorkAreaStore workAreaStore,
             ParameterStore parameterStore,
-            ActivityStore activityStore)
+            ActivityStore activityStore,
+            MachineStore machineStore)
         {
             _logService = logService;
             _notificationService = notificationService;
@@ -44,6 +46,7 @@ namespace KWRP.Avalonia.Frontend.Services
             _workAreaStore = workAreaStore;
             _parameterStore = parameterStore;
             _activityStore = activityStore;
+            _machineStore = machineStore;
         }
 
 
@@ -267,33 +270,39 @@ namespace KWRP.Avalonia.Frontend.Services
 
             // Information Box
             {
-                int informationBoxWidth = 150;
                 var bx = _canvasItemStore.CompactionAreas.Select(p => p.AaBB.Xmax).Max();
                 var by = _canvasItemStore.CompactionAreas.Select(p => p.AaBB.Ymax).Max();
                 var loc = mat.Transform(new Point(bx, by));
 
                 var laneArrangementParametersText = new TextBlock
                 {
-                    Width = informationBoxWidth,
                     FontSize = 45,
                     ClipToBounds = false,
+                    Padding = new Thickness(5),
                     Text =
-                        "aaaaaaa\n" +
-                        "bbbbbbbbbb\n" +
-                        "ccccccccccccc\n" +
-                        "dddddddddddddddd\n" +
-                        "eeeeeeeeeeeeeeeeeee\n",
+                        $"区割りパラメータ\n" +
+                        $"　鉄輪幅 : {_parameterStore.LaneWidth:F2}m\n" +
+                        $"　前方オフセット : {_parameterStore.FrontOffset:F2}m\n" +
+                        $"　後方オフセット : {_parameterStore.RearOffset:F2}m\n" +
+                        $"　側方オフセット① : {_parameterStore.SidePrevOffset:F2}m\n" +
+                        $"　側方オフセット② : {_parameterStore.SideNextOffset:F2}m\n" +
+                        $"　レーンラップ幅 : {_parameterStore.LapWidth:F2}m\n" +
+                        $"　作業可能長さ : {_parameterStore.LaneChangeLength:F2}m\n" +
+                        $"　作業進捗方向 : {_parameterStore.ProgresssDirectionRadian.Value * Math.PI / 180.0:F2} deg.\n" +
+                        $"\n" +
+                        $"　最小レーン数 : {_parameterStore.PairCountMin}\n" +
+                        $"　最大レーン数 : {_parameterStore.PairCountMax}",
                 };
+                laneArrangementParametersText.Measure(new Size(double.MaxValue, double.MaxValue));
 
-                
                 var grid = new Grid
                 {
                     Margin = new Thickness(20),
-                    Background = new SolidColorBrush(Color.FromArgb(159, 50, 116, 238)),
+                    Background = new SolidColorBrush(Color.FromRgb(57, 197, 187)),
                     RenderTransform = new TranslateTransform { X = box.Xmax, Y = box.Ymin, },
                     ClipToBounds = false,
-                    Height=100,
-                    Width=154,
+                    Height = laneArrangementParametersText.DesiredSize.Height,
+                    Width = laneArrangementParametersText.DesiredSize.Width,
                 };
                 grid.RowDefinitions.Add(new RowDefinition(GridLength.Auto));
                 grid.Children.Add(laneArrangementParametersText);
@@ -303,8 +312,8 @@ namespace KWRP.Avalonia.Frontend.Services
                 var tempBox = new Trdk.Geometry.BoundingBox
                 {
                     Xmin = box.Xmax,
-                    Xmax = box.Xmax + informationBoxWidth,
-                    Ymin = box.Ymax - 30 * 5,
+                    Xmax = box.Xmax + laneArrangementParametersText.DesiredSize.Width * 1.01,
+                    Ymin = box.Ymax - laneArrangementParametersText.DesiredSize.Height * 1.01,
                     Ymax = box.Ymax,
                 };
 
@@ -366,7 +375,7 @@ namespace KWRP.Avalonia.Frontend.Services
                     };
                     var laneCount = new TextBlock
                     {
-                        Text = $"{act.LaneCount} lanes",
+                        Text = $"{act.LaneCount}レーン",
                         FontSize = 30 * vm.Scale / 0.12,
                         ClipToBounds = false,
                         HorizontalAlignment = HorizontalAlignment.Center,
