@@ -284,8 +284,8 @@ namespace KWRP.Avalonia.Frontend.Services
                         $"　鉄輪幅 : {_parameterStore.LaneWidth:F2}m\n" +
                         $"　前方オフセット : {_parameterStore.FrontOffset:F2}m\n" +
                         $"　後方オフセット : {_parameterStore.RearOffset:F2}m\n" +
-                        $"　側方オフセット① : {_parameterStore.SidePrevOffset:F2}m\n" +
-                        $"　側方オフセット② : {_parameterStore.SideNextOffset:F2}m\n" +
+                        $"　側方オフセット① : {_parameterStore.SidePrevOffset.Value:F2}m\n" +
+                        $"　側方オフセット② : {_parameterStore.SideNextOffset.Value:F2}m\n" +
                         $"　レーンラップ幅 : {_parameterStore.LapWidth:F2}m\n" +
                         $"　作業可能長さ : {_parameterStore.LaneChangeLength:F2}m\n" +
                         $"　作業進捗方向 : {_parameterStore.ProgresssDirectionRadian.Value * Math.PI / 180.0:F2} deg.\n" +
