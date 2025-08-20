@@ -12,12 +12,12 @@
     Focusable="True"
     mc:Ignorable="d">
 
-    <UserControl.Styles>
+	<UserControl.Styles>
         <Style Selector="TextBlock.title">
             <Setter Property="FontWeight" Value="SemiBold" />
             <Setter Property="FontSize" Value="20" />
         </Style>
-
+		
         <Style Selector="TextBlock.header">
             <Setter Property="FontWeight" Value="SemiBold" />
         </Style>
@@ -175,7 +175,7 @@
                                     Grid.Column="0"
                                     VerticalAlignment="Center"
                                     Spacing="2">
-                                    <TextBlock Classes="header" Text="参照速度 (km)" />
+                                    <TextBlock Classes="header" Text="参照速度 (km/h)" />
                                 </StackPanel>
                                 <NumericUpDown
                                     Grid.Column="1"
@@ -188,7 +188,7 @@
                                     Grid.Column="0"
                                     VerticalAlignment="Center"
                                     Spacing="2">
-                                    <TextBlock Classes="header" Text="端部速度 (km)" />
+                                    <TextBlock Classes="header" Text="端部速度 (km/h)" />
                                 </StackPanel>
                                 <NumericUpDown
                                     Grid.Column="1"
@@ -244,7 +244,7 @@
                                     Grid.Column="0"
                                     VerticalAlignment="Center"
                                     Spacing="2">
-                                    <TextBlock Classes="header" Text="参照速度 (km)" />
+                                    <TextBlock Classes="header" Text="参照速度 (km/h)" />
                                 </StackPanel>
                                 <NumericUpDown
                                     Grid.Column="1"
@@ -258,7 +258,7 @@
                                     Grid.Column="0"
                                     VerticalAlignment="Center"
                                     Spacing="2">
-                                    <TextBlock Classes="header" Text="端部速度 (km)" />
+                                    <TextBlock Classes="header" Text="端部速度 (km/h)" />
                                 </StackPanel>
                                 <NumericUpDown
                                     Grid.Column="1"
@@ -313,7 +313,7 @@
                                     Grid.Column="0"
                                     VerticalAlignment="Center"
                                     Spacing="2">
-                                    <TextBlock Classes="header" Text="参照速度 (km)" />
+                                    <TextBlock Classes="header" Text="参照速度 (km/h)" />
                                 </StackPanel>
                                 <NumericUpDown
                                     Grid.Column="1"
@@ -326,7 +326,7 @@
                                     Grid.Column="0"
                                     VerticalAlignment="Center"
                                     Spacing="2">
-                                    <TextBlock Classes="header" Text="端部速度 (km)" />
+                                    <TextBlock Classes="header" Text="端部速度 (km/h)" />
                                 </StackPanel>
                                 <NumericUpDown
                                     Grid.Column="1"
