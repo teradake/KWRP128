@@ -37,6 +37,9 @@ namespace KWRP.Avalonia.Frontend.ViewModels.Shapes
         public string Length => _model.Length.ToString("0.0 m");
         public string Width => _model.Width.ToString("0.0 m");
 
+        public string WorkTime => $"{_model.WorkTime.TotalMinutes:F1}分（累計 {WorkTimeAcc}）";
+        public string WorkTimeAcc => $" {(int)_model.AccumulatedWorkTime.TotalHours:D2}:{_model.AccumulatedWorkTime.Minutes:D2}";
+
         // dummy
         public IList<Point> PointsDummy => PointsWorkArea;
         public IBrush StrokeDummy => Brushes.Transparent;

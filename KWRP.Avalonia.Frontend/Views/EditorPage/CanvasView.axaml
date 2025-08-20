@@ -500,6 +500,8 @@
                             <Run Text="{Binding SelectedActivity.Value.Length, StringFormat='エリア長さ: {0}', FallbackValue=len}" />
                             <LineBreak />
                             <Run Text="{Binding SelectedActivity.Value.Width, StringFormat='エリア幅: {0}', FallbackValue=wid}" />
+							<LineBreak />
+							<Run Text="{Binding SelectedActivity.Value.WorkTime, StringFormat='作業時間: {0}', FallbackValue=worktime}" />
                         </SelectableTextBlock>
                     </Expander>
 
