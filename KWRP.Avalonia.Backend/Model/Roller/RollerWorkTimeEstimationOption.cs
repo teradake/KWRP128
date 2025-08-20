@@ -5,10 +5,10 @@ namespace KWRP.Avalonia.Backend.Models.Roller
 {
     public class WorkTimeEstimationOptions
     {
-        [JsonIgnore] public static double MeanSwitchbackTime => 3.0;
-        [JsonIgnore] public static double MeanTravelTime => 60.0;
-        [JsonIgnore] public static double MeanChokobumiTime => 15.0;
-        [JsonIgnore] public static double MeanKubireLength => 16.0;
+        [JsonIgnore] public TimeSpan MeanSwitchbackTime => TimeSpan.FromSeconds(3.0);   // 折返し時間
+        [JsonIgnore] public TimeSpan MeanTravelTime => TimeSpan.FromSeconds(60.0);      // 移動時間
+        [JsonIgnore] public TimeSpan MeanChokobumiTime => TimeSpan.FromSeconds(15.0);   // ちょこ踏み時間
+        [JsonIgnore] public double MeanKubireLengthMeter => 16.0;                       // くびれ距離 (m)
 
         [JsonPropertyName("No-Compaction")] public WorkTimeEstimationFlags NonCompaction { get; init; }
         [JsonPropertyName("Compaction")] public WorkTimeEstimationFlags Compaction { get; init; }
