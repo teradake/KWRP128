@@ -1,6 +1,6 @@
 ﻿namespace KWRP.Backend.Model.Modlules.WorkTimeEstimator
 {
-    internal class ActivityWorkTimeEstimator
+    public class ActivityWorkTimeEstimator
     {
         private readonly ActivityWorkTimeEstimatorOption _option;
 

@@ -4,7 +4,7 @@ using System.Diagnostics;
 namespace KWRP.Backend.Model.Modlules.WorkTimeEstimator
 {
      [DebuggerDisplay("RefSpeed={RefSpeedKmPerHour} km/h, Travel={MeanTravelTime.TotalSeconds} s")]
-    internal sealed class ActivityWorkTimeEstimatorOption
+    public sealed class ActivityWorkTimeEstimatorOption
     {
         /// <summary>折返し時間 [sec]</summary>
         public TimeSpan MeanSwitchbackTime { get; set; } = TimeSpan.FromSeconds(3.0);
