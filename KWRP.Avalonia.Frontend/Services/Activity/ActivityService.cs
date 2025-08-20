@@ -6,10 +6,12 @@ using KWRP.Avalonia.Backend.Services.Activity;
 using KWRP.Avalonia.Backend.Services.Extensions;
 using KWRP.Avalonia.Frontend.Models.Stores;
 using KWRP.Backend.Model.Modlules.WorkTimeEstimator;
+using NetTopologySuite.Algorithm;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Trdk.Geometry;
 
@@ -168,6 +170,8 @@ namespace KWRP.Avalonia.Frontend.Services.Activity
 
             var activities = new List<ActivityModel>();
             var representatives = new List<ActivityModel>();
+            var workTimes = new List<TimeSpan>();
+
             var actBuilder = new ActivityBuilder()
                 .SetRoller(VR)
                 .SetWorkTimeEstimatorOption(ActivityWorkTimeEstimatorOption.BuildByRoller(VR));
@@ -175,17 +179,21 @@ namespace KWRP.Avalonia.Frontend.Services.Activity
             for (int i = 0; i < workAreaSequence.Length; ++i)
             {
                 ActivityModel? represent = null;
+                TimeSpan workTime = TimeSpan.Zero;
                 actBuilder.SetCurrentWorkArea(workAreaSequence[i]);
 
                 if (_activityStore.EnableMove)
                 {
-                    activities.Add(actBuilder.BuildMoveActivity(sequenceID, i));
+                    var act = actBuilder.BuildMoveActivity(sequenceID, i);
+                    activities.Add(act);
+                    workTime += act.WorkTime;
                 }
 
                 if (_activityStore.EnableNonCompaction)
                 {
                     var act = actBuilder.BuildNonCompactionActivity(sequenceID, i);
                     activities.Add(act);
+                    workTime += act.WorkTime;
                     represent = act;
                 }
 
@@ -193,9 +201,11 @@ namespace KWRP.Avalonia.Frontend.Services.Activity
                 {
                     var act = actBuilder.BuildCompactionActivity(sequenceID, i);
                     activities.Add(act);
+                    workTime += act.WorkTime;
                     represent = act;
                 }
 
+                workTimes.Add(workTime);
                 if (represent != null)
                 {
                     representatives.Add(represent);
@@ -204,6 +214,7 @@ namespace KWRP.Avalonia.Frontend.Services.Activity
 
             var acts = activities.ToArray();
             _activityStore.ActivityGroups.Add(acts);
+            _activityStore.ActivityGroupWorkTimes.Add(workTimes.ToArray());
             _activityStore.ActivityCards.AddRange(representatives);
             return acts;
         }
@@ -306,6 +317,71 @@ namespace KWRP.Avalonia.Frontend.Services.Activity
                     }
                 }
             }
+
+            // Output WorkTime
+            try
+            {
+                {
+                    var fileName = $"{_activityStore.OutputFolderPrefix.CurrentValue}_作業時間.csv";
+                    var path = Path.Combine(targetFolder, fileName);
+
+                    var sb = new StringBuilder();
+                    sb.AppendLine("groupId,time,accTime");
+                    for (int groupId = 0; groupId < _activityStore.ActivityGroupWorkTimes.Count; ++groupId)
+                    {
+                        var remain = TimeSpan.Zero;
+                        foreach (var t in _activityStore.ActivityGroupWorkTimes[groupId])
+                            remain += t;
+
+                        foreach (var (areaId, t) in _activityStore.ActivityGroupWorkTimes[groupId].Select((t, id) => (id, t)))
+                        {
+                            var tag = $"{groupId}_{areaId}";
+                            sb.AppendLine($"{tag},{t:hh\\:mm},{remain:hh\\:mm}");
+                            remain -= t;
+                        }
+                        sb.AppendLine();
+                    }
+
+                    // csvに出力
+                    await using var fs = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None);
+                    await using var writer = new StreamWriter(fs);
+                    await writer.WriteAsync(sb.ToString());
+                }
+
+                {
+                    var fileName = $"{_activityStore.OutputFolderPrefix.CurrentValue}_作業時間.txt";
+                    var path = Path.Combine(targetFolder, fileName);
+
+                    var sb = new StringBuilder();
+                    for (int groupId = 0; groupId < _activityStore.ActivityGroupWorkTimes.Count; ++groupId)
+                    {
+                        sb.AppendLine("エリア名    作業時間    残時間");
+                        sb.AppendLine("----------------------------------------");
+                        var remain = TimeSpan.Zero;
+                        foreach (var t in _activityStore.ActivityGroupWorkTimes[groupId])
+                            remain += t;
+
+                        foreach (var (areaId, t) in _activityStore.ActivityGroupWorkTimes[groupId].Select((t, id) => (id, t)))
+                        {
+                            var tag = $"{groupId}_{areaId}";
+                            sb.AppendLine($"{tag}        {t:hh\\:mm}        {remain:hh\\:mm}");
+                            remain -= t;
+                        }
+                        sb.AppendLine();
+                    }
+
+                    // csvに出力
+                    await using var fs = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None);
+                    await using var writer = new StreamWriter(fs);
+                    await writer.WriteAsync(sb.ToString());
+                }
+            }
+            catch (Exception e)
+            {
+                _logService.LogWarn("作業時間の出力に失敗しました" + e);
+            }
+
+
 
             // Output PlanView (png)
             try
