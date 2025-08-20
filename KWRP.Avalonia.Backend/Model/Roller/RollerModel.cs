@@ -1,10 +1,5 @@
 ﻿using KWRP.Avalonia.Backend.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace KWRP.Avalonia.Backend.Models.Roller
 {
@@ -56,6 +51,18 @@ namespace KWRP.Avalonia.Backend.Models.Roller
 
 
         /// <summary>
+        /// アクティビティの作業時間計算時に使用するオプション値
+        /// </summary>
+        [JsonPropertyName("ActivityWorkTimeEstimationOptions")]
+        public WorkTimeEstimationOptions WorkTimeEstimationOptions
+        {
+            get => _workTimeEstimationOptions ?? WorkTimeEstimationOptions.CreateDefault();
+            set => _workTimeEstimationOptions = value;
+        }
+        private WorkTimeEstimationOptions? _workTimeEstimationOptions;
+
+
+        /// <summary>
         /// 前方余裕(m) : 占有エリアの前方側のマージン
         /// </summary>
         [JsonIgnore]
@@ -74,6 +81,19 @@ namespace KWRP.Avalonia.Backend.Models.Roller
         [JsonIgnore]
         public double LeftRightAllowance => Zone.LeftRightMargin;
 
+
+        public RollerModel()
+        {
+            MachineName = string.Empty;
+            Description = string.Empty;
+            MachineInfo = RollerMachineInfo.CreateDefault();
+            Zone = RollerZone.CreateDefault();
+            MoveParameter = RollerMovement.CreateDefault();
+            NonCompactionParameter = RollerMovement.CreateDefault();
+            CompactionParameter = RollerMovement.CreateDefault();
+            WorkTimeEstimationOptions = WorkTimeEstimationOptions.CreateDefault();
+        }
+
         /// <summary>
         /// デフォルトのインスタンスを作成するための静的メソッド
         /// </summary>
@@ -89,6 +109,7 @@ namespace KWRP.Avalonia.Backend.Models.Roller
                 MoveParameter = RollerMovement.CreateDefault(),
                 NonCompactionParameter = RollerMovement.CreateDefault(),
                 CompactionParameter = RollerMovement.CreateDefault(),
+                WorkTimeEstimationOptions = WorkTimeEstimationOptions.CreateDefault(),
             };
         }
 
@@ -103,6 +124,7 @@ namespace KWRP.Avalonia.Backend.Models.Roller
                 MoveParameter = MoveParameter.Clone(),
                 NonCompactionParameter = NonCompactionParameter.Clone(),
                 CompactionParameter = CompactionParameter.Clone(),
+                WorkTimeEstimationOptions = WorkTimeEstimationOptions.Clone(),
             };
         }
 
