@@ -3,6 +3,7 @@ using KWRP.Avalonia.Backend.Model.Shapes;
 using KWRP.Avalonia.Backend.Model.Shapes.Activity;
 using KWRP.Avalonia.Backend.Model.Shapes.WorkArea;
 using KWRP.Avalonia.Backend.Models.Roller;
+using KWRP.Backend.Model.Modlules.WorkTimeEstimator;
 using Trdk.Geometry;
 using Trdk.Geometry.NTS;
 
@@ -16,6 +17,8 @@ namespace KWRP.Avalonia.Backend.Services.Activity
         }
 
         private RollerModel? _roller = null;
+        private ActivityWorkTimeEstimator? _workTimeEstimator = null;
+
         private WorkAreaModel? _prev = null;
         private WorkAreaModel? _current = null;
         private int activityID = 0;
@@ -40,12 +43,18 @@ namespace KWRP.Avalonia.Backend.Services.Activity
             return this;
         }
 
+        public ActivityBuilder SetWorkTimeEstimatorOption(ActivityWorkTimeEstimatorOption option)
+        {
+            _workTimeEstimator = new ActivityWorkTimeEstimator(option);
+            return this;
+        }
+
         public ActivityBuilder SetCurrentWorkArea(WorkAreaModel workArea)
         {
             _prev = _current;
             _current = workArea;
 
-            // seg edge flag
+            // set edge flag
             {
                 _edgeFlag[0] = workArea.IsEdgeFront;
                 _edgeFlag[1] = workArea.IsEdgeRear;
@@ -63,12 +72,20 @@ namespace KWRP.Avalonia.Backend.Services.Activity
         {
             if (_current == null) throw new Exception("作業エリアが登録されていません");
             if (_roller == null) throw new Exception("ローラが登録されていません");
+            if (_workTimeEstimator == null) throw new Exception("作業時間推定器が登録されていません");
 
             // マージンの設定、ローラは上向き
             _margin[Direction.Up] = _roller.FrontAllowance + (_edgeFlag[0] ? _roller.Zone.FrontEdgeOffset : 0);
             _margin[Direction.Down] = _roller.RearAllowance + (_edgeFlag[1] ? _roller.Zone.BackEdgeOffset : 0);
             _margin[Direction.Left] = _roller.LeftRightAllowance;
             _margin[Direction.Right] = _roller.LeftRightAllowance;
+
+            // 作業時間
+            var workTime = _workTimeEstimator.GetNonCompactionWorkTime(
+                laneLengthListMeter: _current.OrthogonalLanes.Select(lane => lane.AaBB.Ymax - lane.AaBB.Ymin),
+                repeatNum: _roller.NonCompactionParameter.RepeatNum,
+                refSpeedKmPerHour: _roller.NonCompactionParameter.RefSpeed,
+                edgeFlags: _edgeFlag);
 
             return new ActivityModel()
             {
@@ -89,6 +106,7 @@ namespace KWRP.Avalonia.Backend.Services.Activity
                 Edge = [_edgeFlag[0], _edgeFlag[1]],
                 InfoPos = _current.InfoCardPos,
                 HeadToUp = _current.Orientation == WorkAreaOrientation.Up,
+                WorkTime = workTime,
             };
         }
 
@@ -96,12 +114,20 @@ namespace KWRP.Avalonia.Backend.Services.Activity
         {
             if (_current == null) throw new Exception("作業エリアが登録されていません");
             if (_roller == null) throw new Exception("ローラが登録されていません");
+            if (_workTimeEstimator == null) throw new Exception("作業時間推定器が登録されていません");
 
             // マージンの設定、ローラは上向き
             _margin[Direction.Up] = _roller.FrontAllowance + (_edgeFlag[0] ? _roller.Zone.FrontEdgeOffset : 0);
             _margin[Direction.Down] = _roller.RearAllowance + (_edgeFlag[1] ? _roller.Zone.BackEdgeOffset : 0);
             _margin[Direction.Left] = _roller.LeftRightAllowance;
             _margin[Direction.Right] = _roller.LeftRightAllowance;
+
+            // 作業時間
+            var workTime = _workTimeEstimator.GetCompactionWorkTime(
+                laneLengthListMeter: _current.OrthogonalLanes.Select(lane => lane.AaBB.Ymax - lane.AaBB.Ymin),
+                repeatNum: _roller.CompactionParameter.RepeatNum,
+                refSpeedKmPerHour: _roller.CompactionParameter.RefSpeed,
+                edgeFlags: _edgeFlag);
 
             return new ActivityModel()
             {
@@ -122,6 +148,7 @@ namespace KWRP.Avalonia.Backend.Services.Activity
                 Edge = [_edgeFlag[0], _edgeFlag[1]],
                 InfoPos = _current.InfoCardPos,
                 HeadToUp = _current.Orientation == WorkAreaOrientation.Up,
+                WorkTime = workTime,
             };
         }
 
@@ -129,6 +156,7 @@ namespace KWRP.Avalonia.Backend.Services.Activity
         {
             if (_current == null) throw new Exception("作業エリアが登録されていません");
             if (_roller == null) throw new Exception("ローラが登録されていません");
+            if (_workTimeEstimator == null) throw new Exception("作業時間推定器が登録されていません");
 
             // マージンの設定、ローラは上向き
             _margin[Direction.Up] = _roller.FrontAllowance + (_edgeFlag[0] ? _roller.Zone.FrontEdgeOffset : 0);
@@ -149,6 +177,9 @@ namespace KWRP.Avalonia.Backend.Services.Activity
                 ? ExpandLane(_current, _margin)
                 : ExpandLane(_prev, _current, _margin);
 
+            // 作業時間
+            var workTime = _workTimeEstimator.GetMoveWorkTime();
+
             return new ActivityModel()
             {
                 ActivityId = activityID++,
@@ -168,6 +199,7 @@ namespace KWRP.Avalonia.Backend.Services.Activity
                 Edge = [_edgeFlag[0], _edgeFlag[1]],
                 InfoPos = _current.InfoCardPos,
                 HeadToUp = _current.Orientation == WorkAreaOrientation.Up,
+                WorkTime = workTime,
             };
         }
 
