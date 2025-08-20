@@ -24,9 +24,9 @@ namespace KWRP.Avalonia.Frontend.Models.Stores
                 _current = serializer.Load(_configPathInfo.MachineConfigPath);
                 _logService.LogInfo($"重機設定ファイル（{_configPathInfo.MachineConfigPath}）を読込みました");
             }
-            catch
+            catch (Exception e)
             {
-                _logService.LogInfo($"重機設定ファイル（{_configPathInfo.MachineConfigPath}）が見つかりませんでした。デフォルト値を使用します");
+                _logService.LogInfo($"重機設定ファイル（{_configPathInfo.MachineConfigPath}）が見つかりませんでした。デフォルト値を使用します: {e}");
             }
             finally
             {
@@ -47,6 +47,8 @@ namespace KWRP.Avalonia.Frontend.Models.Stores
         public RollerModel CurrentRoller => _current ??= RollerModel.CreateDefault();
         public string MachineConfigPath => _configPathInfo.MachineConfigPath;
 
-        public bool IsPropertyChanged => _current != null && !_current.Equals(_original);
+        public bool IsPropertyChanged => _current != null       // nullチェック
+            && (_current.WorkTimeEstimationOptions.IsDefault    // オプションがデフォルト値の場合は保存
+            || !_current.Equals(_original));
     }
 }
