@@ -31,6 +31,7 @@ namespace KWRP.Avalonia.Backend.Model.Shapes.Activity
         public int LaneCount { get; set; }
 
         public TimeSpan WorkTime { get; set; }
+        public TimeSpan AccumulatedWorkTime { get; set; }
         #endregion
 
         public override string ToString()

@@ -18,6 +18,7 @@ namespace KWRP.Avalonia.Backend.Services.Activity
 
         private RollerModel? _roller = null;
         private ActivityWorkTimeEstimator? _workTimeEstimator = null;
+        private TimeSpan _accumlatedWorkTime = TimeSpan.Zero;
 
         private WorkAreaModel? _prev = null;
         private WorkAreaModel? _current = null;
@@ -46,6 +47,7 @@ namespace KWRP.Avalonia.Backend.Services.Activity
         public ActivityBuilder SetWorkTimeEstimatorOption(ActivityWorkTimeEstimatorOption option)
         {
             _workTimeEstimator = new ActivityWorkTimeEstimator(option);
+            _accumlatedWorkTime = TimeSpan.Zero;
             return this;
         }
 
@@ -86,6 +88,7 @@ namespace KWRP.Avalonia.Backend.Services.Activity
                 repeatNum: _roller.NonCompactionParameter.RepeatNum,
                 refSpeedKmPerHour: _roller.NonCompactionParameter.RefSpeed,
                 edgeFlags: _edgeFlag);
+            _accumlatedWorkTime += workTime;
 
             return new ActivityModel()
             {
@@ -107,6 +110,7 @@ namespace KWRP.Avalonia.Backend.Services.Activity
                 InfoPos = _current.InfoCardPos,
                 HeadToUp = _current.Orientation == WorkAreaOrientation.Up,
                 WorkTime = workTime,
+                AccumulatedWorkTime = _accumlatedWorkTime,
             };
         }
 
@@ -128,6 +132,7 @@ namespace KWRP.Avalonia.Backend.Services.Activity
                 repeatNum: _roller.CompactionParameter.RepeatNum,
                 refSpeedKmPerHour: _roller.CompactionParameter.RefSpeed,
                 edgeFlags: _edgeFlag);
+            _accumlatedWorkTime += workTime;
 
             return new ActivityModel()
             {
@@ -149,6 +154,7 @@ namespace KWRP.Avalonia.Backend.Services.Activity
                 InfoPos = _current.InfoCardPos,
                 HeadToUp = _current.Orientation == WorkAreaOrientation.Up,
                 WorkTime = workTime,
+                AccumulatedWorkTime = _accumlatedWorkTime,
             };
         }
 
@@ -179,6 +185,7 @@ namespace KWRP.Avalonia.Backend.Services.Activity
 
             // 作業時間
             var workTime = _workTimeEstimator.GetMoveWorkTime();
+            _accumlatedWorkTime += workTime;
 
             return new ActivityModel()
             {
@@ -200,6 +207,7 @@ namespace KWRP.Avalonia.Backend.Services.Activity
                 InfoPos = _current.InfoCardPos,
                 HeadToUp = _current.Orientation == WorkAreaOrientation.Up,
                 WorkTime = workTime,
+                AccumulatedWorkTime = _accumlatedWorkTime,
             };
         }
 
