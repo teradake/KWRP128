@@ -413,11 +413,11 @@
                     CornerRadius="5">
                     <Expander
                         Name="expan2"
-                        Background="#96F7C7D2"
+                        Background="#bbF7C7D2"
                         IsExpanded="True">
                         <Expander.Resources>
                             <x:Double x:Key="ExpanderMinHeight">10</x:Double>
-                            <SolidColorBrush x:Key="ExpanderHeaderBackground">#96F7C7D2</SolidColorBrush>
+                            <SolidColorBrush x:Key="ExpanderHeaderBackground">#bbF7C7D2</SolidColorBrush>
                             <SolidColorBrush x:Key="ExpanderHeaderBackgroundPointerOver">#e6F7C7D2</SolidColorBrush>
                             <SolidColorBrush x:Key="ExpanderHeaderBackgroundPressed">#e6F7C7D2</SolidColorBrush>
                             <Thickness x:Key="ExpanderChevronMargin">0 -5</Thickness>
@@ -457,11 +457,11 @@
                     </Border.IsVisible>
                     <Expander
                         Name="expaninf"
-                        Background="#bb88CCDD"
+                        Background="#dd88CCDD"
                         IsExpanded="True">
                         <Expander.Resources>
                             <x:Double x:Key="ExpanderMinHeight">10</x:Double>
-                            <SolidColorBrush x:Key="ExpanderHeaderBackground">#bb88CCDD</SolidColorBrush>
+                            <SolidColorBrush x:Key="ExpanderHeaderBackground">#dd88CCDD</SolidColorBrush>
                             <SolidColorBrush x:Key="ExpanderHeaderBackgroundPointerOver">#ee88CCDD</SolidColorBrush>
                             <SolidColorBrush x:Key="ExpanderHeaderBackgroundPressed">#ee88CCDD</SolidColorBrush>
                             <Thickness x:Key="ExpanderChevronMargin">0 -5</Thickness>
@@ -500,8 +500,8 @@
                             <Run Text="{Binding SelectedActivity.Value.Length, StringFormat='エリア長さ: {0}', FallbackValue=len}" />
                             <LineBreak />
                             <Run Text="{Binding SelectedActivity.Value.Width, StringFormat='エリア幅: {0}', FallbackValue=wid}" />
-							<LineBreak />
-							<Run Text="{Binding SelectedActivity.Value.WorkTime, StringFormat='作業時間: {0}', FallbackValue=worktime}" />
+                            <LineBreak />
+                            <Run Text="{Binding SelectedActivity.Value.WorkTime, StringFormat='作業時間: {0}', FallbackValue=worktime}" />
                         </SelectableTextBlock>
                     </Expander>
 
@@ -527,13 +527,13 @@
                     CornerRadius="5">
                     <Expander
                         Name="expan"
-                        Background="#55008000"
+                        Background="#77008000"
                         IsExpanded="True">
                         <Expander.Resources>
                             <x:Double x:Key="ExpanderMinHeight">10</x:Double>
-                            <SolidColorBrush x:Key="ExpanderHeaderBackground">#55008000</SolidColorBrush>
-                            <SolidColorBrush x:Key="ExpanderHeaderBackgroundPointerOver">#77008000</SolidColorBrush>
-                            <SolidColorBrush x:Key="ExpanderHeaderBackgroundPressed">#77008000</SolidColorBrush>
+                            <SolidColorBrush x:Key="ExpanderHeaderBackground">#77008000</SolidColorBrush>
+                            <SolidColorBrush x:Key="ExpanderHeaderBackgroundPointerOver">#99008000</SolidColorBrush>
+                            <SolidColorBrush x:Key="ExpanderHeaderBackgroundPressed">#99008000</SolidColorBrush>
                             <Thickness x:Key="ExpanderChevronMargin">0 -5</Thickness>
                             <Thickness x:Key="ExpanderContentPadding">0</Thickness>
                         </Expander.Resources>
