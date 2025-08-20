@@ -43,6 +43,7 @@ namespace KWRP.Avalonia.Frontend.Models.Stores
                 .ObserveClear()
                 .Subscribe(_ =>
                 {
+                    ActivityGroupWorkTimes.Clear();
                     ActivityCards.Clear();
                     SelectedAcitivty.Value = null;
                     CurrentGroupItems.Clear();
@@ -52,6 +53,8 @@ namespace KWRP.Avalonia.Frontend.Models.Stores
         }
 
         public ObservableList<ActivityModel[]> ActivityGroups { get; } = [];
+        public List<TimeSpan[]> ActivityGroupWorkTimes { get; } = [];
+
         public ObservableList<ActivityModel> ActivityCards { get; } = [];
                 
         public ReactiveProperty<ActivityModel?> SelectedAcitivty { get; } = new(null);
