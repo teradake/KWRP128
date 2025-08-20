@@ -5,6 +5,7 @@ using KWRP.Avalonia.Backend.Services;
 using KWRP.Avalonia.Backend.Services.Activity;
 using KWRP.Avalonia.Backend.Services.Extensions;
 using KWRP.Avalonia.Frontend.Models.Stores;
+using KWRP.Backend.Model.Modlules.WorkTimeEstimator;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -155,13 +156,22 @@ namespace KWRP.Avalonia.Frontend.Services.Activity
         }
 
 
+        /// <summary>
+        /// 実際にアクティビティのインスタンス生成して登録するためのメソッド
+        /// </summary>
+        /// <param name="sequenceID"></param>
+        /// <param name="workAreaSequence"></param>
+        /// <returns></returns>
         protected ActivityModel[] RegisterSequences(int sequenceID, WorkAreaModel[] workAreaSequence)
         {
             _logService.LogDebug("register");
 
             var activities = new List<ActivityModel>();
             var representatives = new List<ActivityModel>();
-            var actBuilder = new ActivityBuilder().SetRoller(VR);
+            var actBuilder = new ActivityBuilder()
+                .SetRoller(VR)
+                .SetWorkTimeEstimatorOption(ActivityWorkTimeEstimatorOption.BuildByRoller(VR));
+
             for (int i = 0; i < workAreaSequence.Length; ++i)
             {
                 ActivityModel? represent = null;
