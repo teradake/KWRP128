@@ -288,7 +288,7 @@ namespace KWRP.Avalonia.Frontend.Services
                         $"　側方オフセット② : {_parameterStore.SideNextOffset.Value:F2}m\n" +
                         $"　レーンラップ幅 : {_parameterStore.LapWidth:F2}m\n" +
                         $"　作業可能長さ : {_parameterStore.LaneChangeLength:F2}m\n" +
-                        $"　作業進捗方向 : {_parameterStore.ProgresssDirectionRadian.Value * Math.PI / 180.0:F2} deg.\n" +
+                        $"　作業進捗方向 : {_parameterStore.ProgresssDirectionRadian.Value * 180.0 / Math.PI:F2} deg.\n" +
                         $"\n" +
                         $"　最小レーン数 : {_parameterStore.PairCountMin}\n" +
                         $"　最大レーン数 : {_parameterStore.PairCountMax}",
