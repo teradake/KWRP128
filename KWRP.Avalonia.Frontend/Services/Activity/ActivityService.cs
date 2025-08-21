@@ -326,7 +326,7 @@ namespace KWRP.Avalonia.Frontend.Services.Activity
                     var path = Path.Combine(targetFolder, fileName);
 
                     var sb = new StringBuilder();
-                    sb.AppendLine("groupId,time,accTime");
+                    sb.AppendLine("エリア名,作業時間,残時間");
                     for (int groupId = 0; groupId < _activityStore.ActivityGroupWorkTimes.Count; ++groupId)
                     {
                         var remain = TimeSpan.Zero;
@@ -344,7 +344,7 @@ namespace KWRP.Avalonia.Frontend.Services.Activity
 
                     // csvに出力
                     await using var fs = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None);
-                    await using var writer = new StreamWriter(fs);
+                    await using var writer = new StreamWriter(fs, new System.Text.UTF8Encoding(true));
                     await writer.WriteAsync(sb.ToString());
                 }
 
