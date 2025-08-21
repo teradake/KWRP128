@@ -309,12 +309,14 @@ namespace KWRP.Avalonia.Frontend.Services
                 Grid.SetRow(laneArrangementParametersText, 0);
                 canvas.Children.Add(grid);
 
+                grid.Measure(new Size(double.MaxValue, double.MaxValue));
+
                 var tempBox = new Trdk.Geometry.BoundingBox
                 {
                     Xmin = box.Xmax,
-                    Xmax = box.Xmax + laneArrangementParametersText.DesiredSize.Width * 1.01,
-                    Ymin = box.Ymax - laneArrangementParametersText.DesiredSize.Height * 1.01,
-                    Ymax = box.Ymax,
+                    Xmax = box.Xmax + grid.DesiredSize.Width * 1.01,
+                    Ymin = box.Ymin,
+                    Ymax = box.Ymin + grid.DesiredSize.Height * 1.01,
                 };
 
                 box = box.Update(tempBox);
