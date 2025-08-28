@@ -59,7 +59,7 @@ namespace KWRP.Avalonia.Frontend.ViewModels
         }
 
         public string AppName => "区割りシステム";
-        public string Version => "1.2.3";
+        public string Version => "1.2.4";
         public string Title => $"{AppName} ver {Version}";
 
         public INotificationMessageManager Manager => _notificationStore.Manager;
