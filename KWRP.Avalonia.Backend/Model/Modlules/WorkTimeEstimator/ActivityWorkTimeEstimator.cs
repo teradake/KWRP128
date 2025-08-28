@@ -51,7 +51,7 @@
                 // 転圧時間の計算
                 foreach (var laneLength in distances)
                 {
-                    var move = TimeSpan.FromSeconds(laneLength / speed);
+                    var move = TimeSpan.FromSeconds(laneLength / speed) * 2;
                     var switchback = _option.MeanSwitchbackTime * 2;
                     estimatedWorkTime += (move + switchback) * repeatNum;
                 }
