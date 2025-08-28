@@ -46,33 +46,49 @@
 
             var speed = refSpeedKmPerHour * 1000.0 / 3600.0; // m/sec
 
-            var estimatedWorkTime = TimeSpan.Zero;
-            {
-                // 転圧時間の計算
-                foreach (var laneLength in distances)
-                {
-                    var move = TimeSpan.FromSeconds(laneLength / speed) * 2;
-                    var switchback = _option.MeanSwitchbackTime * 2;
-                    estimatedWorkTime += (move + switchback) * repeatNum;
-                }
+            //var estimatedWorkTime = TimeSpan.Zero;
+            //{
+            //    // 転圧時間の計算
+            //    foreach (var laneLength in distances)
+            //    {
+            //        var move = TimeSpan.FromSeconds(laneLength / speed) * 2;
+            //        var switchbackTime = _option.MeanSwitchbackTime * 2;
+            //        estimatedWorkTime += (move + switchbackTime) * repeatNum;
+            //    }
 
-                // 端部のちょこ踏み時間の計算
-                foreach (var edgeFlag in edgeFlags)
-                {
-                    if (!enableChokobumi) break;
-                    if (!edgeFlag) continue;
-                    estimatedWorkTime += _option.MeanChokobumiTime * (repeatNum * distances.Length);
-                }
+            //    // 端部のちょこ踏み時間の計算
+            //    foreach (var edgeFlag in edgeFlags)
+            //    {
+            //        if (!enableChokobumi) break;
+            //        if (!edgeFlag) continue;
+            //        estimatedWorkTime += _option.MeanChokobumiTime * (repeatNum * distances.Length);
+            //    }
 
-                // くびれの時間の計算
-                if (enableKubire && _option.MeanKubireLengthMeter > 0)
-                {
-                    var move = TimeSpan.FromSeconds(_option.MeanKubireLengthMeter / speed) * 2;
-                    var switchback = _option.MeanSwitchbackTime * 2;
-                    estimatedWorkTime += (move + switchback);
-                }
-            }
-            return estimatedWorkTime;
+            //    // くびれの時間の計算
+            //    if (enableKubire && _option.MeanKubireLengthMeter > 0)
+            //    {
+            //        var move = TimeSpan.FromSeconds(_option.MeanKubireLengthMeter / speed) * 2;
+            //        var switchbackTime = _option.MeanSwitchbackTime * 2;
+            //        estimatedWorkTime += (move + switchbackTime);
+            //    }
+            //}
+            //return estimatedWorkTime;
+
+
+            var laneLength = distances.Sum();
+            var compactionLength = laneLength * 2;
+            var chokobumiTimeFront = repeatNum * distances.Length * _option.MeanChokobumiTime * (edgeFlags[0] ? 1 : 0);
+            var chokobumiTimeRear = repeatNum * distances.Length * _option.MeanChokobumiTime * (edgeFlags[1] ? 1 : 0);
+            var switchbackTime = _option.MeanSwitchbackTime;
+            var kubireTime = TimeSpan.FromSeconds(_option.MeanKubireLengthMeter * 2 / speed) + switchbackTime * 2;
+            var compactionTime = TimeSpan.FromSeconds(compactionLength * repeatNum / speed) + switchbackTime * distances.Length * 2 * repeatNum;
+            
+            var estimated = compactionTime
+                + (enableChokobumi ? chokobumiTimeFront + chokobumiTimeRear : TimeSpan.Zero)
+                + (enableKubire ? kubireTime : TimeSpan.Zero);
+            return estimated;
+
+
         }
     }
 }
