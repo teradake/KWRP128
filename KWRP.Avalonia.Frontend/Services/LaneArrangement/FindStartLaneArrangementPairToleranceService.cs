@@ -1,8 +1,10 @@
 ﻿using KWRP.Avalonia.Backend;
+using KWRP.Avalonia.Backend.Enums;
 using KWRP.Avalonia.Backend.Model.Modlules.LaneFilter;
 using KWRP.Avalonia.Backend.Model.Modlules.LaneIntegration;
 using KWRP.Avalonia.Backend.Model.Modules.LaneArrangement;
 using KWRP.Avalonia.Backend.Model.Shapes;
+using KWRP.Avalonia.Backend.Models;
 using KWRP.Avalonia.Backend.Services;
 using KWRP.Avalonia.Frontend.Models.Settings;
 using KWRP.Avalonia.Frontend.Models.Stores;
@@ -24,6 +26,7 @@ namespace KWRP.Avalonia.Frontend.Services.LaneArrangement
         private readonly ILaneArrangementEvaluationService _evaluator;
         private readonly DfsLaneIntegrator _laneIntegrator;
         private readonly ApplicationStore _applicationStore;
+        private readonly INotificationService _notificationService;
 
         private readonly List<double> _directions = [];
 
@@ -33,7 +36,8 @@ namespace KWRP.Avalonia.Frontend.Services.LaneArrangement
             ILogService logService,
             ILaneArrangementEvaluationService evaluator,
             DfsLaneIntegrator laneIntegrator,
-            ApplicationStore applicationStore)
+            ApplicationStore applicationStore,
+            INotificationService notificationService)
         {
             _parameterStore = parameterStore;
             _canvasItemStore = canvasItemStore;
@@ -41,6 +45,7 @@ namespace KWRP.Avalonia.Frontend.Services.LaneArrangement
             _evaluator = evaluator;
             _laneIntegrator = laneIntegrator;
             _applicationStore = applicationStore;
+            _notificationService = notificationService;
 
             _logService.LogDebug("init");
         }
@@ -130,7 +135,15 @@ namespace KWRP.Avalonia.Frontend.Services.LaneArrangement
                     orthogonalLanes: p,
                     progressDirectionRad: _directions[best],
                     headToRight: _parameterStore.RollerHeadType == Backend.Enums.RollerHeadingType.ToRight)));
-                    
+
+            // レーンが生成できなかった場合は通知
+            if (lanes.Length == 0 || !pairedLanes.Any())
+            {
+                _notificationService.Notify(KWRPNotification.Create(
+                    message: $"ローラ作業可能長さが確保できないためレーン生成ができません。\n（作業進捗方向: {(180 / Math.PI *_directions[best]):F2}°）",
+                    type: NotifyMessageType.Warn,
+                    duration: 3.0));
+            }
 
             // 結果を格納する
             _canvasItemStore.CreatedLaneResults.Add(result);
