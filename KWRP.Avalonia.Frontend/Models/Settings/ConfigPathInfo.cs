@@ -12,23 +12,24 @@ namespace KWRP.Avalonia.Frontend.Models.Settings
     public class ConfigPathInfo
     {
         private readonly string _basePath;
-        private readonly string _settingDirName;
-        private readonly string _assetsDirName;
+        private readonly string _settingDirName = "settings";
+        private readonly string _assetsDirName = "assets";
 
         public ConfigPathInfo(string? basePath = null)
         {
-            _basePath = basePath ?? Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!;
-            if (_basePath == null)
+            if (string.IsNullOrEmpty(basePath))
             {
-                string exeFullPath = Path.GetFullPath(Environment.GetCommandLineArgs()[0]);
-                _basePath = Path.GetDirectoryName(exeFullPath);
+                basePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                if (string.IsNullOrEmpty(basePath))
+                {
+                    string exeFullPath = Path.GetFullPath(Environment.GetCommandLineArgs()[0]);
+                    basePath = Path.GetDirectoryName(exeFullPath);
+                }
             }
-        
-            _settingDirName = "settings";
-            _assetsDirName = "assets";
+            _basePath = basePath ?? throw new ArgumentNullException(nameof(basePath), "実行ファイルのフォルダパスが取得できませんでした");
 
-            if (!Directory.Exists(SettingDirectoryPath)) Directory.CreateDirectory(SettingDirectoryPath);
-            if (!Directory.Exists(AssetsDirectoryPath)) Directory.CreateDirectory(AssetsDirectoryPath);
+            CreateDirectoryIfNotExists(SettingDirectoryPath);
+            CreateDirectoryIfNotExists(AssetsDirectoryPath);
         }
 
         public string MachineConfigPath => Path.Combine(SettingDirectoryPath, "MachineInfo.json");
@@ -37,5 +38,13 @@ namespace KWRP.Avalonia.Frontend.Models.Settings
 
         public string AssetsDirectoryPath => Path.Combine(_basePath, _assetsDirName);
         public string SettingDirectoryPath => Path.Combine(_basePath, _settingDirName);
+
+        private void CreateDirectoryIfNotExists(string path)
+        {
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+        }
     }
 }
