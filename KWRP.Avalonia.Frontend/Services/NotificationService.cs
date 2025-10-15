@@ -6,7 +6,7 @@ namespace KWRP.Avalonia.Frontend.Services
 {
     public class NotificationService : INotificationService
     {
-        public event Action<KWRPNotification> Notified;
+        public event Action<KWRPNotification> Notified = delegate { };
 
         public void Notify(KWRPNotification notification)
         {
