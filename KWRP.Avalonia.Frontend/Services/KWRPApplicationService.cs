@@ -36,7 +36,7 @@ namespace KWRP.Avalonia.Frontend.Services
             try
             {
                 var savePath = _configPathInfo.MachineConfigPath;
-                var dir = Path.GetDirectoryName(savePath);
+                var dir = Path.GetDirectoryName(savePath) ?? throw new Exception("ディレクトリパスの取得に失敗しました");
                 if (!Directory.Exists(dir))
                 {
                     Directory.CreateDirectory(dir);
@@ -57,7 +57,7 @@ namespace KWRP.Avalonia.Frontend.Services
             try
             {
                 var savePath = _configPathInfo.LaneArrangementConfigPath;
-                var dir = Path.GetDirectoryName(savePath);
+                var dir = Path.GetDirectoryName(savePath) ?? throw new Exception("ディレクトリパスの取得に失敗しました");
                 if (!Directory.Exists(dir))
                 {
                     Directory.CreateDirectory(dir);
