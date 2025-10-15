@@ -31,6 +31,17 @@
             };
         }
 
+        public static string GetWorkName(this RollerActivityType type)
+        {
+            return type switch
+            {
+                RollerActivityType.Move => "trans",
+                RollerActivityType.NonCompaction => "nocomp",
+                RollerActivityType.Compaction => "comp",
+                _ => throw new NotImplementedException()
+            };
+        }
+
         public static int ToWorkType(this RollerActivityType type)
         {
             return type switch

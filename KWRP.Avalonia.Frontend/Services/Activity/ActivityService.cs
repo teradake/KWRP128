@@ -301,7 +301,8 @@ namespace KWRP.Avalonia.Frontend.Services.Activity
 
                 foreach (ActivityModel act in _activityStore.ActivityGroups[groupId].Where(act => act.GroupId == groupId))
                 {
-                    var fileName = $"{_activityStore.OutputFolderPrefix.CurrentValue}_{act.GroupId:d2}_{act.OutputFIlePrefix}.csv";
+                    //var fileName = $"{_activityStore.OutputFolderPrefix.CurrentValue}_{act.GroupId:d2}_{act.OutputFIlePrefix}.csv";
+                    var fileName = $"{act.GroupId:d2}_{act.OutputFIlePrefix}.csv";
                     var filePath = Path.Combine(outputDirectoryPath, fileName);
 
                     try

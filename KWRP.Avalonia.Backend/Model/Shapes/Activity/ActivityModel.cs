@@ -19,7 +19,7 @@ namespace KWRP.Avalonia.Backend.Model.Shapes.Activity
         public bool Comp => ActivityType.ToComp();
         public bool[] Edge { get; set; } = { false, false };
         public RollerActivityType ActivityType { get; set; }
-        public string OutputFIlePrefix => $"{ActivityId:D3}_{ActivityType.GetID()}";
+        public string OutputFIlePrefix => $"{ActivityId:D3}_{ActivityType.GetWorkName()}";
 
         #region info可視化用
         public int GroupId { get; set; }
