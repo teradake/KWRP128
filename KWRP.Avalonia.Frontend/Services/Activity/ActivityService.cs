@@ -161,7 +161,7 @@ namespace KWRP.Avalonia.Frontend.Services.Activity
         /// <summary>
         /// 実際にアクティビティのインスタンス生成して登録するためのメソッド
         /// </summary>
-        /// <param name="sequenceID"></param>
+        /// <param name="sequenceID">GroupIdに相当。0-based</param>
         /// <param name="workAreaSequence"></param>
         /// <returns></returns>
         protected ActivityModel[] RegisterSequences(int sequenceID, WorkAreaModel[] workAreaSequence)
@@ -176,11 +176,12 @@ namespace KWRP.Avalonia.Frontend.Services.Activity
                 .SetRoller(VR)
                 .SetWorkTimeEstimatorOption(ActivityWorkTimeEstimatorOption.BuildByRoller(VR));
 
-            for (int i = 0; i < workAreaSequence.Length; ++i)
+            sequenceID++;   // 1-basedに変換
+            foreach (var (workArea, i) in workAreaSequence.Select((wa, id) => (wa, id + 1)))    // 1-basedに変換
             {
                 ActivityModel? represent = null;
                 TimeSpan workTime = TimeSpan.Zero;
-                actBuilder.SetCurrentWorkArea(workAreaSequence[i]);
+                actBuilder.SetCurrentWorkArea(workArea);
 
                 if (_activityStore.EnableMove)
                 {
@@ -292,14 +293,14 @@ namespace KWRP.Avalonia.Frontend.Services.Activity
             // Output Activity
             for (int groupId = 0; groupId < _activityStore.ActivityGroups.Count; ++groupId)
             {
-                var outputFolder = $"Group{groupId}";
+                var outputFolder = $"Group{groupId + 1}";
                 var outputDirectoryPath = Path.Combine(targetFolder, outputFolder);
                 if (!Directory.Exists(outputDirectoryPath))
                 {
                     Directory.CreateDirectory(outputDirectoryPath);
                 }
 
-                foreach (ActivityModel act in _activityStore.ActivityGroups[groupId].Where(act => act.GroupId == groupId))
+                foreach (ActivityModel act in _activityStore.ActivityGroups[groupId].Where(act => act.GroupId == groupId + 1))
                 {
                     //var fileName = $"{_activityStore.OutputFolderPrefix.CurrentValue}_{act.GroupId:d2}_{act.OutputFIlePrefix}.csv";
                     var fileName = $"{act.GroupId:d2}_{act.OutputFIlePrefix}.csv";
