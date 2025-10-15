@@ -22,7 +22,7 @@ namespace KWRP.Avalonia.Backend.Services.Activity
 
         private WorkAreaModel? _prev = null;
         private WorkAreaModel? _current = null;
-        private int activityID = 0;
+        private int activityID = 1;
         private readonly bool[] _edgeFlag;
         private readonly Dictionary<Direction, double> _margin;
 

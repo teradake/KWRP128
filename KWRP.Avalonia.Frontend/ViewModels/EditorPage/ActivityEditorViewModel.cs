@@ -175,7 +175,7 @@ namespace KWRP.Avalonia.Frontend.ViewModels.EditorPage
                         SelectedActivityIndex.Value = null;
                         if (val != null)
                         {
-                            SelectedActivityIndex.Value = 0;
+                            SelectedActivityIndex.Value = 1;
                             _activityService.SetCurrentGroup((int)val);
                         }
                     })
@@ -194,12 +194,18 @@ namespace KWRP.Avalonia.Frontend.ViewModels.EditorPage
                             if (SelectedGroupIndex.Value is int idx)
                             {
                                 int m = _activityStore.ActivityGroups[idx].Length;
-                                if (val < 0 || val >= m)
+                                if (val < 1 || val > m)
                                 {
-                                    SelectedActivityIndex.Value = (val % m + m) % m;
+                                    SelectedActivityIndex.Value = ((val - 1) % m + m) % m + 1;
                                     return;
                                 }
-                                _activityService.GetActivityModel(idx, (int)val);
+                                _activityService.GetActivityModel(idx, (int)val - 1);
+                                //if (val < 0 || val >= m)
+                                //{
+                                //    SelectedActivityIndex.Value = (val % m + m) % m;
+                                //    return;
+                                //}
+                                //_activityService.GetActivityModel(idx, (int)val);
                             }
                         }
                         catch (Exception e)
