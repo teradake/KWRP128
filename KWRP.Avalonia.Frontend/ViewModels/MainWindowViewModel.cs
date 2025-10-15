@@ -69,9 +69,9 @@ namespace KWRP.Avalonia.Frontend.ViewModels
 
         public IReadOnlyBindableReactiveProperty<bool> IsBusy { get; }
 
-        internal async Task LoadDxfHistoryAsync() => await _dxfHistoryStorageService.LoadAsync();
-        internal async Task SaveDxfHistoryAsync() => await _dxfHistoryStorageService.SaveAsync();
-        internal async Task SaveLaneArrangementConfigAsync() => await _appService.SaveLaneArrangementConfigAsync();
-        internal async Task SaveMachineConfigAsync() => await _appService.SaveMachineConfigAsync();
+        public async Task LoadDxfHistoryAsync() => await _dxfHistoryStorageService.LoadAsync();
+        public async Task SaveDxfHistoryAsync() => await _dxfHistoryStorageService.SaveAsync();
+        public async Task SaveLaneArrangementConfigAsync() => await _appService.SaveLaneArrangementConfigAsync();
+        public async Task SaveMachineConfigAsync() => await _appService.SaveMachineConfigAsync();
     }
 }

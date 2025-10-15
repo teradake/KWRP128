@@ -420,7 +420,7 @@ namespace KWRP.Avalonia.Frontend.ViewModels.EditorPage
         public BindableReactiveProperty<bool> GoalAreaVisible { get; } = new(true);
         public BindableReactiveProperty<bool> ActivityVisible { get; } = new(true);
 
-        internal void AddPochi(double x, double y)
+        public void AddPochi(double x, double y)
         {
             var pochi = new Vec2(x, y);
             if (_canvasItemStore.RulerPoints.Count > 0 && _canvasItemStore.RulerPoints.Last().Equals(pochi))
@@ -429,19 +429,19 @@ namespace KWRP.Avalonia.Frontend.ViewModels.EditorPage
             }
             _canvasItemStore.RulerPoints.Add(pochi);
         }
-        internal void ClearPochi() => _canvasItemStore.RulerPoints.Clear();
+        public void ClearPochi() => _canvasItemStore.RulerPoints.Clear();
 
-        internal void SetSize(int height, int width) => _canvasService.SetWindowSize(height, width);
-        internal void PointerTranslate(double dx, double dy) => _canvasService.Translate(dx, dy);
-        internal void PointerScaleAt(double scale, double x, double y) => _canvasService.ScaleAt(scale, x, y);
-        internal void Scale(double scale) => PointerScaleAt(scale, _canvasItemStore.AreaBoundingBox.Value?.Center.X ?? 0, _canvasItemStore.AreaBoundingBox.Value?.Center.Y ?? 0);
-        internal void ResetAffine() => _canvasService.ResetAffine();
-        internal void AdjustAffine() => _canvasService.AdjustAffine();
-        internal void RotateAffine(double rotDegree) => _canvasService.Rotate(rotDegree);
+        public void SetSize(int height, int width) => _canvasService.SetWindowSize(height, width);
+        public void PointerTranslate(double dx, double dy) => _canvasService.Translate(dx, dy);
+        public void PointerScaleAt(double scale, double x, double y) => _canvasService.ScaleAt(scale, x, y);
+        public void Scale(double scale) => PointerScaleAt(scale, _canvasItemStore.AreaBoundingBox.Value?.Center.X ?? 0, _canvasItemStore.AreaBoundingBox.Value?.Center.Y ?? 0);
+        public void ResetAffine() => _canvasService.ResetAffine();
+        public void AdjustAffine() => _canvasService.AdjustAffine();
+        public void RotateAffine(double rotDegree) => _canvasService.Rotate(rotDegree);
 
-        internal void StartDirectionSelection() => _canvasStateStore.IsDirectionSelectionMode.Value = true;
-        internal void SetDirectionAt(double x, double y) => _directionArrowService.SetArrowAt(x, y);
-        internal async Task ReleaseDirectionAt(double x, double y)
+        public void StartDirectionSelection() => _canvasStateStore.IsDirectionSelectionMode.Value = true;
+        public void SetDirectionAt(double x, double y) => _directionArrowService.SetArrowAt(x, y);
+        public async Task ReleaseDirectionAt(double x, double y)
         {
             try
             {
@@ -453,11 +453,11 @@ namespace KWRP.Avalonia.Frontend.ViewModels.EditorPage
                 _canvasStateStore.IsOptimizing.Value = false;
             }
         }
-        internal void UpdateDirectionArrow(double x, double y) =>_directionArrowService.UpdateArrowAt(x, y);
+        public void UpdateDirectionArrow(double x, double y) =>_directionArrowService.UpdateArrowAt(x, y);
 
-        internal void SetDragRectAt(double x, double y) => _dragRectService.SetDragRectAt(x, y);
-        internal void ReleaseDragRectAt(double x, double y) => _dragRectService.ReleaseDragRectAt(x, y);
-        internal void UpdateDragRect(double x, double y) => _dragRectService.UpdateDragRectAt(x, y);
+        public void SetDragRectAt(double x, double y) => _dragRectService.SetDragRectAt(x, y);
+        public void ReleaseDragRectAt(double x, double y) => _dragRectService.ReleaseDragRectAt(x, y);
+        public void UpdateDragRect(double x, double y) => _dragRectService.UpdateDragRectAt(x, y);
 
         
     }
