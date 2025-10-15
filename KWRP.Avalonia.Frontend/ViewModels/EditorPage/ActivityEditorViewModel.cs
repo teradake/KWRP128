@@ -109,7 +109,7 @@ namespace KWRP.Avalonia.Frontend.ViewModels.EditorPage
                     .AddTo(Disposables);
 
                 GroupIds = _groupIds
-                    .CreateView(i => new GroupItem(i, $"Group {i}"))
+                    .CreateView(i => new GroupItem(i, $"Group {i+1}"))
                     .ToNotifyCollectionChanged(SynchronizationContextCollectionEventDispatcher.Current)
                     .AddTo(Disposables);
                 SelectedGroupIndex = new BindableReactiveProperty<int?>(null).AddTo(Disposables);
