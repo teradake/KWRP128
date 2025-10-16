@@ -1,4 +1,6 @@
-﻿namespace KWRP.Backend.Model.Shapes.Activity.Entity
+﻿using System.Xml.Serialization;
+
+namespace KWRP.Backend.Model.Shapes.Activity.Entity
 {
     public class RollerActivityEntity
     {
@@ -23,8 +25,8 @@
         public int job_number { get; set; }
         public bool manned_construction { get; set; }
         public string area_name { get; set; } = string.Empty;
-        public string work_area_range { get; set; } = string.Empty;
-        public string occupied_range { get; set; } = string.Empty;
+        public List<Vector2d> work_area_range { get; set; } = [];
+        public List<Vector2d> occupied_range { get; set; } = [];
     }
 
     public class RollerBaseActivity
@@ -53,7 +55,31 @@
     public class RollerUniqueMoveActivity
     {
         public int activity_id { get; set; }
-        public string destination_coordinate { get; set; } = string.Empty;
+        public List<Vector2d> destination_coordinate { get; set; } = [];
         public string move_type { get; set; } = string.Empty;
+    }
+
+    public class Vector2d
+    {
+        private double _x;
+        private double _y;
+
+        public double X
+        {
+            get { return _x; }
+            set
+            {
+                _x = Math.Round(value, 4, MidpointRounding.AwayFromZero);
+            }
+        }
+
+        public double Y
+        {
+            get { return _y; }
+            set
+            {
+                _y = Math.Round(value, 4, MidpointRounding.AwayFromZero);
+            }
+        }
     }
 }

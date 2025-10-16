@@ -1,6 +1,8 @@
 ﻿using KWRP.Avalonia.Backend;
 using KWRP.Avalonia.Backend.Enums;
 using KWRP.Avalonia.Backend.Model.Shapes.Activity;
+using System.Xml.Serialization;
+using Trdk.Geometry;
 
 namespace KWRP.Backend.Model.Shapes.Activity.Entity
 {
@@ -24,8 +26,8 @@ namespace KWRP.Backend.Model.Shapes.Activity.Entity
                     job_number = -1,
                     manned_construction = false,
                     area_name = $"1-1-{act.AreaID}",
-                    work_area_range = "Not Yet Implemented!!!!!!!!!",
-                    occupied_range = "Not Yet Implemented!!!!!!!!!"
+                    work_area_range = act.WorkArea.Shape.ToList(act.Dir), 
+                    occupied_range = act.OccArea.Shape.ToList(act.Dir),
                 },
                 Base = new RollerBaseActivity
                 {
@@ -52,7 +54,7 @@ namespace KWRP.Backend.Model.Shapes.Activity.Entity
                 ent.Unique_Move = new RollerUniqueMoveActivity
                 {
                     activity_id = act.GroupId * KWRPConstants.C_IINF + act.AreaID,
-                    destination_coordinate = "Not Yet Implemented!!!!!!!!!",
+                    destination_coordinate = act.GoalArea.Shape.ToList(act.Dir),
                     move_type = string.Empty,
                 };
             }
@@ -75,5 +77,26 @@ namespace KWRP.Backend.Model.Shapes.Activity.Entity
 
             return ent;
         }
+
+
+
+        /// <summary>
+        /// AL用に変換。時計まわりかつ始点と終点が一致していることを保証する
+        /// </summary>
+        /// <param name="shape"></param>
+        /// <returns></returns>
+        public static List<Vector2d> ToList(this Polygon shape, double dir)
+        {
+            var points = shape
+                .ToClockWise()
+                .Points
+                .ReorderPointsToWorkList(dir);
+
+            return points
+                .Append(points[0])
+                .Select(p => new Vector2d { X = p.X, Y = p.Y })
+                .ToList();
+        }
     }
+
 }
