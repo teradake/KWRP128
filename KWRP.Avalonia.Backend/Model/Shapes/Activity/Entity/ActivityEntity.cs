@@ -2,8 +2,12 @@
 
 namespace KWRP.Backend.Model.Shapes.Activity.Entity
 {
+
     public class RollerActivityEntity
     {
+        public int GroupId { get; set; }
+        public int AreaId { get; set; }
+        public int ActivityId { get; set; }
         public RollerCommonActivity Common { get; set; } = new();
         public RollerBaseActivity Base { get; set; } = new();
         public RollerUniqueCompactionActivity? Unique_Compaction { get; set; }

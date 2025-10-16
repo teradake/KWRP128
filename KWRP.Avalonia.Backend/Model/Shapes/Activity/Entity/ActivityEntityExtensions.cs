@@ -14,6 +14,9 @@ namespace KWRP.Backend.Model.Shapes.Activity.Entity
 
             var ent = new RollerActivityEntity
             {
+                GroupId = act.GroupId,
+                AreaId = act.AreaID,
+                ActivityId = act.ActivityId,
                 Common = new RollerCommonActivity
                 {
                     activity_id = id,
