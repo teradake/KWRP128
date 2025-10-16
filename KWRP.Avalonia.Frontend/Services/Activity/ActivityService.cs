@@ -1,4 +1,5 @@
-﻿using KWRP.Avalonia.Backend.Model.Shapes.Activity;
+﻿using KWRP.Avalonia.Backend;
+using KWRP.Avalonia.Backend.Model.Shapes.Activity;
 using KWRP.Avalonia.Backend.Model.Shapes.WorkArea;
 using KWRP.Avalonia.Backend.Models.Roller;
 using KWRP.Avalonia.Backend.Services;
@@ -344,7 +345,7 @@ namespace KWRP.Avalonia.Frontend.Services.Activity
 
             try
             {
-                var jsonName = $"ActivityList.json";
+                var jsonName = KWRPConstants.C_ACTIVITYLIST_JSON_FILENAME;
                 var path = Path.Combine(targetFolder, jsonName);
                 var json = System.Text.Json.JsonSerializer.Serialize(activityList, new System.Text.Json.JsonSerializerOptions()
                 {
