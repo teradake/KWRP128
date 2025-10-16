@@ -10,11 +10,13 @@ namespace KWRP.Backend.Model.Shapes.Activity.Entity
     {
         public static RollerActivityEntity? ToEntity(this ActivityModel act, double laneDirectionRadian)
         {
+            int id = ((act.GroupId * KWRPConstants.C_IINF) + act.AreaID) *KWRPConstants.C_IINF + act.ActivityId;
+
             var ent = new RollerActivityEntity
             {
                 Common = new RollerCommonActivity
                 {
-                    activity_id = act.GroupId * KWRPConstants.C_IINF + act.AreaID,
+                    activity_id = id,
                     machine_type = string.Empty,
                     plan_machine_id = $"VR{act.GroupId:d2}",
                     machine_model = string.Empty,
@@ -31,7 +33,7 @@ namespace KWRP.Backend.Model.Shapes.Activity.Entity
                 },
                 Base = new RollerBaseActivity
                 {
-                    activity_id = act.GroupId * KWRPConstants.C_IINF + act.AreaID,
+                    activity_id = id,
                     work_type = act.ActivityType.ToTag(),
                     construction_direction = act.Dir,
                     material_type = string.Empty,
@@ -53,7 +55,7 @@ namespace KWRP.Backend.Model.Shapes.Activity.Entity
             {
                 ent.Unique_Move = new RollerUniqueMoveActivity
                 {
-                    activity_id = act.GroupId * KWRPConstants.C_IINF + act.AreaID,
+                    activity_id = id,
                     destination_coordinate = act.GoalArea.Shape.ToList(act.Dir),
                     move_type = string.Empty,
                 };
@@ -64,7 +66,7 @@ namespace KWRP.Backend.Model.Shapes.Activity.Entity
             {
                 ent.Unique_Compaction = new RollerUniqueCompactionActivity
                 {
-                    activity_id = act.GroupId * KWRPConstants.C_IINF + act.AreaID,
+                    activity_id = id,
                     repeat_count = act.RepeatNum,
                     vibration_flg = act.Comp,
                 };

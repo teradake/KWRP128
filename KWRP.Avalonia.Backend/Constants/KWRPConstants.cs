@@ -4,7 +4,7 @@
     {
         public const double C_INF = double.MaxValue / 10.0;
         public const double C_EPS = 1e-9;
-        public const int C_IINF = 1_000_000_000;
+        public const int C_IINF = 1_000;
 
         public const int C_DEFAULT_PAIRCOUNT_MIN = 2;
         public const int C_DEFAULT_PAIRCOUNT_MAX = 3;
