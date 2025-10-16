@@ -25,5 +25,7 @@
         public const int C_REPEAT_MAX = 10;
         public const double C_SPEED_MAX = 30;
         public const double C_MARGIN_MAX = 100;
+
+        public const string C_ACTIVITYLIST_JSON_FILENAME = "RollerActivityList.json";
     }
 }

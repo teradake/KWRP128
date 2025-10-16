@@ -344,7 +344,7 @@ namespace KWRP.Avalonia.Frontend.Services.Activity
 
             try
             {
-                var jsonName = $"{_activityStore.OutputFolderPrefix.CurrentValue}_ActivityList.json";
+                var jsonName = $"ActivityList.json";
                 var path = Path.Combine(targetFolder, jsonName);
                 var json = System.Text.Json.JsonSerializer.Serialize(activityList, new System.Text.Json.JsonSerializerOptions()
                 {
