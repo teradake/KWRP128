@@ -1,4 +1,4 @@
-﻿namespace KWRP.Backend.Model.Shapes.Activity
+﻿namespace KWRP.Backend.Model.Shapes.Activity.Entity
 {
     public class RollerActivityEntity
     {
