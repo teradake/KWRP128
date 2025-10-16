@@ -6,12 +6,16 @@ using KWRP.Avalonia.Backend.Services.Activity;
 using KWRP.Avalonia.Backend.Services.Extensions;
 using KWRP.Avalonia.Frontend.Models.Stores;
 using KWRP.Backend.Model.Modlules.WorkTimeEstimator;
+using KWRP.Backend.Model.Shapes.Activity.Entity;
 using NetTopologySuite.Algorithm;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Encodings.Web;
+using System.Text.Json;
+using System.Text.Unicode;
 using System.Threading.Tasks;
 using Trdk.Geometry;
 
@@ -28,6 +32,7 @@ namespace KWRP.Avalonia.Frontend.Services.Activity
         private readonly CaptureService _captureService;
         private readonly CadScriptService _cadScriptService;
         private readonly CanvasItemStore _canvasItemStore;
+        private readonly ParameterStore _parameterStore;
 
         private RollerModel VR => _machineStore.CurrentRoller;
 
@@ -40,7 +45,8 @@ namespace KWRP.Avalonia.Frontend.Services.Activity
             IPathService pathService,
             CaptureService captureService,
             CadScriptService cadScriptService,
-            CanvasItemStore canvasItemStore)
+            CanvasItemStore canvasItemStore,
+            ParameterStore parameterStore)
         {
             _activityStore = activityStore;
             _logService = logService;
@@ -51,6 +57,7 @@ namespace KWRP.Avalonia.Frontend.Services.Activity
             _captureService = captureService;
             _cadScriptService = cadScriptService;
             _canvasItemStore = canvasItemStore;
+            _parameterStore = parameterStore;
 
             _logService.LogDebug("init");
         }
@@ -290,7 +297,8 @@ namespace KWRP.Avalonia.Frontend.Services.Activity
                 throw new IOException(reason);
             }
 
-            // Output Activity
+            // Output Activity & ActivityListJson
+            var activityList = new List<RollerActivityEntity>();
             for (int groupId = 0; groupId < _activityStore.ActivityGroups.Count; ++groupId)
             {
                 var outputFolder = $"Group{groupId + 1}";
@@ -317,7 +325,40 @@ namespace KWRP.Avalonia.Frontend.Services.Activity
                         _logService.LogError($"ファイル{fileName}保存時にエラーが発生しました。{ex}");
                         throw;
                     }
+
+                    try
+                    {
+                        var entity = act.ToEntity(_parameterStore.ProgresssDirectionRadian.Value);
+                        if (entity is { })
+                        {
+                            activityList.Add(entity);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logService.LogError($"ActivityModelからActivityEntityへの変換に失敗しました。{ex}");
+                        throw;
+                    }
                 }
+            }
+
+            try
+            {
+                var jsonName = $"{_activityStore.OutputFolderPrefix.CurrentValue}_ActivityList.json";
+                var path = Path.Combine(targetFolder, jsonName);
+                var json = System.Text.Json.JsonSerializer.Serialize(activityList, new System.Text.Json.JsonSerializerOptions()
+                {
+                    Encoder = JavaScriptEncoder.Create(UnicodeRanges.All),
+                    ReadCommentHandling = JsonCommentHandling.Skip,
+                    WriteIndented = true,
+                });
+                await using var fs = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None);
+                await using var writer = new StreamWriter(fs);
+                await writer.WriteAsync(json);
+            }
+            catch (Exception e)
+            {
+                _logService.LogWarn("ActivityListJsonの保存に失敗しました" + e);
             }
 
             // Output WorkTime

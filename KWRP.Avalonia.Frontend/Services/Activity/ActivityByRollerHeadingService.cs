@@ -25,6 +25,7 @@ namespace KWRP.Avalonia.Frontend.Services.Activity
         private readonly CaptureService _captureService;
         private readonly CadScriptService _cadScriptService;
         private readonly CanvasItemStore _canvasItemStore;
+        private readonly ParameterStore _parameterStore;
 
         private RollerModel VR => _machineStore.CurrentRoller;
 
@@ -37,8 +38,9 @@ namespace KWRP.Avalonia.Frontend.Services.Activity
             IPathService pathService,
             CaptureService captureService,
             CadScriptService cadScriptService,
-            CanvasItemStore canvasItemStore)
-            : base(activityStore, logService, notificationService, workAreaStore, machineStore, pathService, captureService, cadScriptService, canvasItemStore)
+            CanvasItemStore canvasItemStore,
+            ParameterStore parameterStore)
+            : base(activityStore, logService, notificationService, workAreaStore, machineStore, pathService, captureService, cadScriptService, canvasItemStore, parameterStore)
         {
             _activityStore = activityStore;
             _logService = logService;
@@ -49,6 +51,7 @@ namespace KWRP.Avalonia.Frontend.Services.Activity
             _captureService = captureService;
             _cadScriptService = cadScriptService;
             _canvasItemStore = canvasItemStore;
+            _parameterStore = parameterStore;
 
             _logService.LogDebug("init");
         }
