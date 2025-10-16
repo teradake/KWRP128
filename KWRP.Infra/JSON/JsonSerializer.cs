@@ -28,7 +28,7 @@ namespace KWRP.Infra.JSON
             }
             catch (Exception ex)
             {
-                throw new IOException($"設定ファイルの保存に失敗しました: {filePath}", ex);
+                throw new IOException($"jsonファイルの保存に失敗しました: {filePath}", ex);
             }
         }
 
@@ -38,19 +38,18 @@ namespace KWRP.Infra.JSON
             {
                 if (!File.Exists(filePath))
                 {
-                    throw new FileNotFoundException("設定ファイルが見つかりません", filePath);
+                    throw new FileNotFoundException("jsonファイルが見つかりません", filePath);
                 }
-
                 using var stream = File.OpenRead(filePath);
                 return await JsonSerializer.DeserializeAsync<T>(stream, _options);
             }
             catch (JsonException ex)
             {
-                throw new FormatException($"設定ファイルの読み込みに失敗しました（形式エラー）: {filePath}", ex);
+                throw new FormatException($"jsonファイルの読み込みに失敗しました（形式エラー）: {filePath}", ex);
             }
             catch (Exception ex)
             {
-                throw new IOException($"設定ファイルの読み込みに失敗しました: {filePath}", ex);
+                throw new IOException($"jsonファイルの読み込みに失敗しました: {filePath}", ex);
             }
         }
 
@@ -58,16 +57,20 @@ namespace KWRP.Infra.JSON
         {
             try
             {
+                if (!File.Exists(filePath))
+                {
+                    throw new FileNotFoundException("jsonファイルが見つかりません", filePath);
+                }
                 string rawJson = File.ReadAllText(filePath);
                 return JsonSerializer.Deserialize<T>(rawJson);
             }
             catch (JsonException ex)
             {
-                throw new FormatException($"設定ファイルの読み込みに失敗しました（形式エラー）: {filePath}", ex);
+                throw new FormatException($"jsonファイルの読み込みに失敗しました（形式エラー）: {filePath}", ex);
             }
             catch (Exception ex)
             {
-                throw new IOException($"設定ファイルの読み込みに失敗しました: {filePath}", ex);
+                throw new IOException($"jsonファイルの読み込みに失敗しました: {filePath}", ex);
             }
         }
     }
