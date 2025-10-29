@@ -16,7 +16,6 @@ namespace KWRP.Backend.Model.Shapes.Activity.Entity
 
     public class RollerCommonActivity
     {
-        public int activity_id { get; set; }
         public string machine_type {  get; set; } = string.Empty;
         public string plan_machine_id { get; set; } = string.Empty;
         public string machine_model { get; set; } = string.Empty;
@@ -35,7 +34,6 @@ namespace KWRP.Backend.Model.Shapes.Activity.Entity
 
     public class RollerBaseActivity
     {
-        public int activity_id { get; set; }
         public string work_type { get; set; } = string.Empty;
         public double construction_direction { get; set; }
         public string material_type { get; set; } = string.Empty;
@@ -51,14 +49,12 @@ namespace KWRP.Backend.Model.Shapes.Activity.Entity
 
     public class RollerUniqueCompactionActivity
     {
-        public int activity_id { get; set; }   
         public int repeat_count { get; set; }
         public bool vibration_flg { get; set; }
     }
 
     public class RollerUniqueMoveActivity
     {
-        public int activity_id { get; set; }
         public List<Vector2d> destination_coordinate { get; set; } = [];
         public string move_type { get; set; } = string.Empty;
     }
