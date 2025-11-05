@@ -388,7 +388,7 @@
                                         <TransformGroup>
                                             <ScaleTransform ScaleX="{Binding $parent[UserControl].((vm:CanvasViewModel)DataContext).CanvasScaleInv.Value}" ScaleY="{Binding $parent[UserControl].((vm:CanvasViewModel)DataContext).CanvasScaleInv.Value}" />
                                             <TranslateTransform X="{Binding X}" Y="{Binding Y}" />
-                                            <TranslateTransform X="{Binding #pochi.Width, Converter={StaticResource ValueHalfConverter}}" Y="{Binding #pochi.Height, Converter={StaticResource ValueHalfConverter}}}" />
+                                            <TranslateTransform X="{Binding #pochi.Width, Converter={StaticResource ValueHalfConverter}}" Y="{Binding #pochi.Height, Converter={StaticResource ValueHalfConverter}}" />
                                         </TransformGroup>
                                     </Ellipse.RenderTransform>
                                 </Ellipse>
