@@ -143,6 +143,7 @@
                                 Grid.Row="1"
                                 Grid.Column="1"
                                 Classes="content"
+                                IsReadOnly="True"
                                 Text="{Binding SelectedOption.Value.DxfFilePath}"
                                 Watermark="右のボタンからDXFファイルを選択">
                                 <TextBox.InnerRightContent>
