@@ -14,7 +14,7 @@
 
     <UserControl.Styles />
 
-    <Grid RowDefinitions="auto　 auto auto *">
+    <Grid RowDefinitions="auto auto auto *">
         <TextBlock
             Grid.Row="0"
             Margin="20,30"
