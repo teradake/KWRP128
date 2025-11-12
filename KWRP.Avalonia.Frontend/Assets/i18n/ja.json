@@ -1,8 +1,6 @@
 {
   "HelloWorld": "こんにちは",
-  "Second/HelloWorld": "Ciao mondo! (日本です)",
   "Language": "言語",
-  "SetByCode": "コードによるセット",
   "TopPage.OpenFile": "転圧領域ファイルを選択",
   "TopPage.SelectXml": "座標取得システムで作成したXMLを選択してください",
   "TopPage.CsvFormat": "csvフォーマット↓",
