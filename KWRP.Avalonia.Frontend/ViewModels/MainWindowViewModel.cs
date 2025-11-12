@@ -63,6 +63,8 @@ namespace KWRP.Avalonia.Frontend.ViewModels
                 string lang = b ? "ja" : "en";
                 Localizer.Instance.LoadLanguage(lang);
             }).AddTo(Disposables);
+
+            Localizer.Instance.LoadLanguage("en");
         }
 
         public string AppName => "区割りシステム";
