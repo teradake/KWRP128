@@ -56,10 +56,12 @@ namespace KWRP.Avalonia.Frontend
 
         public override void OnFrameworkInitializationCompleted()
         {
+#if !DEBUG
             if (!SingletonApplication.Start())
             {
                 System.Environment.Exit(0);
             }
+#endif
 
             // アプリケーションの起動
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
