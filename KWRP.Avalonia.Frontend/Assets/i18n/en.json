@@ -2,5 +2,11 @@
   "HelloWorld": "Hello World!",
   "Second/HelloWorld": "Hello World (different context)",
   "Language": "Language",
-  "SetByCode": "Set by code"
+  "SetByCode": "Set by code",
+  "TopPage.OpenFile": "Select Compaction Area File ...",
+  "TopPage.SelectXml": "Select the XML created by Cad Plugin",
+  "TopPage.CsvFormat": "CSV format↓",
+  "TopPage.CsvNote": "The first `X, Y` row is optional",
+  "TopPage.RollerLabel": "Vibratory Roller: {0}",
+  "TopPage.BackgroundLabel": "Background Image: {0}"
 }

@@ -2,5 +2,11 @@
   "HelloWorld": "嘘です。日本語です",
   "Second/HelloWorld": "Ciao mondo! (日本です)",
   "Language": "言語",
-  "SetByCode": "コードによるセット"
+  "SetByCode": "コードによるセット",
+  "TopPage.OpenFile": "転圧領域ファイルを選択",
+  "TopPage.SelectXml": "座標取得システムで作成したXMLを選択してください",
+  "TopPage.CsvFormat": "csvフォーマット↓",
+  "TopPage.CsvNote": "先頭の「X,Y」の行は無くてもOKです",
+  "TopPage.RollerLabel": "振動ローラ : {0}",
+  "TopPage.BackgroundLabel": "背景図 : {0}"
 }
