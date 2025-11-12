@@ -3,6 +3,7 @@ using KWRP.Avalonia.Backend.Services;
 using KWRP.Avalonia.Frontend.Models;
 using KWRP.Avalonia.Frontend.Models.Stores;
 using KWRP.Avalonia.Frontend.Services.Dxf;
+using KWRP.Frontend.Models.Localizer;
 using R3;
 using System;
 using System.IO;
@@ -56,11 +57,19 @@ namespace KWRP.Avalonia.Frontend.ViewModels
                 .Select(path => Path.GetFileName(path))
                 .ToReadOnlyBindableReactiveProperty(Path.GetFileName(_applicationStore.SpatialDataPath.Value))
                 .AddTo(Disposables);
+
+            ToggleLanguageCommand = new ReactiveCommand<bool>(b =>
+            {
+                string lang = b ? "ja" : "en";
+                Localizer.Instance.LoadLanguage(lang);
+            }).AddTo(Disposables);
         }
 
         public string AppName => "区割りシステム";
         public string Version => "1.2.6";
         public string Title => $"{AppName} ver {Version}";
+
+        public ReactiveCommand<bool> ToggleLanguageCommand { get; }
 
         public INotificationMessageManager Manager => _notificationStore.Manager;
         public IReadOnlyBindableReactiveProperty<ViewModelBase?> CurrentViewModel { get; }
