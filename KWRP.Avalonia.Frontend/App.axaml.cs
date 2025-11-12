@@ -59,6 +59,8 @@ namespace KWRP.Avalonia.Frontend
 #if !DEBUG
             if (!SingletonApplication.Start())
             {
+                var logger = _serviceProvider.GetRequiredService<ILogService>();
+                logger.LogWarn("多重起動が検出されました。アプリケーションを終了します。");
                 System.Environment.Exit(0);
             }
 #endif
