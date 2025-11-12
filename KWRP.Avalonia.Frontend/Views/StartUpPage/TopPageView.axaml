@@ -6,6 +6,7 @@
     xmlns:enums="using:KWRP.Avalonia.Backend.Enums"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="using:KWRP.Avalonia.Frontend.ViewModels.StartUpPage"
+    xmlns:i18n="clr-namespace:KWRP.Frontend.Models.Localizer"
     d:DesignHeight="500"
     d:DesignWidth="600"
     x:CompileBindings="True"
@@ -26,7 +27,7 @@
             <DropDownButton
                 Classes="emp"
                 ClickMode="Press"
-                Content="転圧領域ファイルを選択">
+                Content="{i18n:Localize TopPage.OpenFile}">
                 <DropDownButton.Flyout>
                     <MenuFlyout Placement="Bottom">
                         <MenuItem
@@ -37,7 +38,7 @@
                             ToolTip.ShowDelay="1"
                             ToolTip.VerticalOffset="0">
                             <ToolTip.Tip>
-                                <TextBlock Text="座標取得システムで作成したXMLを選択してください" />
+                                <TextBlock Text="{i18n:Localize TopPage.SelectXml}" />
                             </ToolTip.Tip>
                         </MenuItem>
                         <MenuItem
@@ -50,9 +51,9 @@
                             <ToolTip.Tip>
                                 <StackPanel>
                                     <TextBlock>
-                                        <Run Text="csvフォーマット↓" />
+                                        <Run Text="{i18n:Localize TopPage.CsvFormat}" />
                                         <LineBreak />
-                                        <Run Text="先頭の「X,Y」の行は無くてもOKです" />
+                                        <Run Text="{i18n:Localize TopPage.CsvNote}" />
                                     </TextBlock>
                                     <Image Source="/Assets/Figures/csv_sample.png" Stretch="None" />
                                 </StackPanel>
