@@ -1,5 +1,5 @@
 {
-  "HelloWorld": "嘘です。日本語です",
+  "HelloWorld": "こんにちは",
   "Second/HelloWorld": "Ciao mondo! (日本です)",
   "Language": "言語",
   "SetByCode": "コードによるセット",
@@ -7,6 +7,9 @@
   "TopPage.SelectXml": "座標取得システムで作成したXMLを選択してください",
   "TopPage.CsvFormat": "csvフォーマット↓",
   "TopPage.CsvNote": "先頭の「X,Y」の行は無くてもOKです",
-  "TopPage.RollerLabel": "振動ローラ : {0}",
-  "TopPage.BackgroundLabel": "背景図 : {0}"
+  "TopPage.RollerLabel": "振動ローラ",
+  "TopPage.BackgroundLabel": "背景図",
+  "Canvas.ShowBackground": "背景表示",
+  "Canvas.ShowLanes": "レーン表示",
+  "Canvas.ShowPairedLanes": "レーンのペア表示"
 }

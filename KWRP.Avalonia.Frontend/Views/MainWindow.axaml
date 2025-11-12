@@ -5,6 +5,7 @@
     xmlns:controls="using:Avalonia.Notification.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:i18n="clr-namespace:KWRP.Frontend.Models.Localizer"
     xmlns:vm="using:KWRP.Avalonia.Frontend.ViewModels"
     Title="{Binding Title}"
     Width="1200"
@@ -29,11 +30,11 @@
                     PointerPressed="TitleBarPressed">
                     <SelectableTextBlock
                         Grid.Row="0"
-                        HorizontalAlignment="Center"
+                        HorizontalAlignment="Left"
                         Foreground="Red"
                         IsVisible="{Binding IsDebugMode}"
                         Text="###### DEBUG MODE ######"
-                        Theme="{StaticResource TitleTextBlockStyle}" />
+                        Theme="{StaticResource SubtitleTextBlockStyle}" />
                     <TextBlock
                         Margin="10,2"
                         VerticalAlignment="Center"
@@ -46,6 +47,16 @@
                         VerticalAlignment="Center"
                         Orientation="Horizontal"
                         Spacing="4">
+
+
+                        <TextBlock Foreground="white"
+                                   Text="{i18n:Localize HelloWorld}"/>
+
+                        <ToggleButton
+                            Content="lang"
+                            Padding="5 3"
+                            Command="{Binding ToggleLanguageCommand}"
+                            CommandParameter="{Binding $self.IsChecked}"/>
 
                         <Button
                             Margin="0"

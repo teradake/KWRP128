@@ -121,10 +121,21 @@
             Margin="10"
             Spacing="10">
 
-            <TextBlock VerticalAlignment="Center" Text="{Binding RollerName, StringFormat='振動ローラ : {0}', FallbackValue=ローラ名}" />
+            <!--<TextBlock VerticalAlignment="Center" Text="{Binding RollerName, StringFormat='振動ローラ : {0}', FallbackValue=ローラ名}" />-->
+            <TextBlock VerticalAlignment="Center">
+                <Run Text="{i18n:Localize TopPage.RollerLabel}"/>
+                <Run Text=" : "/>
+                <Run Text="{Binding RollerName, FallbackValue=ローラ名}"/>
+            </TextBlock>
 
             <StackPanel Orientation="Horizontal" Spacing="1">
-                <TextBlock VerticalAlignment="Center" Text="{Binding DxfTitleName.Value, StringFormat='背景図 : {0}', FallbackValue=背景図}" />
+                <!--<TextBlock VerticalAlignment="Center" Text="{Binding DxfTitleName.Value, StringFormat='背景図 : {0}', FallbackValue=背景図}" />-->
+                <TextBlock VerticalAlignment="Center">
+	                <Run Text="{i18n:Localize TopPage.BackgroundLabel}"/>
+	                <Run Text=" : "/>
+                    <Run Text="{Binding DxfTitleName.Value, FallbackValue=背景図}"/>
+                </TextBlock>
+
                 <Button
                     Classes="image"
                     Command="{Binding ClearDxfCommand}"

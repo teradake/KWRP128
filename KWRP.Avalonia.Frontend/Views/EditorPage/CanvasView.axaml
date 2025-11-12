@@ -8,6 +8,7 @@
     xmlns:shape="using:KWRP.Avalonia.Frontend.ViewModels.Shapes"
     xmlns:ui="using:FluentAvalonia.UI.Controls"
     xmlns:vm="using:KWRP.Avalonia.Frontend.ViewModels.EditorPage"
+    xmlns:i18n="clr-namespace:KWRP.Frontend.Models.Localizer"
     d:DesignHeight="650"
     d:DesignWidth="500"
     x:DataType="vm:CanvasViewModel"
@@ -636,30 +637,30 @@
 
                             <CheckBox
                                 Name="planViewVisible"
-                                Content="背景表示"
+                                Content="{i18n:Localize Canvas.ShowBackground}"
                                 IsChecked="{Binding PlanViewVisible.Value}"
                                 IsVisible="{Binding PlanView.Value, Converter={x:Static ObjectConverters.IsNotNull}}" />
                             <CheckBox
                                 Name="laneVisible"
-                                Content="レーン表示"
+                                Content="{i18n:Localize Canvas.ShowLanes}"
                                 IsChecked="{Binding LaneVisible.Value}" />
                             <CheckBox
                                 Name="pairedLaneVisible"
-                                Content="レーンのペア表示"
+                                Content="{i18n:Localize Canvas.ShowPairedLanes}"
                                 IsChecked="{Binding PairedLaneVisible.Value}" />
                             <CheckBox
                                 Name="workAreaVisible"
-                                Content="作業エリア表示"
+                                Content="{i18n:Localize Canvas.ShowWorkAreas}"
                                 IsChecked="{Binding WorkAreaVisible.Value}"
                                 IsVisible="{Binding !IsLaneDesign.Value}" />
                             <CheckBox
                                 Name="goalAreaVisible"
-                                Content="ゴール表示"
+                                Content="{i18n:Localize Canvas.ShowGoals}"
                                 IsChecked="{Binding GoalAreaVisible.Value}"
                                 IsVisible="{Binding !IsLaneDesign.Value}" />
                             <CheckBox
                                 Name="activityVisible"
-                                Content="アクティビティ表示"
+                                Content="{i18n:Localize Canvas.ShowActivities}"
                                 IsChecked="{Binding ActivityVisible.Value}"
                                 IsVisible="{Binding IsActivityDesign.Value}" />
                         </StackPanel>
