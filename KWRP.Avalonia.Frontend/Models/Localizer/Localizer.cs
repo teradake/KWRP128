@@ -18,21 +18,28 @@ namespace KWRP.Frontend.Models.Localizer
 
         public bool LoadLanguage(string language)
         {
-            Language = language;
-
-            Uri uri = new Uri($"avares://KWRP.Frontend/Assets/i18n/{language}.json");
-            if (AssetLoader.Exists(uri))
+            try
             {
-                using (StreamReader sr = new StreamReader(AssetLoader.Open(uri), Encoding.UTF8))
-                {
-                    //m_Strings = JsonConvert.DeserializeObject<Dictionary<string, string>>(sr.ReadToEnd());
-                    m_Strings = JsonSerializer.Deserialize<Dictionary<string, string>>(sr.ReadToEnd());
-                }
-                Invalidate();
+                Language = language;
 
-                return true;
+                Uri uri = new Uri($"avares://KWRP/Assets/i18n/{language}.json");
+                if (AssetLoader.Exists(uri))
+                {
+                    using (StreamReader sr = new StreamReader(AssetLoader.Open(uri), Encoding.UTF8))
+                    {
+                        //m_Strings = JsonConvert.DeserializeObject<Dictionary<string, string>>(sr.ReadToEnd());
+                        m_Strings = JsonSerializer.Deserialize<Dictionary<string, string>>(sr.ReadToEnd());
+                    }
+                    Invalidate();
+
+                    return true;
+                }
+                return false;
             }
-            return false;
+            catch (Exception e)
+            {
+                return false;
+            }
         }
 
         public string Language { get; private set; }
