@@ -20,7 +20,7 @@ namespace KWRP.Frontend.Models.Localizer
         {
             Language = language;
 
-            Uri uri = new Uri($"avares://AvaloniaLocalizationExample/Assets/i18n/{language}.json");
+            Uri uri = new Uri($"avares://KWRP.Frontend/Assets/i18n/{language}.json");
             if (AssetLoader.Exists(uri))
             {
                 using (StreamReader sr = new StreamReader(AssetLoader.Open(uri), Encoding.UTF8))
