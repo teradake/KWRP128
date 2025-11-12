@@ -51,7 +51,7 @@ namespace KWRP.Frontend.Models.Localizer
                 if (m_Strings != null && m_Strings.TryGetValue(key, out string res))
                     return res.Replace("\\n", "\n");
 
-                return $"missing {Language}:{key}";
+                return $"[{key}]" + (string.IsNullOrEmpty(Language) ? "" : $":{Language}");
             }
         }
 
