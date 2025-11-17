@@ -27,6 +27,8 @@ using KWRP.Avalonia.Backend.Constants;
 using KWRP.Avalonia.Frontend.Services.Dxf;
 using Avalonia.Interactivity;
 using System.Threading;
+using KWRP.Backend.Services;
+using KWRP.Frontend.Services;
 
 namespace KWRP.Avalonia.Frontend
 {
@@ -272,6 +274,7 @@ namespace KWRP.Avalonia.Frontend
             services.AddSingleton<IKWRPApplicationService, KWRPApplicationService>();
             services.AddSingleton<DxfConvertService>();
             services.AddSingleton<DxfHistoryStorageService>();
+            services.AddSingleton<ILanguageService, LanguageService>();
 
             // stores
             services.AddSingleton<NavigationStore>();
