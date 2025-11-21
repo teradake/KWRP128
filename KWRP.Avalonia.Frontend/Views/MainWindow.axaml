@@ -28,19 +28,22 @@
                     Height="35"
                     Background="#1a1a1b"
                     PointerPressed="TitleBarPressed">
-                    <SelectableTextBlock
-                        Grid.Row="0"
-                        HorizontalAlignment="Left"
-                        Foreground="Red"
-                        IsVisible="{Binding IsDebugMode}"
-                        Text="###### DEBUG MODE ######"
-                        Theme="{StaticResource SubtitleTextBlockStyle}" />
-                    <TextBlock
-                        Margin="10,2"
-                        VerticalAlignment="Center"
-                        Foreground="LightGray"
-                        IsVisible="{Binding !IsDebugMode}"
-                        Text="{Binding Title}" />
+                    <StackPanel Orientation="Horizontal" Spacing="0">
+					    <TextBlock
+                            Margin="10,2"
+                            VerticalAlignment="Center"
+                            Foreground="LightGray"
+                            Text="{Binding Title, FallbackValue=Title here}" />	
+                        <SelectableTextBlock
+                            Grid.Row="0"
+                            HorizontalAlignment="Left"
+                            Foreground="Red"
+                            IsVisible="{Binding IsDebugMode}"
+                            Text="###### DEBUG MODE ######"
+                            Theme="{StaticResource SubtitleTextBlockStyle}" />
+                        
+                    </StackPanel>
+                    
                     <StackPanel
                         Margin="0,0,10,0"
                         HorizontalAlignment="Right"
@@ -48,9 +51,6 @@
                         Orientation="Horizontal"
                         Spacing="4">
 
-
-                        <TextBlock Foreground="white"
-                                   Text="{i18n:Localize HelloWorld}"/>
 
                         <ToggleButton
                             Content="lang"
