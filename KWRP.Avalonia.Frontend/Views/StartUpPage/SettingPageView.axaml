@@ -5,10 +5,12 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="using:KWRP.Avalonia.Frontend.ViewModels.StartUpPage"
+    xmlns:i18n="clr-namespace:KWRP.Frontend.Models.Localizer"
     MinWidth="380"
     HorizontalAlignment="Left"
     x:CompileBindings="True"
     x:DataType="vm:SettingPageViewModel"
+
     mc:Ignorable="d">
 
 
@@ -51,11 +53,11 @@
                 HorizontalAlignment="Center"
                 FontSize="24"
                 FontWeight="Bold"
-                Text="計算設定" />
+                Text="{i18n:Localize ConfigPage.Setting}" />
 
             <Expander IsExpanded="True">
                 <Expander.Header>
-                    <TextBlock Classes="title" Text="レーン生成パラメータ" />
+                    <TextBlock Classes="title" Text="{i18n:Localize ConfigPage.GenLaneParams}" />
                 </Expander.Header>
                 <StackPanel>
 
@@ -64,8 +66,8 @@
                             Grid.Column="0"
                             VerticalAlignment="Center"
                             Spacing="2">
-                            <TextBlock Classes="header" Text="ラップ調整" />
-                            <TextBlock Classes="description" Text="非転圧領域が少なくなるようレーンラップ量を調整します" />
+                            <TextBlock Classes="header" Text="{i18n:Localize ConfigPage.LapAdjustment}" />
+                            <TextBlock Classes="description" Text="{i18n:Localize ConfigPage.LapAdjustmentDescription}" />
                         </StackPanel>
 
                         <ToggleSwitch
@@ -80,8 +82,8 @@
                             Grid.Column="0"
                             VerticalAlignment="Center"
                             Spacing="2">
-                            <TextBlock Classes="header" Text="作業進捗方向の最適化" />
-                            <TextBlock Classes="description" Text="方向選択モード時に最適な作業進捗方向を計算します" />
+                            <TextBlock Classes="header" Text="{i18n:Localize ConfigPage.OptimizeDir}" />
+                            <TextBlock Classes="description" Text="{i18n:Localize ConfigPage.OptimizeDirDescription}" />
                         </StackPanel>
 
                         <ToggleSwitch
@@ -97,7 +99,7 @@
 
             <Expander IsExpanded="True">
                 <Expander.Header>
-                    <TextBlock Classes="title" Text="ペアレーン生成パラメータ" />
+                    <TextBlock Classes="title" Text="{i18n:Localize ConfigPage.GroupingParams}" />
                 </Expander.Header>
                 <StackPanel>
 
@@ -106,8 +108,8 @@
                             Grid.Column="0"
                             VerticalAlignment="Center"
                             Spacing="2">
-                            <TextBlock Classes="header" Text="ペア基準値　前方 (m)" />
-                            <TextBlock Classes="description" Text="隣接するレーンの前方のずれがペア基準値より長い場合ペアにしないようにします" />
+                            <TextBlock Classes="header" Text="{i18n:Localize ConfigPage.ThresholdFront}" />
+                            <TextBlock Classes="description" Text="{i18n:Localize ConfigPage.ThresholdFrontDescription}" />
                         </StackPanel>
                         <NumericUpDown
                             Grid.Column="1"
@@ -120,8 +122,8 @@
                             Grid.Column="0"
                             VerticalAlignment="Center"
                             Spacing="2">
-                            <TextBlock Classes="header" Text="ペア基準値　後方 (m)" />
-                            <TextBlock Classes="description" Text="隣接するレーンの後方のずれがペア基準値より長い場合ペアにしないようにします" />
+                            <TextBlock Classes="header" Text="{i18n:Localize ConfigPage.ThresholdRear}" />
+                            <TextBlock Classes="description" Text="{i18n:Localize ConfigPage.ThresholdRearDescription}" />
                         </StackPanel>
                         <NumericUpDown
                             Grid.Column="1"

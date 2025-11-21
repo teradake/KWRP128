@@ -237,6 +237,7 @@
   "ConfigPage.ThresholdFrontDescription": "隣接するレーンの前方のずれがペア基準値より長い場合ペアにしないようにします",
   "ConfigPage.ThresholdRear": "ペア基準値　後方 (m)",
   "ConfigPage.ThresholdRearDescription": "隣接するレーンの後方のずれがペア基準値より長い場合ペアにしないようにします",
+
   "Canvas.CompassHeader": "方角,表示ボタン",
   "Canvas.ShowBackground": "背景表示",
   "Canvas.ShowLanes": "レーン表示",
