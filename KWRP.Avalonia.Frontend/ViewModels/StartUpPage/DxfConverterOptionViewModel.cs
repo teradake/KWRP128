@@ -80,7 +80,7 @@ namespace KWRP.Avalonia.Frontend.ViewModels.StartUpPage
             }
         }
 
-        public string PngSize => $"(画像大きさ: {MapWidth * PixelsPerMeter}x{MapHeight * PixelsPerMeter})";
+        public string PngSize => $"{MapWidth * PixelsPerMeter}x{MapHeight * PixelsPerMeter}";
         public bool IsTitleValid =>
             !string.IsNullOrWhiteSpace(Title) 
             && Title.IndexOfAny(Path.GetInvalidFileNameChars()) == -1;
