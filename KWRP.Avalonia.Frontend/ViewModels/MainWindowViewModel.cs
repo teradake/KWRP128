@@ -3,6 +3,7 @@ using KWRP.Avalonia.Backend.Services;
 using KWRP.Avalonia.Frontend.Models;
 using KWRP.Avalonia.Frontend.Models.Stores;
 using KWRP.Avalonia.Frontend.Services.Dxf;
+using KWRP.Backend.Services;
 using KWRP.Frontend.Models.Localizer;
 using R3;
 using System;
@@ -19,6 +20,7 @@ namespace KWRP.Avalonia.Frontend.ViewModels
         private readonly LogStore _logStore;
         private readonly IKWRPApplicationService _appService;
         private readonly DxfHistoryStorageService _dxfHistoryStorageService;
+        private readonly ILanguageService _languageService;
 
 
         public MainWindowViewModel(
@@ -27,7 +29,8 @@ namespace KWRP.Avalonia.Frontend.ViewModels
             LogStore logStore,
             ApplicationStore applicationStore,
             IKWRPApplicationService appService,
-            DxfHistoryStorageService dxfHistoryStorageService)
+            DxfHistoryStorageService dxfHistoryStorageService,
+            ILanguageService languageService)
         {
             _navigationStore = navigationStore;
             _notificationStore = notificationStore;
@@ -35,6 +38,7 @@ namespace KWRP.Avalonia.Frontend.ViewModels
             _applicationStore = applicationStore;
             _appService = appService;
             _dxfHistoryStorageService = dxfHistoryStorageService;
+            _languageService = languageService;
             //_appService = appService;
 
             CurrentViewModel = _navigationStore
@@ -61,10 +65,10 @@ namespace KWRP.Avalonia.Frontend.ViewModels
             ToggleLanguageCommand = new ReactiveCommand<bool>(b =>
             {
                 string lang = b ? "ja" : "en";
-                Localizer.Instance.LoadLanguage(lang);
+                _languageService.LoadLanguage(lang);
             }).AddTo(Disposables);
 
-            Localizer.Instance.LoadLanguage("en");
+            _languageService.LoadLanguage("en");
         }
 
         public string AppName => "区割りシステム";
