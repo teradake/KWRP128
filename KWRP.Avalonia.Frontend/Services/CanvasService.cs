@@ -29,7 +29,7 @@ namespace KWRP.Avalonia.Frontend.Services
         {
             if (_canvasItemStore.AreaBoundingBox.Value == null)
             {
-                _logService.LogDebug("BoundingBoxがnull");
+                _logService.LogDebug("BoundingBox is null");
                 ResetAffine();
                 return;
             }
@@ -50,7 +50,7 @@ namespace KWRP.Avalonia.Frontend.Services
                 || targetBoundingBox.Width < KWRPConstants.C_EPS
                 || windowHeight * windowWidth < KWRPConstants.C_EPS)
             {
-                _logService.LogDebug("BoundingBoxがinvalid");
+                _logService.LogDebug("BoundingBox is invalid");
                 ResetAffine();
                 return;
             }

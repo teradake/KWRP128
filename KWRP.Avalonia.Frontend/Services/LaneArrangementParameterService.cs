@@ -137,7 +137,7 @@ namespace KWRP.Avalonia.Frontend.Services
                 CountMin = _parameterStore.PairCountMin,
             };
 
-            var param = new LaneArrangementParameter { PairingParams = pair, VrParams = vrparam, Description = $"{DateTime.Now:yyyyMMdd}作成"};
+            var param = new LaneArrangementParameter { PairingParams = pair, VrParams = vrparam, Description = $"{DateTime.Now:yyyyMMdd} created"};
 
             try
             {
