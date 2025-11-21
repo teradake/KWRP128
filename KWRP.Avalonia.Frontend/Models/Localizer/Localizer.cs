@@ -14,7 +14,7 @@ namespace KWRP.Frontend.Models.Localizer
     {
         private const string IndexerName = "Item";
         private const string IndexerArrayName = "Item[]";
-        private Dictionary<string, string> m_Strings = null;
+        private Dictionary<string, string>? m_Strings = null;
 
         public bool LoadLanguage(string language)
         {
