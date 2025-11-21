@@ -17,6 +17,14 @@ namespace KWRP.Frontend.Services
 
         public string GetString(string key) => Localizer.Instance[key];
 
-        public bool LoadLanguage(string language) => Localizer.Instance.LoadLanguage(language);
+        public bool LoadLanguage(string language)
+        {
+            var updated = Localizer.Instance.LoadLanguage(language);
+            if (updated)
+            {
+                LanguageChanged?.Invoke();
+            }
+            return updated;
+        }
     }
 }
