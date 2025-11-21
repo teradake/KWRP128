@@ -70,7 +70,7 @@ namespace KWRP.Avalonia.Frontend.Services
 
             var filePath = await _pathService.GetOpenFilePathAsync(
                 fileType: fileType,
-                title: $"{fileType}ファイルを選択してください");
+                title: $"ファイルを選択してください");
 
             if (string.IsNullOrEmpty(filePath))
             {

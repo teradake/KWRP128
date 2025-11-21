@@ -119,7 +119,7 @@ namespace KWRP.Avalonia.Frontend
                 {
                     e.Cancel = true;
                     var messageBox = MessageBoxManager.GetMessageBoxStandard(
-                        title: "設定の保存",
+                        title: "確認",
                         text: "重機設定値が変更されています。保存しますか?",
                         ButtonEnum.YesNoCancel,
                         Icon.Question);
