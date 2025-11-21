@@ -5,5 +5,7 @@
         string CurrentLanguage { get; }
         bool LoadLanguage(string language);
         string GetString(string key);
+
+        event Action LanguageChanged;
     }
 }
