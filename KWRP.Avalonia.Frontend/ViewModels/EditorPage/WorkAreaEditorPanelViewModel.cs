@@ -110,7 +110,7 @@ namespace KWRP.Avalonia.Frontend.ViewModels.EditorPage
             }
 
             _logService.LogDebug($"init: workareas: {WorkAreaCount.Value}({_workAreaStore.WorkAreas.Count})");
-            _logService.SetStatusMessage("作業エリア設定UI : 右側の設定ボタンから作業エリア（青色の領域）の形状や方向などを設定できます。設定したい作業エリアをマウスで選択できます");
+            _logService.SetStatusMessage("Domain.Front.WorkAreaSettingsUI");
         }
 
 

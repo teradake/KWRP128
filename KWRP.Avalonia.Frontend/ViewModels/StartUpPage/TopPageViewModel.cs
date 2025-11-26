@@ -121,7 +121,7 @@ namespace KWRP.Avalonia.Frontend.ViewModels.StartUpPage
                 })
                 .AddTo(Disposables);
 
-            _logService.SetStatusMessage("TopPage : 転圧領域xmlファイルを読込んでNextボタンを押すことで区割りを開始します");
+            _logService.SetStatusMessage("Domain.Front.TopPageDescription");
             _logService.LogDebug("init");
         }
     }

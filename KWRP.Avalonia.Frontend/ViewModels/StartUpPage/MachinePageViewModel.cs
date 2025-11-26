@@ -48,7 +48,7 @@ namespace KWRP.Avalonia.Frontend.ViewModels.StartUpPage
             _parameterStore = parameterStore;
             _languageService = languageService;
 
-            _logService.SetStatusMessage("重機情報 : 振動ローラーの寸法や自動化作業領域等に関するパラメータが参照できます");
+            _logService.SetStatusMessage("Domain.Front.MachineInfoDescription");
             _logService.LogDebug("init");
 
             this.PropertyChanged += OnMachinePageViewModelPropertyChanged;

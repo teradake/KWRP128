@@ -326,7 +326,7 @@ namespace KWRP.Avalonia.Frontend.ViewModels.EditorPage
             }
 
             _logService.LogDebug("init");
-            _logService.SetStatusMessage("アクティビティ設定UI : アクティビティの設定（レーン間移動、無起振、起振）、保存先を設定します。");
+            _logService.SetStatusMessage("Domain.Front.ActivitySettingsUIDescription");
             
         }
 

@@ -207,7 +207,7 @@ namespace KWRP.Avalonia.Frontend.ViewModels.EditorPage
             }
 
 
-            _logService.SetStatusMessage("レーン割UI : 「レーン割実行」ボタンを押すか、振動ローラーパラメータを変更することで区割りが実行できます");
+            _logService.SetStatusMessage("Domain.Front.LaneDivisionUIDescription");
             _logService.LogDebug("init");
             
         }

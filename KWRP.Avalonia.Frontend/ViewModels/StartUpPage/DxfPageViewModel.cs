@@ -154,7 +154,7 @@ namespace KWRP.Avalonia.Frontend.ViewModels.StartUpPage
                 })
                 .AddTo(Disposables);
 
-            _logService.SetStatusMessage("背景設定UI : 背景画像を登録・選択することができます");
+            _logService.SetStatusMessage("Domain.Front.BackgroundSettingsUIDescription");
             _logService.LogDebug("init");
         }
 
