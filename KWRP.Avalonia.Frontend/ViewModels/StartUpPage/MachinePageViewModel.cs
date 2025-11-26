@@ -51,20 +51,24 @@ namespace KWRP.Avalonia.Frontend.ViewModels.StartUpPage
             _logService.SetStatusMessage("Domain.Front.MachineInfoDescription");
             _logService.LogDebug("init");
 
+            Observable.FromEvent(
+                h => _languageService.LanguageChanged += h,
+                h => _languageService.LanguageChanged -= h)
+                .Subscribe(_ =>
+                {
+                    // 言語切り替え時にUI表示を更新
+                    WheelTypes = [RollerWheelType.Single, RollerWheelType.Tandem];
+                    OnPropertyChanged(nameof(Type));
+                    OnPropertyChanged(nameof(FrontAllowanceDescription));
+                    OnPropertyChanged(nameof(RearAllowanceDescription));
+                    OnPropertyChanged(nameof(LeftRightAllowanceDescription));
+                    OnPropertyChanged(nameof(WheelType));
+                })
+                .AddTo(Disposables);
+
             this.PropertyChanged += OnMachinePageViewModelPropertyChanged;
-            _languageService.LanguageChanged += OnLanguageChanged;
         }
 
-        private void OnLanguageChanged()
-        {
-            WheelTypes = [RollerWheelType.Single, RollerWheelType.Tandem];
-
-            OnPropertyChanged(nameof(Type));
-            OnPropertyChanged(nameof(FrontAllowanceDescription));
-            OnPropertyChanged(nameof(RearAllowanceDescription));
-            OnPropertyChanged(nameof(LeftRightAllowanceDescription));
-            OnPropertyChanged(nameof(WheelType));
-        }
 
         private void OnMachinePageViewModelPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
@@ -74,7 +78,6 @@ namespace KWRP.Avalonia.Frontend.ViewModels.StartUpPage
         public override void Dispose()
         {
             this.PropertyChanged -= OnMachinePageViewModelPropertyChanged;
-            _languageService.LanguageChanged -= OnLanguageChanged;
             if (updated)
             {
                 _logService.LogInfo("重機情報を変更しました");
