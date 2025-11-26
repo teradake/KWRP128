@@ -48,6 +48,7 @@ namespace KWRP.Avalonia.Frontend.ViewModels
 
             StatusMessage = _logStore
                 .StatusMessageObservable
+                .Select(key => _languageService.GetString(key))
                 .ToReadOnlyBindableReactiveProperty("")
                 .AddTo(Disposables);
 
