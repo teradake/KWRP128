@@ -69,9 +69,16 @@ namespace KWRP.Avalonia.Frontend.ViewModels
             }).AddTo(Disposables);
 
             _languageService.LoadLanguage("en");
+
+
+            Observable.FromEvent(
+                h => _languageService.LanguageChanged += h,
+                h => _languageService.LanguageChanged -= h)
+                .Subscribe(_ => OnPropertyChanged(nameof(Title)))
+                .AddTo(Disposables);
         }
 
-        public string AppName => "区割りシステム";
+        public string AppName => _languageService.GetString("Domain.Front.AppName");
         public string Version => "1.2.6";
         public string Title => $"{AppName} ver {Version}";
 
