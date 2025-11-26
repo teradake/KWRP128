@@ -130,7 +130,7 @@
   "Domain.Front.WorkAreaInitializationFailed": "作業エリア初期化に失敗",
   "Domain.Front.WorkAreaInitializationError": "作業エリア初期化に失敗しました。{0}",
   "Domain.Front.WorkAreaSettingsUI": "作業エリア設定UI : 右側の設定ボタンから作業エリア（青色の領域）の形状や方向などを設定できます。設定したい作業エリアをマウスで選択できます",
-  "Domain.Front.DivisionSystem": "区割りシステム",
+  "Domain.Front.AppName": "区割りシステム",
   "Domain.Front.Yes": "有",
   "Domain.Front.No": "無",
   "Domain.Front.WorkTimeTotal": "{0:F1}分（累計 {1}）",
@@ -269,6 +269,7 @@
   "Canvas.ClearDotsTip": "画面上のポチポチをクリアします",
   "Canvas.DirModeMessage": "方向を指定してください",
   "Canvas.DirModeClose": "閉じる",
+
   "LaneEditor.GenLaneParam": "区割りパラメータ",
   "LaneEditor.LaneWidth": "鉄輪幅 (m)",
   "LaneEditor.FrontOffset": "前方オフセット (m)",
@@ -285,6 +286,7 @@
   "LaneEditor.MinLaneCount": "最小レーン数",
   "LaneEditor.MaxLaneCount": "最大レーン数",
   "LaneEditor.WorkAreaSetting": "作業エリア設定",
+
   "WorkAreaEditor.Setting": "作業エリア設定",
   "WorkAreaEditor.ClearSelection": "エリア選択解除",
   "WorkAreaEditor.Undo": "一つ戻す",
