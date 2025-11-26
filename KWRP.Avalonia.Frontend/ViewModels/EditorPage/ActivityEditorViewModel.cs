@@ -5,6 +5,7 @@ using KWRP.Avalonia.Backend.Models.Roller;
 using KWRP.Avalonia.Backend.Services;
 using KWRP.Avalonia.Frontend.Models.Stores;
 using KWRP.Avalonia.Frontend.Services;
+using KWRP.Backend.Services;
 using ObservableCollections;
 using R3;
 using System;
@@ -25,6 +26,7 @@ namespace KWRP.Avalonia.Frontend.ViewModels.EditorPage
         private readonly IActivityService _activityService;
         private readonly IPathService _pathService;
         private readonly ApplicationStore _applicationStore;
+        private readonly ILanguageService _languageService;
 
         public RollerModel Roller => _machineStore.CurrentRoller;
 
@@ -37,7 +39,8 @@ namespace KWRP.Avalonia.Frontend.ViewModels.EditorPage
             MachineStore machineStore,
             IActivityService activityService,
             IPathService pathService,
-            ApplicationStore applicationStore)
+            ApplicationStore applicationStore,
+            ILanguageService languageService)
         {
             _logService = logService;
             _navigationService = navigationService;
@@ -47,6 +50,7 @@ namespace KWRP.Avalonia.Frontend.ViewModels.EditorPage
             _pathService = pathService;
             _machineStore = machineStore;
             _applicationStore = applicationStore;
+            _languageService = languageService;
 
             // init property
             {
@@ -109,7 +113,7 @@ namespace KWRP.Avalonia.Frontend.ViewModels.EditorPage
                     .AddTo(Disposables);
 
                 GroupIds = _groupIds
-                    .CreateView(i => new GroupItem(i, $"Group {i+1}"))
+                    .CreateView(i => new GroupItem(i, $"Group {i + 1}"))
                     .ToNotifyCollectionChanged(SynchronizationContextCollectionEventDispatcher.Current)
                     .AddTo(Disposables);
                 SelectedGroupIndex = new BindableReactiveProperty<int?>(null).AddTo(Disposables);
@@ -229,7 +233,7 @@ namespace KWRP.Avalonia.Frontend.ViewModels.EditorPage
                         {
                             _applicationStore.IsBusy.Value = true;
 
-                            await Task.Run(() =>  _activityService.CreateActivityGroups());
+                            await Task.Run(() => _activityService.CreateActivityGroups());
 
                             if (_activityStore.ActivityGroups.Count > 0)
                             {
@@ -265,7 +269,7 @@ namespace KWRP.Avalonia.Frontend.ViewModels.EditorPage
                     {
                         try
                         {
-                            _applicationStore.IsBusy.Value = true; 
+                            _applicationStore.IsBusy.Value = true;
                             await _activityService.OutputActivitiesAsync();
 
                             _logService.LogInfo($"アクティビティを保存しました: {Path.Combine(OutputFolderPath.Value!, OutputFolderPrefix.Value)}");
