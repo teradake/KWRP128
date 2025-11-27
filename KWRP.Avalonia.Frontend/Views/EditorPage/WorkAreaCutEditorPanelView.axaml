@@ -33,6 +33,7 @@
 
                 </Grid>
 
+                
                 <DataGrid
                     Margin="20"
                     BorderBrush="Gray"
@@ -47,14 +48,18 @@
                             x:DataType="model:CutProperty"
                             Binding="{Binding Ratio, UpdateSourceTrigger=LostFocus}"
                             Header="{i18n:Localize WorkAreaCutEditor.LengthRatio}"
-                            IsReadOnly="False" />
+                            IsReadOnly="False"
+                            MinWidth="80"
+                            MaxWidth="150" />
+
                         <DataGridTextColumn
                             x:DataType="model:CutProperty"
                             Binding="{Binding Percentage, StringFormat='{}{0:0.00}%'}"
                             Header="{i18n:Localize WorkAreaCutEditor.Percentage}"
-                            IsReadOnly="True" />
+                            IsReadOnly="True"
+                            MinWidth="80"
+                            MaxWidth="120" />
                     </DataGrid.Columns>
-
 
                 </DataGrid>
 
