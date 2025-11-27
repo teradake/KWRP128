@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="using:KWRP.Avalonia.Frontend.ViewModels.EditorPage"
+    xmlns:i18n="clr-namespace:KWRP.Frontend.Models.Localizer"
     d:DesignHeight="450"
     d:DesignWidth="800"
     x:CompileBindings="True"
@@ -40,15 +41,15 @@
                     <Button
                         Padding="15,5"
                         Command="{Binding SaveLaneArrangementParamCommand}"
-                        Content="パラメータ保存" />
+                        Content="{i18n:Localize LaneEditor.SaveParam}" />
                     <Button
                         Padding="15,5"
                         Command="{Binding LoadLaneArrangementParamCommand}"
-                        Content="パラメータ読み込み" />
+                        Content="{i18n:Localize LaneEditor.LoadParam}" />
                     <Button
                         Padding="15,5"
                         Command="{Binding LaneArrangementCommand}"
-                        Content="レーン割実行" />
+                        Content="{i18n:Localize LaneEditor.Calculate}" />
 
                 </StackPanel>
 

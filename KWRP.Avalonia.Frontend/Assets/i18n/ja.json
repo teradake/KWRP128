@@ -286,6 +286,9 @@
   "LaneEditor.MinLaneCount": "最小レーン数",
   "LaneEditor.MaxLaneCount": "最大レーン数",
   "LaneEditor.WorkAreaSetting": "作業エリア設定",
+  "LaneEditor.SaveParam": "パラメータ保存",
+  "LaneEditor.LoadParam": "パラメータ読み込み",
+  "LaneEditor.Calculate": "レーン割実行",
 
   "WorkAreaEditor.Setting": "作業エリア設定",
   "WorkAreaEditor.ClearSelection": "エリア選択解除",
