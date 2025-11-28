@@ -7,8 +7,8 @@
     xmlns:i18n="clr-namespace:KWRP.Frontend.Models.Localizer"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="using:KWRP.Avalonia.Frontend.ViewModels.EditorPage"
-    Width="300"
-    d:DesignWidth="300"
+    d:DesignHeight="650"
+    d:DesignWidth="400"
     x:CompileBindings="True"
     x:DataType="vm:WorkAreaEditorPanelViewModel"
     Focusable="True"
@@ -50,7 +50,7 @@
         </Grid>
 
         <ScrollViewer Grid.Row="0" IsVisible="{Binding #cutMode.IsChecked}">
-            <Grid Width="{Binding $parent[UserControl].Bounds.Width}" RowDefinitions="30 *">
+            <Grid RowDefinitions="30 *">
                 <ToggleButton
                     Grid.Row="0"
                     HorizontalAlignment="Right"

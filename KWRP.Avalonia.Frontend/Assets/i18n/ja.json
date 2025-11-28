@@ -277,7 +277,7 @@
   "LaneEditor.SidePrevOffset": "側方オフセット① (m)",
   "LaneEditor.SideNextOffset": "側方オフセット② (m)",
   "LaneEditor.LapWidth": "レーンラップ幅 (m)",
-  "LaneEditor.WorkableLength": "作業可能長さ (m)",
+  "LaneEditor.LaneChangeLength": "作業可能長さ (m)",
   "LaneEditor.ProgressDirectionDegree": "作業進捗方向 (deg.)",
   "LaneEditor.RollerHeadingDirection": "振動ローラ向き (deg.)",
   "LaneEditor.ReverseRollerDirection": "ローラ向き反転",
