@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:i18n="clr-namespace:KWRP.Frontend.Models.Localizer"
     xmlns:model="using:KWRP.Avalonia.Frontend.Models"
     xmlns:vm="using:KWRP.Avalonia.Frontend.ViewModels.EditorPage"
     x:DataType="vm:WorkAreaCutEditorPanelViewModel"
@@ -21,7 +22,7 @@
                     <TextBlock
                         Grid.Column="0"
                         VerticalAlignment="Center"
-                        Text="分割数" />
+                        Text="{i18n:Localize WorkAreaCutEditor.DivCount}" />
                     <NumericUpDown
                         Name="cuts"
                         Grid.Column="1"
@@ -32,6 +33,7 @@
 
                 </Grid>
 
+                
                 <DataGrid
                     Margin="20"
                     BorderBrush="Gray"
@@ -45,15 +47,19 @@
                         <DataGridTextColumn
                             x:DataType="model:CutProperty"
                             Binding="{Binding Ratio, UpdateSourceTrigger=LostFocus}"
-                            Header="長さ比率"
-                            IsReadOnly="False" />
+                            Header="{i18n:Localize WorkAreaCutEditor.LengthRatio}"
+                            IsReadOnly="False"
+                            MinWidth="80"
+                            MaxWidth="150" />
+
                         <DataGridTextColumn
                             x:DataType="model:CutProperty"
                             Binding="{Binding Percentage, StringFormat='{}{0:0.00}%'}"
-                            Header="割合"
-                            IsReadOnly="True" />
+                            Header="{i18n:Localize WorkAreaCutEditor.Percentage}"
+                            IsReadOnly="True"
+                            MinWidth="80"
+                            MaxWidth="120" />
                     </DataGrid.Columns>
-
 
                 </DataGrid>
 
@@ -61,7 +67,7 @@
                     Margin="20"
                     HorizontalAlignment="Stretch"
                     Command="{Binding CutCommand}"
-                    Content="決定"
+                    Content="{i18n:Localize WorkAreaCutEditor.Confirm}"
                     IsVisible="{Binding !!CutCount.Value}" />
 
             </StackPanel>
