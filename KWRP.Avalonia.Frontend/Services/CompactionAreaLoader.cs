@@ -12,6 +12,7 @@ using System.Linq;
 using KWRP.Avalonia.Backend.Models.AutomatedConstructionAreaItems;
 using Trdk.Geometry.NTS;
 using System.IO;
+using KWRP.Backend.Services;
 
 
 namespace KWRP.Avalonia.Frontend.Services
@@ -30,6 +31,7 @@ namespace KWRP.Avalonia.Frontend.Services
         private readonly PolygonCsvParser _polygonCsvParser;
         private readonly ICanvasService _canvasService;
         private readonly ApplicationStore _applicationStore;
+        private readonly ILanguageService _languageService;
 
         private readonly Dictionary<FileType, Func<string, Task>> _strategies;
 
@@ -41,7 +43,8 @@ namespace KWRP.Avalonia.Frontend.Services
             ParameterStore parameterStore,
             PolygonCsvParser polygonCsvParser,
             ICanvasService canvasService,
-            ApplicationStore applicationStore)
+            ApplicationStore applicationStore,
+            ILanguageService languageService)
         {
             _pathService = pathService;
             _logService = logService;
@@ -58,6 +61,7 @@ namespace KWRP.Avalonia.Frontend.Services
             };
 
             _logService.LogDebug("init");
+            _languageService = languageService;
         }
 
 
@@ -65,16 +69,16 @@ namespace KWRP.Avalonia.Frontend.Services
         {
             if (!_strategies.ContainsKey(fileType))
             {
-                throw new ArgumentException($"ファイルはサポートされていません。有効な拡張子はxml, csvです");
+                throw new ArgumentException(_languageService.GetString("Domain.Front.FileNotSupported"));
             }
 
             var filePath = await _pathService.GetOpenFilePathAsync(
                 fileType: fileType,
-                title: $"ファイルを選択してください");
+                title: _languageService.GetString("Domain.Back.SelectFile"));
 
             if (string.IsNullOrEmpty(filePath))
             {
-                _logService.LogDebug("ファイル選択を中止しました");
+                _logService.LogDebug(_languageService.GetString("Domain.Front.FileSelectionCancelled"));
                 return;
             }
 
@@ -90,7 +94,7 @@ namespace KWRP.Avalonia.Frontend.Services
             {
                 ".xml" => FileType.XML,
                 ".csv" => FileType.CSV,
-                _ => throw new Exception($"ファイルはサポートされていません。有効な拡張子はxml, csvです"),
+                _ => throw new ArgumentException(_languageService.GetString("Domain.Front.FileNotSupported")),
             };
 
             await LoadFileAsync(filePath, fileType);
@@ -102,7 +106,7 @@ namespace KWRP.Avalonia.Frontend.Services
         {
             if (!File.Exists(filePath))
             {
-                throw new FileNotFoundException($"指定されたファイルが存在しません: {filePath}");
+                throw new FileNotFoundException(String.Format(_languageService.GetString("Domain.Front.FileDoesNotExist"), filePath));
             }
 
             try
@@ -110,17 +114,17 @@ namespace KWRP.Avalonia.Frontend.Services
                 using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.None))
                 { }
 
-                _logService.LogDebug($"領域ファイル「{filePath}」を選択しました");
+                _logService.LogDebug(String.Format(_languageService.GetString("Domain.Front.SelectedAreaFile"), filePath));
                 await _strategies[fileType](filePath);
-                _logService.LogInfo($"領域ファイル「{filePath}」を読込みが完了しました");
+                _logService.LogDebug(String.Format(_languageService.GetString("Domain.Front.AreaFileLoadComplete"), filePath));
             }
             catch (IOException ex)
             {
-                throw new Exception($"ファイルが開かれています\n{ex.Message}", ex);
+                throw new Exception(String.Format(_languageService.GetString("Domain.Front.FileOpenError"), ex.Message, ex));
             }
             catch (Exception ex)
             {
-                throw new Exception($"ファイル読み込みに失敗しました\n{ex.Message}", ex);
+                throw new Exception(String.Format(_languageService.GetString("Domain.Front.FileReadFailed"), ex.Message, ex));
             }
         }
 
@@ -153,7 +157,8 @@ namespace KWRP.Avalonia.Frontend.Services
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine(ex.Message + $"{typeof(CompactionAreaItems)}のロードに失敗しました。フォーマットが正しくない可能性があります");
+                System.Diagnostics.Debug.WriteLine(ex.Message +
+                    String.Format(_languageService.GetString("Domain.Front.CompactionAreaItemsLoadFailed"), typeof(CompactionAreaItems)));
             }
 
             try
@@ -182,11 +187,12 @@ namespace KWRP.Avalonia.Frontend.Services
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine(ex.Message + $"{typeof(AutomatedConstructionAreaItems)}のロードに失敗しました");
+                System.Diagnostics.Debug.WriteLine(ex.Message +
+                    String.Format(_languageService.GetString("Domain.Front.CompactionAreaItemsLoadFailed"), typeof(AutomatedConstructionAreaItems)));
             }
 
-            System.Diagnostics.Debug.WriteLine($"領域データのロードに失敗しました。フォーマットが正しくない可能性があります。");
-            throw new ArgumentException($"領域データのロードに失敗しました。フォーマットが正しくない可能性があります。");
+            System.Diagnostics.Debug.WriteLine(_languageService.GetString("Domain.Front.AreaDataLoadFailed"));
+            throw new ArgumentException(_languageService.GetString("Domain.Front.AreaDataLoadFailed"));
         }
 
         async Task LoadCsvDataAsync(string path)
@@ -201,8 +207,9 @@ namespace KWRP.Avalonia.Frontend.Services
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"領域データのロードに失敗しました。フォーマットが正しくない可能性があります。");
-                throw new ArgumentException(ex.Message + $"領域データ{path}のロードに失敗しました。フォーマットが正しくない可能性があります。");
+                System.Diagnostics.Debug.WriteLine(_languageService.GetString("Domain.Front.AreaDataLoadFailed"));
+                throw new ArgumentException(ex.Message +
+                    String.Format(_languageService.GetString("Domain.Front.CompactionAreaItemsLoadFailed"), path));
             }
         }
 
@@ -238,7 +245,7 @@ namespace KWRP.Avalonia.Frontend.Services
             }
             catch (Exception ex)
             {
-                throw new Exception($"領域データの登録時に例外が発生しました: {ex.Message}", ex);
+                throw new Exception(String.Format(_languageService.GetString("Domain.Front.AreaDataRegistrationException"), ex.Message), ex);
             }
         }
 
