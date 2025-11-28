@@ -1,10 +1,15 @@
-﻿using Trdk.Geometry;
+﻿using KWRP.Backend.Services;
+using Trdk.Geometry;
 
 namespace KWRP.Avalonia.Backend.Model.Modlules.LaneIntegration
 {
     public class NaiveDfsLaneIntegrator
     {
-        public static IEnumerable<Polygon[]> Integrate(IEnumerable<Polygon> orthogonalLanes, int minPairCount, int maxPairCount)
+        public static IEnumerable<Polygon[]> Integrate(
+            IEnumerable<Polygon> orthogonalLanes, 
+            int minPairCount, 
+            int maxPairCount,
+            ILanguageService? _languageService=null)
         {
             // 隣接リストを作る
             var lanes = orthogonalLanes
@@ -14,7 +19,11 @@ namespace KWRP.Avalonia.Backend.Model.Modlules.LaneIntegration
 
             if (N > KWRPConstants.C_LANE_COUNT_LIMIT)
             {
-                throw new ArgumentException($"レーンの数が多すぎるので処理を中止します。{N} > {KWRPConstants.C_LANE_COUNT_LIMIT}");
+                throw new ArgumentException(
+                    String.Format(
+                        _languageService?.GetString("Domain.Back.TooManyLanesAbort") 
+                        ?? $"レーンの数が多すぎるので処理を中止します。{0} > {1}", 
+                        N, KWRPConstants.C_LANE_COUNT_LIMIT));
             }
 
             var adjacentyList = Enumerable.Range(0, N).Select(_ => new List<int>()).ToArray();

@@ -94,7 +94,8 @@ namespace KWRP.Avalonia.Frontend.Services.LaneArrangement
             var pairedLanes = NaiveDfsLaneIntegrator.Integrate(
                 orthogonalLanes: simulators[best].Lanes.Select(lane => lane.ToPolygon()), 
                 minPairCount: _parameterStore.PairCountMin,
-                maxPairCount: _parameterStore.PairCountMax);
+                maxPairCount: _parameterStore.PairCountMax, 
+                _languageService: _languageService);
             var result = CreatedLaneResult.By(
                 targetPolygon: target.Rotate(_directions[best]),
                 lanes: lanes.Select(lane => LaneModel.CreateByOrthogonal(lane, _directions[best])),
