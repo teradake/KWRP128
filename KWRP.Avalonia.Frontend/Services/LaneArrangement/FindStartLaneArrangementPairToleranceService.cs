@@ -8,6 +8,7 @@ using KWRP.Avalonia.Backend.Models;
 using KWRP.Avalonia.Backend.Services;
 using KWRP.Avalonia.Frontend.Models.Settings;
 using KWRP.Avalonia.Frontend.Models.Stores;
+using KWRP.Backend.Services;
 using R3;
 using System;
 using System.Collections.Generic;
@@ -27,6 +28,7 @@ namespace KWRP.Avalonia.Frontend.Services.LaneArrangement
         private readonly DfsLaneIntegrator _laneIntegrator;
         private readonly ApplicationStore _applicationStore;
         private readonly INotificationService _notificationService;
+        private readonly ILanguageService _languageService;
 
         private readonly List<double> _directions = [];
 
@@ -37,7 +39,8 @@ namespace KWRP.Avalonia.Frontend.Services.LaneArrangement
             ILaneArrangementEvaluationService evaluator,
             DfsLaneIntegrator laneIntegrator,
             ApplicationStore applicationStore,
-            INotificationService notificationService)
+            INotificationService notificationService,
+            ILanguageService languageService)
         {
             _parameterStore = parameterStore;
             _canvasItemStore = canvasItemStore;
@@ -48,6 +51,7 @@ namespace KWRP.Avalonia.Frontend.Services.LaneArrangement
             _notificationService = notificationService;
 
             _logService.LogDebug("init");
+            _languageService = languageService;
         }
 
         public void AllocateDirections(params double[] rotationDirectionsRadian)
@@ -60,7 +64,7 @@ namespace KWRP.Avalonia.Frontend.Services.LaneArrangement
         {
             var simulators = _directions
                 .Select(d => target.Rotate(-d))
-                .Select(p => new FindStartLaneLastLapAdjustmentArranger(p, _logService))
+                .Select(p => new FindStartLaneLastLapAdjustmentArranger(p, _logService, _languageService))
                 .ToArray();
 
             var minLength = _parameterStore.LaneChangeLength

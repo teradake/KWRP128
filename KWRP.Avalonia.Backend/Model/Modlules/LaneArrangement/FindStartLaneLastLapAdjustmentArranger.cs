@@ -1,4 +1,5 @@
 ﻿using KWRP.Avalonia.Backend.Services;
+using KWRP.Backend.Services;
 using System.ComponentModel.DataAnnotations;
 using System.IO.Compression;
 using Trdk.Geometry;
@@ -19,6 +20,7 @@ namespace KWRP.Avalonia.Backend.Model.Modules.LaneArrangement
 
 
         private readonly ILogService? _logService;
+        private readonly ILanguageService? _languageService;
         private readonly List<BoundingBox> _lanes = [];
         private readonly List<(double XL, double XR)> _xranges = [];
 
@@ -27,10 +29,14 @@ namespace KWRP.Avalonia.Backend.Model.Modules.LaneArrangement
         public PolygonWithHoles TargetPolygon { get; }
 
 
-        public FindStartLaneLastLapAdjustmentArranger(PolygonWithHoles targetPolygon, ILogService? logService = null)
+        public FindStartLaneLastLapAdjustmentArranger(
+            PolygonWithHoles targetPolygon, 
+            ILogService? logService = null,
+            ILanguageService? languageService=null)
         {
             TargetPolygon = targetPolygon;
             _logService = logService;
+            _languageService = languageService;
         }
 
         public void CreateInscribeLanes(
@@ -44,15 +50,15 @@ namespace KWRP.Avalonia.Backend.Model.Modules.LaneArrangement
             // validate
             if (laneWidth <= 0)
             {
-                throw new ArgumentException($"鉄倫幅({nameof(laneWidth)})は0より大きい値としてください");
+                throw new ArgumentException(_languageService?.GetString("Domain.Back.WheelWidthGreaterThanZero") ?? "鉄輪幅は0より大きい値としてください");
             }
             if (lapWidth <= 0)
             {
-                throw new ArgumentException($"レーンラップ幅({nameof(lapWidth)})は0より大きい値としてください");
+                throw new ArgumentException(_languageService?.GetString("Domain.Back.LaneLapWidthGreaterThanZero") ?? "レーンラップ幅は0より大きい値としてください");
             }
             if (Utils.IsPositive(2 * lapWidth - laneWidth))
             {
-                throw new ArgumentException($"レーンラップ幅({nameof(lapWidth)})は 2 x 鉄輪幅より短い値としてください");
+                throw new ArgumentException(_languageService?.GetString("Domain.Back.LaneLapWidthShorterThanDoubleWheelWidth") ?? "レーンラップ幅は鉄輪幅×2より短い値としてください");
             }
 
             
@@ -124,8 +130,12 @@ namespace KWRP.Avalonia.Backend.Model.Modules.LaneArrangement
 
                         if (chunkL.Count % 2 != 0)
                         {
-                            _logService?.LogWarn($"x=xL(={xL:f3})で交点が奇数になっています。レーン割がうまくいかない可能性があります");
-                            throw new Exception($"x=xR(={xL:f3})で交点が奇数になっています");
+                            _logService?.LogWarn(String.Format(_languageService?.GetString("Domain.Back.OddIntersectionCountLeft") 
+                                                                ?? $"x=xL(={0:f3})で交点が奇数になっています。レーン割がうまくいかない可能性があります", 
+                                                                xL));
+                            throw new Exception(String.Format(_languageService?.GetString("Domain.Back.OddIntersectionCountLeft")
+                                                                ?? $"x=xL(={0:f3})で交点が奇数になっています。レーン割がうまくいかない可能性があります",
+                                                                xL));
                         }
 
                         // 直線x = xrとpolygonの交点を取得
@@ -150,8 +160,12 @@ namespace KWRP.Avalonia.Backend.Model.Modules.LaneArrangement
 
                         if (chunkR.Count % 2 != 0)
                         {
-                            _logService?.LogWarn($"x=xR(={xR:f3})で交点が奇数になっています。レーン割がうまくいかない可能性があります");
-                            throw new Exception($"x=xR(={xR:f3})で交点が奇数になっています");
+                            _logService?.LogWarn(String.Format(_languageService?.GetString("Domain.Back.OddIntersectionCountRight")
+                                                                ?? $"x=xR(={0:f3})で交点が奇数になっています。レーン割がうまくいかない可能性があります",
+                                                                xL));
+                            throw new Exception(String.Format(_languageService?.GetString("Domain.Back.OddIntersectionCountRight")
+                                                                ?? $"x=xR(={0:f3})で交点が奇数になっています。レーン割がうまくいかない可能性があります",
+                                                                xL));
                         }
 
                         var crossPoints = crossPointsL
@@ -274,7 +288,10 @@ namespace KWRP.Avalonia.Backend.Model.Modules.LaneArrangement
                 }
                 catch (Exception e)
                 {
-                    throw new Exception($"区間[{xL}, {xR}]でレーン生成時にエラーが発生しました: {e.Message}", e);
+                    //throw new Exception($"区間[{xL}, {xR}]でレーン生成時にエラーが発生しました: {e.Message}", e);
+                    throw new Exception(String.Format(_languageService?.GetString("Domain.Back.LaneGenerationError")
+                                                        ?? "区間[{0:f3}, {1:f3}]でレーン生成時にエラーが発生しました: {2}",
+                                                        xL, xR, e.Message), e);
                 }
             }
         }
