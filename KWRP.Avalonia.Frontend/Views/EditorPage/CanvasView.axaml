@@ -480,44 +480,46 @@
                                 IsVisible="{Binding !#expaninf.IsExpanded}"
                                 Text="{i18n:Localize Canvas.ActivityInfoHeader}" />
                         </Expander.Header>
-                        <SelectableTextBlock Margin="5,0,5,5" SelectionBrush="{Binding #expaninf.Background}">
-                            <Run Text="{Binding SelectedActivity.Value.ActivityId, StringFormat='ID : {0}', FallbackValue=id}" />
+                        <SelectableTextBlock Margin="5,0,5,5" 
+                                             SelectionBrush="{Binding #expaninf.Background}"
+                                             DataContext="{Binding SelectedActivity.Value}">
+                            <Run Text="{Binding ActivityId, StringFormat='ID : {0}', FallbackValue=id}" />
                             <LineBreak />
                             <Run Text="{i18n:Localize Canvas.WorkType}"/> :
-                            <Run Text="{Binding SelectedActivity.Value.WorkType, StringFormat='{}{0}', FallbackValue=work}" />
+                            <Run Text="{Binding WorkType, StringFormat='{}{0}', FallbackValue=work}" />
                             <LineBreak />
                             <Run Text="{i18n:Localize Canvas.WorkGroup}"/> :
-                            <Run Text="{Binding SelectedActivity.Value.PathID, StringFormat='{}{0}', FallbackValue=groupId}" />
+                            <Run Text="{Binding PathID, StringFormat='{}{0}', FallbackValue=groupId}" />
                             <LineBreak />
                             <Run Text="{i18n:Localize Canvas.VRDirection}"/> :
-                            <Run Text="{Binding SelectedActivity.Value.Dir, StringFormat='{}{0}', FallbackValue=dir}" />
+                            <Run Text="{Binding Dir, StringFormat='{}{0}', FallbackValue=dir}" />
                             <LineBreak />
                             <Run Text="{i18n:Localize Canvas.RefSpeed}"/> :
-                            <Run Text="{Binding SelectedActivity.Value.RefSpeed, StringFormat='{}{0}', FallbackValue=ref}" />
+                            <Run Text="{Binding RefSpeed, StringFormat='{}{0}', FallbackValue=ref}" />
                             <LineBreak />
                             <Run Text="{i18n:Localize Canvas.EdgeSpeed}"/> :
-                            <Run Text="{Binding SelectedActivity.Value.EdgeSpeed, StringFormat='{}{0}', FallbackValue=edge}" />
+                            <Run Text="{Binding EdgeSpeed, StringFormat='{}{0}', FallbackValue=edge}" />
                             <LineBreak />
                             <Run Text="{i18n:Localize Canvas.RepeatNum}"/> :
-                            <Run Text="{Binding SelectedActivity.Value.RepeatNum, StringFormat='{}{0}', FallbackValue=num}" />
+                            <Run Text="{Binding RepeatNum, StringFormat='{}{0}', FallbackValue=num}" />
                             <LineBreak />
                             <Run Text="{i18n:Localize Canvas.Vibration}"/> :
-                            <Run Text="{Binding SelectedActivity.Value.Comp, StringFormat='{}{0}', FallbackValue=comp}" />
+                            <Run Text="{Binding Comp, StringFormat='{}{0}', FallbackValue=comp}" />
                             <LineBreak />
                             <Run Text="{i18n:Localize Canvas.FrontEdgeFlag}"/> :
-                            <Run Text="{Binding SelectedActivity.Value.EdgeFront, StringFormat='{}{0}', FallbackValue=ef}" />
+                            <Run Text="{Binding EdgeFront, StringFormat='{}{0}', FallbackValue=ef}" />
                             <LineBreak />
                             <Run Text="{i18n:Localize Canvas.RearEdgeFlag}"/> :
-                            <Run Text="{Binding SelectedActivity.Value.EdgeRear, StringFormat='{}{0}', FallbackValue=er}" />
+                            <Run Text="{Binding EdgeRear, StringFormat='{}{0}', FallbackValue=er}" />
                             <LineBreak />
                             <Run Text="{i18n:Localize Canvas.AreaLength}"/> :
-                            <Run Text="{Binding SelectedActivity.Value.Length, StringFormat='{}{0}', FallbackValue=len}" />
+                            <Run Text="{Binding Length, StringFormat='{}{0}', FallbackValue=len}" />
                             <LineBreak />
                             <Run Text="{i18n:Localize Canvas.AreaWidth}"/> :
-                            <Run Text="{Binding SelectedActivity.Value.Width, StringFormat='{}{0}', FallbackValue=wid}" />
+                            <Run Text="{Binding Width, StringFormat='{}{0}', FallbackValue=wid}" />
                             <LineBreak />
                             <Run Text="{i18n:Localize Canvas.WorkTime}"/> :
-                            <Run Text="{Binding SelectedActivity.Value.WorkTime, StringFormat='{}{0}', FallbackValue=worktime}" />
+                            <Run Text="{Binding WorkTime, StringFormat='{}{0}', FallbackValue=worktime}" />
                         </SelectableTextBlock>
                     </Expander>
 
