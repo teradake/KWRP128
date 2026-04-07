@@ -137,7 +137,7 @@
   "Domain.Front.DirectoryPathRetrievalFailed": "Failed to retrieve directory path.",
   "Domain.Front.DivisionParameters": "Lane division parameters\\n",
   "Domain.Front.DivisionResults": "Lane division results",
-  "Domain.Front.DoubleWheel": "Tandem",
+  "Domain.Front.TandemWheel": "Tandem",
   "Domain.Front.DxfFileNotRegistered": "DXF file not registered.",
   "Domain.Front.DxfFileSelected": "DXF file selected: {0}",
   "Domain.Front.DxfFileSelectionError": "Error during DXF file selection:",

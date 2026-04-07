@@ -137,7 +137,7 @@
   "Domain.Front.DirectoryPathRetrievalFailed": "ディレクトリパスの取得に失敗しました",
   "Domain.Front.DivisionParameters": "区割りパラメータ\\n",
   "Domain.Front.DivisionResults": "区割り結果",
-  "Domain.Front.DoubleWheel": "両鉄輪",
+  "Domain.Front.TandemWheel": "両鉄輪",
   "Domain.Front.DxfFileNotRegistered": "dxfファイルが未登録",
   "Domain.Front.DxfFileSelected": "dxfファイルを選択 : {0}",
   "Domain.Front.DxfFileSelectionError": "dxfファイル選択時エラー :",
