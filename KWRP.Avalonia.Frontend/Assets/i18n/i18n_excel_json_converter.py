@@ -23,6 +23,14 @@ TARGET_SHEETS: List[str] = [
 
 EXPECTED_COLS = ["Key", "ja", "en"]
 
+SPECIAL_ENTRIES = {
+    "ActEditor.Spacing": {
+        "ja": "",   # 空文字
+        "en": " ",  # スペース1文字（strip すると消えるので注意）
+    }
+}
+
+
 
 def log(msg: str) -> None:
     """標準エラー出力へログ."""
@@ -73,6 +81,18 @@ def read_sheet(excel_path: Path, sheet_name: str) -> pd.DataFrame:
     df = df[df["Key"] != ""].copy()
 
     return df
+
+
+def apply_special_entries(ja_map: Dict[str, str], en_map: Dict[str, str]) -> None:
+    """Excel由来の辞書に、仕様で要求される特別なKeyを追加する."""
+    for key, values in SPECIAL_ENTRIES.items():
+        if key in ja_map or key in en_map:
+            raise ValueError(f"SPECIAL_ENTRIES の Key が既存データと重複しています: '{key}'")
+
+        ja_map[key] = values["ja"]
+        en_map[key] = values["en"]
+
+        log(f"Added special entry: {key!r} (ja={values['ja']!r}, en={values['en']!r})")
 
 
 def sanitize_value(s: str) -> str:
@@ -132,6 +152,8 @@ def build_language_maps(excel_path: Path) -> Tuple[Dict[str, str], Dict[str, str
 
             ja_map[key] = ja_val
             en_map[key] = en_val
+    
+    apply_special_entries(ja_map, en_map)
 
     return ja_map, en_map
 

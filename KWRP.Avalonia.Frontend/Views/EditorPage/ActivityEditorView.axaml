@@ -101,7 +101,7 @@
                             <TextBlock Classes="title">
                                 <Underline>
                                     <Run Text="{i18n:Localize ActEditor.Trans}" />
-                                </Underline><Run Text="{i18n:Localize ActEditor.GenActivity}"/>
+                                </Underline><Run Text="{i18n:Localize ActEditor.Spacing}"/><Run Text="{i18n:Localize ActEditor.GenActivity}"/>
                             </TextBlock>
                         </StackPanel>
                         <ToggleSwitch
@@ -230,7 +230,7 @@
                             <TextBlock Classes="title">
                                 <Underline>
                                     <Run Text="{i18n:Localize ActEditor.Nocomp}"/>
-                                </Underline><Run Text="{i18n:Localize ActEditor.GenActivity}"/>
+                                </Underline><Run Text="{i18n:Localize ActEditor.Spacing}"/><Run Text="{i18n:Localize ActEditor.GenActivity}"/>
                             </TextBlock>
                         </StackPanel>
                         <ToggleSwitch
@@ -302,7 +302,7 @@
                             <TextBlock Classes="title">
                                 <Underline>
                                     <Run Text="{i18n:Localize ActEditor.Comp}"/>
-                                </Underline><Run Text="{i18n:Localize ActEditor.GenActivity}"/>
+                                </Underline><Run Text="{i18n:Localize ActEditor.Spacing}"/><Run Text="{i18n:Localize ActEditor.GenActivity}"/>
                             </TextBlock>
                         </StackPanel>
                         <ToggleSwitch
