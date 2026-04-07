@@ -1,5 +1,6 @@
 ﻿using KWRP.Avalonia.Backend.Services;
 using KWRP.Avalonia.Frontend.Models.Stores;
+using KWRP.Backend.Services;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,15 +15,18 @@ namespace KWRP.Avalonia.Frontend.Services
         private readonly ILogService _logService;
         private readonly IPathService _pathService;
         private readonly ActivityStore _activityStore;
+        private readonly ILanguageService _languageService;
 
         public CadScriptService(
             ILogService logService,
             ActivityStore activityStore,
-            IPathService pathService)
+            IPathService pathService,
+            ILanguageService languageService)
         {
             _logService = logService;
             _activityStore = activityStore;
             _pathService = pathService;
+            _languageService = languageService;
         }
 
         public async Task CreateCadScriptAsync(string path)
@@ -37,8 +41,8 @@ namespace KWRP.Avalonia.Frontend.Services
             // 「#区割り結果」という名前のレイヤを作成。現在のレイヤを「#区割り結果」にする
             sb.AppendLine(
                 $"-LAYER\r\n" +
-                $"n #区割り結果\r\n" +
-                $"s #区割り結果\r\n");
+                $"n {_languageService.GetString("Domain.Front.DivisionResults")}\r\n" +
+                $"s  {_languageService.GetString("Domain.Front.DivisionResults")} \r\n\n");
 
             var acts = _activityStore.ActivityGroups.SelectMany(group => group).Where(act => act.ActivityType == Backend.Enums.RollerActivityType.Compaction);
             if (!acts.Any())
@@ -60,7 +64,7 @@ namespace KWRP.Avalonia.Frontend.Services
             }
             catch (Exception ex)
             {
-                _logService.LogError("CadScriptの保存に失敗しました", ex);
+                _logService.LogError(_languageService.GetString("Domain.Front.CadScriptSaveFailed"), ex);
                 throw;
             }
         }

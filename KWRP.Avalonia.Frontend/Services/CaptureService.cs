@@ -10,6 +10,7 @@ using KWRP.Avalonia.Backend.Models;
 using KWRP.Avalonia.Backend.Services;
 using KWRP.Avalonia.Frontend.Models.Stores;
 using KWRP.Avalonia.Frontend.ViewModels.Shapes;
+using KWRP.Backend.Services;
 using System;
 using System.IO;
 using System.Linq;
@@ -28,6 +29,7 @@ namespace KWRP.Avalonia.Frontend.Services
         private readonly ParameterStore _parameterStore;
         private readonly MachineStore _machineStore;
         private readonly ActivityStore _activityStore;
+        private readonly ILanguageService _languageService;
 
         public CaptureService(
             ILogService logService,
@@ -37,7 +39,8 @@ namespace KWRP.Avalonia.Frontend.Services
             WorkAreaStore workAreaStore,
             ParameterStore parameterStore,
             ActivityStore activityStore,
-            MachineStore machineStore)
+            MachineStore machineStore,
+            ILanguageService languageService)
         {
             _logService = logService;
             _notificationService = notificationService;
@@ -47,6 +50,7 @@ namespace KWRP.Avalonia.Frontend.Services
             _parameterStore = parameterStore;
             _activityStore = activityStore;
             _machineStore = machineStore;
+            _languageService = languageService;
         }
 
 
@@ -77,10 +81,12 @@ namespace KWRP.Avalonia.Frontend.Services
                     return;
                 }
 
-                var pngPath = await _pathService.GetSaveFilePathAsync(Backend.Enums.FileType.PNG);
+                var pngPath = await _pathService.GetSaveFilePathAsync(
+                    fileType: Backend.Enums.FileType.PNG,
+                    title: _languageService.GetString("Domain.Back.SpecifyFileNameToSave"));
                 if (string.IsNullOrEmpty(pngPath))
                 {
-                    _logService.LogInfo("キャプチャを中止しました");
+                    _logService.LogInfo(_languageService.GetString("Domain.Front.CaptureAborted"));
                     return;
                 }
 
@@ -88,8 +94,8 @@ namespace KWRP.Avalonia.Frontend.Services
                 await using var os = new FileStream(pngPath, FileMode.Create);
                 renderBitmap.Save(os);
 
-                _notificationService.Notify(KWRPNotification.Create("キャプチャを保存しました", Backend.Enums.NotifyMessageType.Info, 6)
-                    .WithCommand("フォルダを開く", () =>
+                _notificationService.Notify(KWRPNotification.Create(_languageService.GetString("Domain.Front.CaptureSaved"), Backend.Enums.NotifyMessageType.Info, 6)
+                    .WithCommand(_languageService.GetString("Domain.Front.OpenFolder"), () =>
                     {
                         if (!string.IsNullOrWhiteSpace(pngPath))
                         {
@@ -99,16 +105,16 @@ namespace KWRP.Avalonia.Frontend.Services
                             }
                             catch (Exception ex)
                             {
-                                _logService.LogError("フォルダのオープンに失敗しました", ex);
+                                _logService.LogError(_languageService.GetString("Domain.Front.FailedToOpenFolder"), ex);
                                 _notificationService.Notify(
-                                    KWRPNotification.Create("フォルダを開けませんでした", NotifyMessageType.Warn, 5));
+                                    KWRPNotification.Create(_languageService.GetString("Domain.Front.FailedToOpenFolder"), NotifyMessageType.Warn, 5));
                             }
                         }
                     }));
             }
             catch (Exception ex)
             {
-                _logService.LogError("キャプチャに失敗しました", ex);
+                _logService.LogError(_languageService.GetString("Domain.Front.CaptureFailed"), ex);
                 System.Diagnostics.Debug.WriteLine("-------------------------------------");
                 System.Diagnostics.Debug.WriteLine(ex);
                 throw;
@@ -130,12 +136,12 @@ namespace KWRP.Avalonia.Frontend.Services
                     var bitmap = CaptureCanvas(canvas);
                     await ClipboardAvalonia.SetImageAsync(bitmap);
 
-                    _notificationService.Notify(KWRPNotification.Create("キャプチャをクリップボードにコピーしました", Backend.Enums.NotifyMessageType.Info, 3));
+                    _notificationService.Notify(KWRPNotification.Create(_languageService.GetString("Domain.Front.CaptureCopiedToClipboard"), Backend.Enums.NotifyMessageType.Info, 3));
                 }
             }
             catch (Exception ex)
             {
-                _logService.LogError("クリップボードへのキャプチャに失敗しました", ex);
+                _logService.LogError(_languageService.GetString("Domain.Front.ClipboardCaptureFailed"), ex);
                 System.Diagnostics.Debug.WriteLine("-------------------------------------");
                 System.Diagnostics.Debug.WriteLine(ex);
                 throw;
@@ -273,26 +279,41 @@ namespace KWRP.Avalonia.Frontend.Services
                 var bx = _canvasItemStore.CompactionAreas.Select(p => p.AaBB.Xmax).Max();
                 var by = _canvasItemStore.CompactionAreas.Select(p => p.AaBB.Ymax).Max();
                 var loc = mat.Transform(new Point(bx, by));
+                //var text =
+                //        $"区割りパラメータ\n" +
+                //        $"　鉄輪幅 : {_parameterStore.LaneWidth:F2}m\n" +
+                //        $"　前方オフセット : {_parameterStore.FrontOffset:F2}m\n" +
+                //        $"　後方オフセット : {_parameterStore.RearOffset:F2}m\n" +
+                //        $"　側方オフセット① : {_parameterStore.SidePrevOffset.Value:F2}m\n" +
+                //        $"　側方オフセット② : {_parameterStore.SideNextOffset.Value:F2}m\n" +
+                //        $"　レーンラップ幅 : {_parameterStore.LapWidth:F2}m\n" +
+                //        $"　作業可能長さ : {_parameterStore.LaneChangeLength:F2}m\n" +
+                //        $"　作業進捗方向 : {_parameterStore.ProgresssDirectionRadian.Value * 180.0 / Math.PI:F2} deg.\n" +
+                //        $"\n" +
+                //        $"　最小レーン数 : {_parameterStore.PairCountMin}\n" +
+                //        $"　最大レーン数 : {_parameterStore.PairCountMax}";
+                var text =
+                    $"{_languageService.GetString("LaneEditor.GenLaneParam")}\n" +
+                    $"　{_languageService.GetString("LaneEditor.LaneWidth")} : {_parameterStore.LaneWidth:F2}\n" +
+                    $"　{_languageService.GetString("LaneEditor.FrontOffset")} : {_parameterStore.FrontOffset:F2}\n" +
+                    $"　{_languageService.GetString("LaneEditor.RearOffset")} : {_parameterStore.RearOffset:F2}\n" +
+                    $"　{_languageService.GetString("LaneEditor.SidePrevOffset")} : {_parameterStore.SidePrevOffset.Value:F2}\n" +
+                    $"　{_languageService.GetString("LaneEditor.SideNextOffset")} : {_parameterStore.SideNextOffset.Value:F2}\n" +
+                    $"　{_languageService.GetString("LaneEditor.LapWidth")} : {_parameterStore.LapWidth:F2}\n" +
+                    $"　{_languageService.GetString("LaneEditor.LaneChangeLength")} : {_parameterStore.LaneChangeLength:F2}\n" +
+                    $"　{_languageService.GetString("LaneEditor.ProgressDirectionDegree")} : {_parameterStore.ProgresssDirectionRadian.Value * 180.0 / Math.PI:F2}\n" +
+                    $"\n" +
+                    $"　{_languageService.GetString("LaneEditor.MinLaneCount")} : {_parameterStore.PairCountMin}\n" +
+                    $"　{_languageService.GetString("LaneEditor.MaxLaneCount")} : {_parameterStore.PairCountMax}";
 
                 var laneArrangementParametersText = new TextBlock
                 {
                     FontSize = 45,
                     ClipToBounds = false,
                     Padding = new Thickness(5),
-                    Text =
-                        $"区割りパラメータ\n" +
-                        $"　鉄輪幅 : {_parameterStore.LaneWidth:F2}m\n" +
-                        $"　前方オフセット : {_parameterStore.FrontOffset:F2}m\n" +
-                        $"　後方オフセット : {_parameterStore.RearOffset:F2}m\n" +
-                        $"　側方オフセット① : {_parameterStore.SidePrevOffset.Value:F2}m\n" +
-                        $"　側方オフセット② : {_parameterStore.SideNextOffset.Value:F2}m\n" +
-                        $"　レーンラップ幅 : {_parameterStore.LapWidth:F2}m\n" +
-                        $"　作業可能長さ : {_parameterStore.LaneChangeLength:F2}m\n" +
-                        $"　作業進捗方向 : {_parameterStore.ProgresssDirectionRadian.Value * 180.0 / Math.PI:F2} deg.\n" +
-                        $"\n" +
-                        $"　最小レーン数 : {_parameterStore.PairCountMin}\n" +
-                        $"　最大レーン数 : {_parameterStore.PairCountMax}",
+                    Text = text,
                 };
+                
                 laneArrangementParametersText.Measure(new Size(double.MaxValue, double.MaxValue));
 
                 var grid = new Grid
@@ -377,7 +398,8 @@ namespace KWRP.Avalonia.Frontend.Services
                     };
                     var laneCount = new TextBlock
                     {
-                        Text = $"{act.LaneCount}レーン",
+                        //Text = $"{act.LaneCount}レーン",
+                        Text = string.Format(_languageService.GetString("Domain.Front.LaneCount"), act.LaneCount),
                         FontSize = 30 * vm.Scale / 0.12,
                         ClipToBounds = false,
                         HorizontalAlignment = HorizontalAlignment.Center,
@@ -428,11 +450,11 @@ namespace KWRP.Avalonia.Frontend.Services
                 {
                     await using var fs = new FileStream(path, FileMode.Create);
                     renderBitmap.Save(fs);
-                    _logService.LogInfo($"計画図を{path}に保存しました。");
+                    _logService.LogInfo(string.Format(_languageService.GetString("Domain.Front.ParameterSavedTo"), path));
                 }
                 catch (Exception ex)
                 {
-                    _logService.LogError("計画図の保存に失敗しました", ex);
+                    _logService.LogError(_languageService.GetString("Domain.Front.PlanSaveFailed"), ex);
                     throw;
                 }
             }
