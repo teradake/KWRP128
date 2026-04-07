@@ -188,7 +188,7 @@
   "Domain.Front.OutlineCreationFailed": "外形線の作成に失敗しました",
   "Domain.Front.OutputSelectionError": "出力先選択時にエラーが発生しました",
   "Domain.Front.ParameterLoadCancelled": "パラメータ読み込み:ファイル選択を中止しました",
-  "Domain.Front.ParameterLoadFailed": "パラメータを読込みに失敗しました",
+  "Domain.Front.ParameterLoadFailed": "パラメータ読込みに失敗しました",
   "Domain.Front.ParameterLoadFileSelectionCancelled": "パラメータ読み込み:ファイル選択を中止しました",
   "Domain.Front.ParameterLoaded": "パラメータを読込みました",
   "Domain.Front.ParameterSaveFailed": "パラメータの保存に失敗しました",
