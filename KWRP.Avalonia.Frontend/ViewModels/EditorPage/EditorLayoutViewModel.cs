@@ -3,6 +3,7 @@ using KWRP.Avalonia.Backend.Services;
 using KWRP.Avalonia.Frontend.Models.Stores;
 using KWRP.Avalonia.Frontend.Services;
 using KWRP.Avalonia.Frontend.ViewModels.StartUpPage;
+using KWRP.Backend.Services;
 using ObservableCollections;
 using R3;
 using System;
@@ -20,6 +21,7 @@ namespace KWRP.Avalonia.Frontend.ViewModels.EditorPage
         private readonly IPathService _pathService;
         private readonly ApplicationStore _applicationStore;
         private readonly INotificationService _notificationService;
+        private readonly ILanguageService _languageService;
 
         public EditorLayoutViewModel(
             NavigationTwoPanelStore navigationTwoPanelStore,
@@ -29,7 +31,8 @@ namespace KWRP.Avalonia.Frontend.ViewModels.EditorPage
             ILaneArrangementParameterService laneArrangementParameterService,
             IPathService pathService,
             ApplicationStore applicationStore,
-            INotificationService notificationService)
+            INotificationService notificationService,
+            ILanguageService languageService)
         {
             _navigationTwoPanelStore = navigationTwoPanelStore;
             _navigationService = navigationService;
@@ -39,6 +42,7 @@ namespace KWRP.Avalonia.Frontend.ViewModels.EditorPage
             _pathService = pathService;
             _applicationStore = applicationStore;
             _laneArrangementParameterService = laneArrangementParameterService;
+            _languageService = languageService;
 
             LeftViewModel = _navigationTwoPanelStore
                 .ObservableLeftViewModel
@@ -88,13 +92,15 @@ namespace KWRP.Avalonia.Frontend.ViewModels.EditorPage
                         if (await _laneArrangementParameterService.LoadParamsAsync())
                         {
                             _logService.LogInfo($"パラメータを読込みました");
-                            _notificationService.Notify(KWRPNotification.Create("パラメータを読込みました", Backend.Enums.NotifyMessageType.Info, 3));
+                            //_notificationService.Notify(KWRPNotification.Create("パラメータを読込みました", Backend.Enums.NotifyMessageType.Info, 3));
+                            _notificationService.Notify(KWRPNotification.Create(_languageService.GetString("Domain.Front.ParameterLoaded"), Backend.Enums.NotifyMessageType.Info, 3));
                         }
                     }
                     catch (Exception ex)
                     {
                         _logService.LogWarn($"パラメータ読み込みに失敗しました: {ex}");
-                        _notificationService.Notify(KWRPNotification.Create("パラメータを読込みに失敗しました" + ex.Message, Backend.Enums.NotifyMessageType.Warn, 5));
+                        //_notificationService.Notify(KWRPNotification.Create("パラメータを読込みに失敗しました" + ex.Message, Backend.Enums.NotifyMessageType.Warn, 5));
+                        _notificationService.Notify(KWRPNotification.Create(_languageService.GetString("Domain.Front.ParameterLoadFailed") + "\n" + ex.Message, Backend.Enums.NotifyMessageType.Warn, 8));
                     }
                     finally
                     {
@@ -115,8 +121,8 @@ namespace KWRP.Avalonia.Frontend.ViewModels.EditorPage
                         if (path == null)
                             return;
 
-                        _notificationService.Notify(KWRPNotification.Create("パラメータを保存しました", Backend.Enums.NotifyMessageType.Info, 5)
-                            .WithCommand("フォルダを開く", () =>
+                        _notificationService.Notify(KWRPNotification.Create(_languageService.GetString("Domain.Front.ParameterSaved"), Backend.Enums.NotifyMessageType.Info, 7)
+                            .WithCommand(_languageService.GetString("Domain.Front.OpenFolder"), () =>
                             {
                                 if (_pathService.IsPathValid(path))
                                 {
@@ -127,7 +133,7 @@ namespace KWRP.Avalonia.Frontend.ViewModels.EditorPage
                     catch (Exception ex)
                     {
                         _logService.LogWarn($"パラメータ保存に失敗しました: {ex}");
-                        _notificationService.Notify(KWRPNotification.Create("パラメータの保存に失敗しました\n" + ex.Message, Backend.Enums.NotifyMessageType.Warn, 5));
+                        _notificationService.Notify(KWRPNotification.Create(_languageService.GetString("Domain.Front.ParameterSaveFailed") + "\n" + ex.Message, Backend.Enums.NotifyMessageType.Warn, 8));
                     }
                     finally
                     {
