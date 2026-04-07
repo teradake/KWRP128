@@ -2,6 +2,7 @@
 using KWRP.Avalonia.Backend.Model.Paramter;
 using KWRP.Avalonia.Backend.Services;
 using KWRP.Avalonia.Frontend.Models.Stores;
+using KWRP.Backend.Services;
 using KWRP.Infra.JSON;
 using System;
 using System.Collections.Generic;
@@ -16,32 +17,43 @@ namespace KWRP.Avalonia.Frontend.Services
     {
         private readonly IPathService _pathService;
         private readonly ILogService _logService;
+        private readonly ILanguageService _languageService;
         private readonly ParameterStore _parameterStore;
         private readonly MachineStore _machineStore;
 
-        public LaneArrangementParameterService(IPathService pathService, ILogService logService, ParameterStore parameterStore, MachineStore machineStore)
+        public LaneArrangementParameterService(
+            IPathService pathService,
+            ILogService logService,
+            ParameterStore parameterStore,
+            MachineStore machineStore,
+            ILanguageService languageService)
         {
             _pathService = pathService;
             _logService = logService;
             _parameterStore = parameterStore;
             _machineStore = machineStore;
+            _languageService = languageService;
 
             _logService.LogDebug("init");
         }
 
         public async Task<bool> LoadParamsAsync()
         {
-            var filePath = await _pathService.GetOpenFilePathAsync(Backend.Enums.FileType.JSON);
+            var filePath = await _pathService.GetOpenFilePathAsync(
+                fileType: Backend.Enums.FileType.JSON, 
+                title: _languageService.GetString("Domain.Back.SelectFile"));
 
             if (string.IsNullOrEmpty(filePath))
             {
-                _logService.LogInfo("パラメータ読み込み:ファイル選択を中止しました");
+                //_logService.LogInfo("パラメータ読み込み:ファイル選択を中止しました");
+                _logService.LogInfo(_languageService.GetString("Domain.Front.ParameterLoadCancelled"));
                 return false;
             }
 
             if (!File.Exists(filePath))
             {
-                throw new FileNotFoundException($"指定されたファイルが存在しません: {filePath}");
+                _logService.LogDebug(_languageService.GetString("Domain.Front.ParameterLoadFileSelectionCancelled"));
+                return false;
             }
 
             try
@@ -51,12 +63,13 @@ namespace KWRP.Avalonia.Frontend.Services
                 using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.None))
                 { }
 
-                _logService.LogDebug($"ファイル「{filePath}」を選択しました");
+                //_logService.LogDebug($"ファイル「{filePath}」を選択しました");
+                _logService.LogDebug(string.Format(_languageService.GetString("Domain.Front.FileSelected"), filePath));
 
                 {
                     var param = await new JsonSerializerService<LaneArrangementParameter>().LoadAsync(filePath);
                     if (param == null || param.VrParams == null || param.PairingParams == null) 
-                        throw new ArgumentNullException($"ファイルのフォーマットが正しくありません");
+                        throw new ArgumentNullException(_languageService.GetString("Domain.Front.FileFormatIncorrect"));
 
 
                     _parameterStore.Reload();
@@ -91,11 +104,13 @@ namespace KWRP.Avalonia.Frontend.Services
             }
             catch (IOException ex)
             {
-                throw new Exception($"ファイルが開かれています\n{ex.Message}", ex);
+                //throw new Exception($"ファイルが開かれています\n{ex.Message}", ex);
+                throw new Exception(string.Format(_languageService.GetString("Domain.Front.FileOpenError"), ex.Message), ex);
             }
             catch (Exception ex)
             {
-                throw new Exception($"ファイル{filePath}読み込みに失敗しました\n{ex.Message}", ex);
+                //throw new Exception($"ファイル{filePath}読み込みに失敗しました\n{ex.Message}", ex);
+                throw new Exception(string.Format(_languageService.GetString("Domain.Front.FileReadErrorMessage"), filePath, ex.Message), ex);
             }
             finally
             {
@@ -105,11 +120,13 @@ namespace KWRP.Avalonia.Frontend.Services
 
         public async Task<string?> SaveParamsAsync()
         {
-            var filePath = await _pathService.GetSaveFilePathAsync(Backend.Enums.FileType.JSON);
+            var filePath = await _pathService.GetSaveFilePathAsync(
+                fileType: Backend.Enums.FileType.JSON,
+                title: _languageService.GetString("Domain.Back.SpecifyFileNameToSave"));
 
             if (string.IsNullOrEmpty(filePath))
             {
-                _logService.LogInfo("パラメータ読み込み:ファイル選択を中止しました");
+                _logService.LogInfo(_languageService.GetString("Domain.Front.ParameterLoadCancelled"));
                 return null;
             }
 
@@ -142,12 +159,14 @@ namespace KWRP.Avalonia.Frontend.Services
             try
             {
                 await new JsonSerializerService<LaneArrangementParameter>().SaveAsync(param, filePath);
-                _logService.LogInfo($"パラメータを{filePath}に保存しました");
+                //_logService.LogInfo($"パラメータを{filePath}に保存しました");
+                _logService.LogInfo(string.Format(_languageService.GetString("Domain.Front.ParameterSavedTo"), filePath));
                 return filePath;
             }
             catch (Exception ex)
             {
-                throw new Exception("パラメータの保存に失敗しました" + ex.Message, ex);
+                //throw new Exception("パラメータの保存に失敗しました" + ex.Message, ex);
+                throw new Exception(_languageService.GetString("Domain.Front.ParameterSaveFailed") + ex.Message, ex);
             }
         }
     }
