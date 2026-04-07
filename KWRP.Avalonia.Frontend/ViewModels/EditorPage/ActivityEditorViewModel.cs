@@ -240,7 +240,8 @@ namespace KWRP.Avalonia.Frontend.ViewModels.EditorPage
                                 SelectedGroupIndex.Value = 0;
                             }
 
-                            _notificationService.Notify(KWRPNotification.Create("アクティビティを生成しました", Backend.Enums.NotifyMessageType.Info, 5));
+                            //_notificationService.Notify(KWRPNotification.Create("アクティビティを生成しました", Backend.Enums.NotifyMessageType.Info, 5));
+                            _notificationService.Notify(KWRPNotification.Create(_languageService.GetString("Domain.Front.ActivityGenerated"), Backend.Enums.NotifyMessageType.Info, 5));
 
                             var allAcivities = _activityStore.ActivityGroups.SelectMany(act => act);
                             var moves = allAcivities.Where(act => act.ActivityType == Backend.Enums.RollerActivityType.Move).Count();
@@ -251,8 +252,8 @@ namespace KWRP.Avalonia.Frontend.ViewModels.EditorPage
                         }
                         catch (Exception ex)
                         {
-                            _logService.LogError("アクティビティの生成に失敗しました", ex);
-                            _notificationService.Notify(KWRPNotification.Create("アクティビティの生成に失敗しました", Backend.Enums.NotifyMessageType.Warn, 5));
+                            _logService.LogError(_languageService.GetString("Domain.Front.ActivityGenerationFailed"), ex);
+                            _notificationService.Notify(KWRPNotification.Create(_languageService.GetString("Domain.Front.ActivityGenerationFailed"), Backend.Enums.NotifyMessageType.Warn, 5));
                         }
                         finally
                         {
@@ -272,10 +273,11 @@ namespace KWRP.Avalonia.Frontend.ViewModels.EditorPage
                             _applicationStore.IsBusy.Value = true;
                             await _activityService.OutputActivitiesAsync();
 
-                            _logService.LogInfo($"アクティビティを保存しました: {Path.Combine(OutputFolderPath.Value!, OutputFolderPrefix.Value)}");
+                            //_logService.LogInfo($"アクティビティを保存しました: {Path.Combine(OutputFolderPath.Value!, OutputFolderPrefix.Value)}");
+                            _logService.LogInfo(string.Format(_languageService.GetString("Domain.Front.ActivitySaved"), Path.Combine(OutputFolderPath.Value!, OutputFolderPrefix.Value)));
                             _notificationService.Notify(
-                                KWRPNotification.Create("アクティビティを出力しました", Backend.Enums.NotifyMessageType.Info, 10)
-                                    .WithCommand(header: "フォルダを開く",
+                                KWRPNotification.Create(_languageService.GetString("Domain.Front.ActivityOutput"), Backend.Enums.NotifyMessageType.Info, 10)
+                                    .WithCommand(header: _languageService.GetString("Domain.Front.OpenFolder"),
                                                  command: () =>
                                                  {
                                                      if (!string.IsNullOrWhiteSpace(OutputFolderPath.Value))
@@ -288,15 +290,15 @@ namespace KWRP.Avalonia.Frontend.ViewModels.EditorPage
                                                          {
                                                              _logService.LogError("フォルダのオープンに失敗しました", ex);
                                                              _notificationService.Notify(
-                                                                 KWRPNotification.Create("フォルダを開けませんでした", NotifyMessageType.Warn, 5));
+                                                                 KWRPNotification.Create(_languageService.GetString("Domain.Front.CannotOpenFolder"), NotifyMessageType.Warn, 5));
                                                          }
                                                      }
                                                  }));
                         }
                         catch (Exception ex)
                         {
-                            _logService.LogError("アクティビティの出力に失敗しました", ex);
-                            _notificationService.Notify(KWRPNotification.Create("アクティビティの出力に失敗しました\n" + ex.Message, Backend.Enums.NotifyMessageType.Warn));
+                            _logService.LogError(_languageService.GetString("Domain.Front.ActivityOutputFailed"), ex);
+                            _notificationService.Notify(KWRPNotification.Create(_languageService.GetString("Domain.Front.ActivityOutputFailed") + "\n" + ex.Message, Backend.Enums.NotifyMessageType.Warn));
                         }
                         finally
                         {
