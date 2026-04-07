@@ -1,4 +1,5 @@
-﻿using KWRP.Avalonia.Backend;
+﻿using Avalonia.Xaml.Interactions.Custom;
+using KWRP.Avalonia.Backend;
 using KWRP.Avalonia.Backend.Model.Shapes.Activity;
 using KWRP.Avalonia.Backend.Model.Shapes.WorkArea;
 using KWRP.Avalonia.Backend.Models.Roller;
@@ -8,6 +9,7 @@ using KWRP.Avalonia.Backend.Services.Extensions;
 using KWRP.Avalonia.Frontend.Models.Stores;
 using KWRP.Backend.Model.Modlules.WorkTimeEstimator;
 using KWRP.Backend.Model.Shapes.Activity.Entity;
+using KWRP.Backend.Services;
 using NetTopologySuite.Algorithm;
 using System;
 using System.Collections.Generic;
@@ -34,6 +36,7 @@ namespace KWRP.Avalonia.Frontend.Services.Activity
         private readonly CadScriptService _cadScriptService;
         private readonly CanvasItemStore _canvasItemStore;
         private readonly ParameterStore _parameterStore;
+        private readonly ILanguageService _languageService;
 
         private RollerModel VR => _machineStore.CurrentRoller;
 
@@ -47,7 +50,8 @@ namespace KWRP.Avalonia.Frontend.Services.Activity
             CaptureService captureService,
             CadScriptService cadScriptService,
             CanvasItemStore canvasItemStore,
-            ParameterStore parameterStore)
+            ParameterStore parameterStore,
+            ILanguageService languageService)
         {
             _activityStore = activityStore;
             _logService = logService;
@@ -59,13 +63,15 @@ namespace KWRP.Avalonia.Frontend.Services.Activity
             _cadScriptService = cadScriptService;
             _canvasItemStore = canvasItemStore;
             _parameterStore = parameterStore;
+            _languageService = languageService;
 
             _logService.LogDebug("init");
         }
 
         public virtual void CreateActivityGroups()
         {
-            _logService.LogInfo($"アクティビティを作成します。workArea: {_workAreaStore.WorkAreas.Count}");
+            //_logService.LogInfo($"アクティビティを作成します。workArea: {_workAreaStore.WorkAreas.Count}");
+            _logService.LogInfo(string.Format(_languageService.GetString("Domain.Front.CreateActivity"), _workAreaStore.WorkAreas.Count));
 
             // init
             _activityStore.ActivityGroups.Clear();
@@ -232,10 +238,10 @@ namespace KWRP.Avalonia.Frontend.Services.Activity
         {
             try
             {
-                var path = await _pathService.GetSaveFolderPathAsync(title: "アクティビティ出力先のフォルダを選択してください");
+                var path = await _pathService.GetSaveFolderPathAsync(title: _languageService.GetString("Domain.Front.SelectActivityOutputFolder"));
                 if (path == null)
                 {
-                    _logService.LogInfo("アクティビティ出力先のフォルダ選択をキャンセルしました");
+                    _logService.LogInfo(_languageService.GetString("Domain.Front.CancelActivityOutputFolderSelection"));
                     return;
                 }
 
@@ -244,7 +250,8 @@ namespace KWRP.Avalonia.Frontend.Services.Activity
             catch (Exception ex)
             {
                 _activityStore.OutputFolderPath.Value = string.Empty;
-                _logService.LogWarn($"アクティビティ出力先フォルダ選択時にエラーが発生しました: {ex.Message}");
+                //_logService.LogWarn($"アクティビティ出力先フォルダ選択時にエラーが発生しました: {ex.Message}");
+                _logService.LogWarn(string.Format(_languageService.GetString("Domain.Front.ErrorDuringFolderSelection"), ex.Message));
                 throw;
             }
         }
@@ -274,18 +281,17 @@ namespace KWRP.Avalonia.Frontend.Services.Activity
         {
             if (_activityStore.OutputFolderPath.Value == null)
             {
-                _logService.LogWarn("出力先フォルダが指定されていません。アクティビティ出力を中止します。");
+                _logService.LogWarn(_languageService.GetString("Domain.Front.NoOutputFolderSpecified"));
                 return;
             }
 
             var targetFolder = Path.Combine(_activityStore.OutputFolderPath.Value, _activityStore.OutputFolderPrefix.CurrentValue);
             if (Directory.Exists(targetFolder))
             {
-                _logService.LogWarn(
-                    $"フォルダ「{targetFolder}」がすでに存在します");
+                _logService.LogWarn(string.Format(_languageService.GetString("Domain.Front.FolderAlreadyExists"), targetFolder));
                 throw new IOException(
-                    $"フォルダ「{targetFolder}」がすでに存在します。\n" +
-                    $"該当するフォルダを削除するか、保存するフォルダ名を変更してください。");
+                    string.Format(_languageService.GetString("Domain.Front.FolderAlreadyExists"), targetFolder) + "\n" +
+                    _languageService.GetString("Domain.Front.DeleteOrRenameFolder"));
             }
             else
             {
