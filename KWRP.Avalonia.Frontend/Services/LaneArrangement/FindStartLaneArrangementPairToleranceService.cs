@@ -143,10 +143,15 @@ namespace KWRP.Avalonia.Frontend.Services.LaneArrangement
             // レーンが生成できなかった場合は通知
             if (lanes.Length == 0 || !pairedLanes.Any())
             {
+                //_notificationService.Notify(KWRPNotification.Create(
+                //    message: $"ローラ作業可能長さが確保できないためレーン生成ができません。\n（作業進捗方向: {(180 / Math.PI *_directions[best]):F2}°）",
+                //    type: NotifyMessageType.Warn,
+                //    duration: 3.0));
+                
                 _notificationService.Notify(KWRPNotification.Create(
-                    message: $"ローラ作業可能長さが確保できないためレーン生成ができません。\n（作業進捗方向: {(180 / Math.PI *_directions[best]):F2}°）",
+                    message: string.Format(_languageService.GetString("Domain.Front.RollerWorkLengthNotSecured"), 180 / Math.PI * _directions[best]),
                     type: NotifyMessageType.Warn,
-                    duration: 3.0));
+                    duration: 4.0));
             }
 
             // 結果を格納する
