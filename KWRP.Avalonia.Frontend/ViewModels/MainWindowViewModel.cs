@@ -80,7 +80,7 @@ namespace KWRP.Avalonia.Frontend.ViewModels
         }
 
         public string AppName => _languageService.GetString("Domain.Front.AppName");
-        public string Version => "1.2.6";
+        public string Version => "1.2.7";
         public string Title => $"{AppName} ver {Version}";
 
         public ReactiveCommand<bool> ToggleLanguageCommand { get; }
