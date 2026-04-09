@@ -1,8 +1,8 @@
 # 区割りシステム
 
-- ローラの区割りシステムです。領域データ（xml, csv）を読込み、VRのアクティビティを生成するUIを提供します
+- 区割りシステムです。領域データ（xml, csv）を読込み、VRのアクティビティを生成するUIを提供します
   - xml形式：Cadファイルに描画されているポリラインを[Cadプラグイン](https://github.com/kjm-kajimadev-A4CSEL/CAS)から選択し、領域ファイルを作成することができます。
-  - csv形式：領域データは以下のフォーマットとしてください。
+  - csv形式：領域データは以下のようなポリラインとしてください。\
 	![作業時間の概算方法](./KWRP.Avalonia.Frontend/Assets/Figures/csv_sample.png)
 - **.NET 8.0**以上がインストールされたWindows 64bit環境での使用を想定しています。
 - Avalonia MVVMで実装しています
