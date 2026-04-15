@@ -4,6 +4,7 @@ using KWRP.Avalonia.Backend.Services;
 using KWRP.Avalonia.Frontend.Models.Stores;
 using KWRP.Avalonia.Frontend.Services;
 using KWRP.Avalonia.Frontend.ViewModels.EditorPage;
+using KWRP.Backend.Services;
 using R3;
 using System;
 using System.Linq;
@@ -19,6 +20,7 @@ namespace KWRP.Avalonia.Frontend.ViewModels.StartUpPage
         private readonly IDataLoader _dataLoader;
         private readonly MachineStore _machineStore;
         private readonly DxfStore _dxfStore;
+        private readonly ILanguageService _languageService;
 
         public ReactiveCommand NextCommand { get; }
         public ReactiveCommand<FileType> LoadCommand { get; }   // ダイアログを開いてファイルを選択
@@ -37,7 +39,8 @@ namespace KWRP.Avalonia.Frontend.ViewModels.StartUpPage
             IDataLoader dataLoader,
             ApplicationStore applicationStore,
             MachineStore machineStore,
-            DxfStore dxfStore)
+            DxfStore dxfStore,
+            ILanguageService languageService)
         {
             _navigationService = navigationService;
             _notificationService = notificationService;
@@ -46,6 +49,7 @@ namespace KWRP.Avalonia.Frontend.ViewModels.StartUpPage
             _applicationStore = applicationStore;
             _machineStore = machineStore;
             _dxfStore = dxfStore;
+            _languageService = languageService;
 
             FilePath = _applicationStore
                 .SpatialDataPath
@@ -60,8 +64,8 @@ namespace KWRP.Avalonia.Frontend.ViewModels.StartUpPage
 
             DxfTitleName = _dxfStore
                 .SelectedOption
-                .Select(v => v?.Title ?? "未登録")
-                .ToReadOnlyBindableReactiveProperty(_dxfStore.SelectedOption.Value?.Title ?? "未登録")
+                .Select(v => v?.Title ?? _languageService.GetString("Domain.Front.Unregistered"))
+                .ToReadOnlyBindableReactiveProperty(_dxfStore.SelectedOption.Value?.Title ?? _languageService.GetString("Domain.Front.Unregistered"))
                 .AddTo(Disposables);
 
             ClearDxfCommand = IsDxfExist
