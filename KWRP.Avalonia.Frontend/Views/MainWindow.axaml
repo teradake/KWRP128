@@ -122,14 +122,14 @@
                 
                 <Grid>
 					
-                    <StackPanel Orientation="Horizontal">
+                    <!--<StackPanel Orientation="Horizontal">
                         <ToggleButton
                             Margin="10,5"
                             Content=" Toggle Language "
                             Padding="5 3"
                             Command="{Binding ToggleLanguageCommand}"
                             CommandParameter="{Binding $self.IsChecked}"/>
-                    </StackPanel>
+                    </StackPanel>-->
 
                 </Grid>
 
