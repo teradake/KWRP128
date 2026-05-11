@@ -71,9 +71,6 @@ namespace KWRP.Avalonia.Frontend.ViewModels
                 _languageService.LoadLanguage(lang);
             }).AddTo(Disposables);
 
-            _languageService.LoadLanguage(KWRPConfigs.DefaultLanguage.ToKey());
-
-
             Observable.FromEvent(
                 h => _languageService.LanguageChanged += h,
                 h => _languageService.LanguageChanged -= h)
