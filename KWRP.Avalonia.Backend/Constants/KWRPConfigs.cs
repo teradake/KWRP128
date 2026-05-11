@@ -1,4 +1,6 @@
-﻿using System.Configuration;
+﻿using KWRP.Backend.Enums;
+using System.Configuration;
+using System.Globalization;
 
 namespace KWRP.Avalonia.Backend.Constants
 {
@@ -15,5 +17,38 @@ namespace KWRP.Avalonia.Backend.Constants
 #endif
             }
         }
+
+        public static SystemLanguageType DefaultLanguage
+        {
+            get
+            {
+                var langKey = ConfigurationManager.AppSettings["DefaultLanguage"];
+                if (langKey == null)
+                {
+                    // OSの言語が日本語ならJa, それ以外ならEnを返す
+                    return GetLanguageFromOS();
+                }
+
+                return langKey.Trim().ToLowerInvariant() switch
+                {
+                    "ja" => SystemLanguageType.Ja,
+                    "en" => SystemLanguageType.En,
+                    _ => GetLanguageFromOS(),
+                };
+            }
+        }
+
+
+        private static SystemLanguageType GetLanguageFromOS()
+        {
+            var uiCulture = CultureInfo.CurrentUICulture;
+
+            return uiCulture.TwoLetterISOLanguageName switch
+            {
+                "ja" => SystemLanguageType.Ja,
+                _ => SystemLanguageType.En,
+            };
+        }
+
     }
 }

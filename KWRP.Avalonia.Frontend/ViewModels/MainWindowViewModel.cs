@@ -1,8 +1,10 @@
 ﻿using Avalonia.Notification;
+using KWRP.Avalonia.Backend.Constants;
 using KWRP.Avalonia.Backend.Services;
 using KWRP.Avalonia.Frontend.Models;
 using KWRP.Avalonia.Frontend.Models.Stores;
 using KWRP.Avalonia.Frontend.Services.Dxf;
+using KWRP.Backend.Enums;
 using KWRP.Backend.Services;
 using KWRP.Frontend.Models.Localizer;
 using R3;
@@ -69,7 +71,7 @@ namespace KWRP.Avalonia.Frontend.ViewModels
                 _languageService.LoadLanguage(lang);
             }).AddTo(Disposables);
 
-            _languageService.LoadLanguage("en");
+            _languageService.LoadLanguage(KWRPConfigs.DefaultLanguage.ToKey());
 
 
             Observable.FromEvent(
