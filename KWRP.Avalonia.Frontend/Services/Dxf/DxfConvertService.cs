@@ -3,6 +3,7 @@ using KWRP.Avalonia.Frontend.Models.Settings;
 using KWRP.Avalonia.Frontend.Models.Stores;
 using KWRP.Avalonia.Frontend.ViewModels.StartUpPage;
 using KWRP.Avalonia.NetDxf;
+using KWRP.Backend.Services;
 using System;
 using System.IO;
 using System.Linq;
@@ -16,15 +17,18 @@ namespace KWRP.Avalonia.Frontend.Services.Dxf
         private readonly ConfigPathInfo _configPathInfo;
         private readonly ILogService _logService;
         private readonly DxfStore _dxfStore;
+        private readonly ILanguageService _languageService;
 
         public DxfConvertService(
             ConfigPathInfo configPathInfo,
             ILogService logService,
-            DxfStore dxfStore)
+            DxfStore dxfStore,
+            ILanguageService languageService)
         {
             _configPathInfo = configPathInfo;
             _logService = logService;
             _dxfStore = dxfStore;
+            _languageService = languageService;
         }
 
         public void AddOption()
@@ -33,13 +37,14 @@ namespace KWRP.Avalonia.Frontend.Services.Dxf
                     .Options
                     .Where(op => op.Title != null)
                     .Select(op => op.Title)
-                    .Where(title => title!.StartsWith("背景"))
+                    .Where(title => title!.StartsWith(_languageService.GetString("Domain.Front.Background")))
                     .ToHashSet();
 
-            string title = $"背景";
+            string title = _languageService.GetString("Domain.Front.Background");
             for (int i = 0; i <= titles.Count; ++i)
             {
-                title = $"背景{i + 1:D2}";
+                //title = $"背景{i + 1:D2}";
+                title = _languageService.GetString("Domain.Front.Background") + $"{i + 1:D2}";
                 if (!titles.Contains(title)) break;
             }
 
@@ -63,7 +68,7 @@ namespace KWRP.Avalonia.Frontend.Services.Dxf
         public string GetSavePngPath(DxfConverterOption option)
         {
             if (option.DxfFilePath == null)
-                throw new NullReferenceException("dxfファイルが未登録");
+                throw new NullReferenceException(_languageService.GetString("Domain.Front.DxfFileNotRegistered"));
 
             var fileName = Path.GetFileName(option.DxfFilePath);
             var pngFileName = option.Title + "_" + Path.ChangeExtension(fileName, "png");
@@ -88,7 +93,8 @@ namespace KWRP.Avalonia.Frontend.Services.Dxf
             }
             catch(Exception e)
             {
-                _logService.LogError($"背景図作成時にエラーが発生しました: {e.Message}", e);
+                _logService.LogError(string.Format(_languageService.GetString("Domain.Front.BackgroundCreationError"), e));
+                //_logService.LogError($"背景図作成時にエラーが発生しました: {e.Message}", e);
                 throw;
             }
         }

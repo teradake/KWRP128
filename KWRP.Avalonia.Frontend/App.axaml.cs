@@ -29,6 +29,7 @@ using Avalonia.Interactivity;
 using System.Threading;
 using KWRP.Backend.Services;
 using KWRP.Frontend.Services;
+using KWRP.Backend.Enums;
 
 namespace KWRP.Avalonia.Frontend
 {
@@ -75,6 +76,7 @@ namespace KWRP.Avalonia.Frontend
                 DisableAvaloniaDataAnnotationValidation();
 
                 // ãNìÆéûÇÃÉçÉO
+                _serviceProvider.GetRequiredService<ILanguageService>().LoadLanguage(KWRPConfigs.DefaultLanguage.ToKey());
                 _serviceProvider.GetRequiredService<ILogService>().LogInfo(
                     $"#############__LAUNCH KWRP" +
                     $"{(KWRPConfigs.IsDevMode ? $"(DevMode)" : "")}__#############");

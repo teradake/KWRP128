@@ -2,6 +2,7 @@
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using KWRP.Avalonia.Backend.Services;
+using KWRP.Backend.Services;
 using netDxf;
 using Trdk.Geometry;
 
@@ -9,7 +10,11 @@ namespace KWRP.Avalonia.NetDxf
 {
     internal class AvaloniaDxfRenderer
     {
-        public static async Task<RenderTargetBitmap> RenderAsync(DxfDocument doc, DxfConverterOption option, ILogService? logger = null)
+        public static async Task<RenderTargetBitmap> RenderAsync(
+            DxfDocument doc, 
+            DxfConverterOption option, 
+            ILogService? logger = null,
+            ILanguageService? lang = null)
         {
             try
             {
@@ -21,12 +26,12 @@ namespace KWRP.Avalonia.NetDxf
                     Ymax = option.Ymin + option.MapHeight,
                 };
 
-                logger?.LogInfo("dxfファイルからエンティティのロード開始");
+                logger?.LogInfo(lang?.GetString("Domain.Dxf.LoadStart") ?? "dxfファイルからエンティティのロード開始");
                 var shapes = await Task.Run(() => DxfLoader.Load(doc, option.DxfFilePath, box, logger));
-                logger?.LogInfo("dxfファイルからエンティティのロード完了");
+                logger?.LogInfo(lang?.GetString("Domain.Dxf.LoadComplete") ?? "dxfファイルからエンティティのロード完了");
 
 
-                logger?.LogInfo($"描画処理を開始");
+                logger?.LogInfo(lang?.GetString("Domain.Dxf.DrawStart") ?? $"描画処理を開始");
                 var dxfCanvas = new DxfCanvas
                 {
                     Shapes = shapes,
@@ -34,7 +39,7 @@ namespace KWRP.Avalonia.NetDxf
                 dxfCanvas.InvalidateVisual();
 
 
-                logger?.LogInfo($"bitmapの作成開始");
+                logger?.LogInfo(lang?.GetString("Domain.Dxf.BitmapCreationStart") ?? $"bitmapの作成開始");
                 var size = new Size(box.Width, box.Height);
                 dxfCanvas.Measure(size);
                 dxfCanvas.Arrange(new Rect(size));
@@ -49,7 +54,7 @@ namespace KWRP.Avalonia.NetDxf
             }
             catch (Exception e)
             {
-                logger?.LogError("bitmapの生成に失敗しました: " + e.Message, e);
+                logger?.LogError(lang?.GetString("Domain.Dxf.BitmapCreationFailed") ?? "bitmapの生成に失敗しました: " + e.Message, e);
                 throw;
             }
         }
@@ -64,7 +69,11 @@ namespace KWRP.Avalonia.NetDxf
             return Load(doc, dxfFilePath, captureRange, logger);
         }
 
-        public static List<DxfShape> Load(DxfDocument doc, string? dxfFliePath = null, BoundingBox? captureRange = null, ILogService? logger = null)
+        public static List<DxfShape> Load(
+            DxfDocument doc, 
+            string? dxfFliePath = null, 
+            BoundingBox? captureRange = null, 
+            ILogService? logger = null)
         {
             var shapes = new List<DxfShape>();
             var entities = doc.Entities;

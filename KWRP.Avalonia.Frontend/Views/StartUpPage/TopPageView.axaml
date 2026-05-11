@@ -16,11 +16,28 @@
     <UserControl.Styles />
 
     <Grid RowDefinitions="auto auto auto *">
+
         <TextBlock
             Grid.Row="0"
             Margin="20,30"
             Text="Top Page"
             Theme="{StaticResource TitleTextBlockStyle}" />
+
+        <StackPanel 
+            Orientation="Horizontal"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
+            Spacing="5"
+            Margin="10">
+            <Label Content="Lang: "/>
+            <ToggleButton 
+                Grid.Row="0"
+                Command="{Binding ToggleLanguageComamnd}"
+                Content="{Binding CurrentLangLabel.Value}"
+                IsChecked="{Binding IsCurrentLangJa.Value}"
+                CommandParameter="{Binding $self.IsChecked}"
+                Padding="10 3" />
+        </StackPanel>
 
         <StackPanel Grid.Row="1" Orientation="Horizontal">
 

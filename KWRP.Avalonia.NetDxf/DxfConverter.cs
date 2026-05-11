@@ -1,5 +1,6 @@
 ﻿using Avalonia.Logging;
 using KWRP.Avalonia.Backend.Services;
+using KWRP.Backend.Services;
 using netDxf;
 
 namespace KWRP.Avalonia.NetDxf
@@ -11,10 +12,17 @@ namespace KWRP.Avalonia.NetDxf
         private string? _dxfFilePath;
         private string? _pngFilePath;
         private ILogService? _logger;
+        private ILanguageService? _languageService;
 
         public DxfConverter SetLogger(ILogService logger)
         {
             _logger = logger;
+            return this;
+        }
+
+        public DxfConverter SetLang(ILanguageService lang)
+        {
+            _languageService = lang;
             return this;
         }
 
@@ -46,21 +54,22 @@ namespace KWRP.Avalonia.NetDxf
             _dxfdoc = await Task.Run(() => DxfDocument.Load(_dxfFilePath));
             if (_dxfdoc == null)
             {
-                throw new Exception("dxfファイルの読込みに失敗しました");
+                throw new Exception(_languageService?.GetString("Domain.Dxf.LoadFailed") ?? "dxfファイルの読込みに失敗しました");
             }
             _option!.DxfFilePath = _dxfFilePath;
 
             try
             {
-                var bitmap = await AvaloniaDxfRenderer.RenderAsync(_dxfdoc, _option!, _logger);
+                var bitmap = await AvaloniaDxfRenderer.RenderAsync(_dxfdoc, _option!, _logger, _languageService);
                 await using var fs = new FileStream(_pngFilePath!, FileMode.Create);
                 bitmap.Save(fs);
 
-                _logger?.LogInfo($"背景図を生成しました。");
+                _logger?.LogInfo(_languageService?.GetString("Domain.Dxf.BackgroundGenerated") ?? $"背景図を生成しました。");
             }
             catch (Exception e)
             {
-                throw new Exception($"Pngファイル生成に失敗しました + {e.Message}", e);
+                throw new Exception(string.Format(
+                    (_languageService?.GetString("Domain.Dxf.PngCreationFailed") ?? "Pngファイル生成に失敗しました {0}"), e));
             }
             finally
             {
@@ -73,37 +82,37 @@ namespace KWRP.Avalonia.NetDxf
             reason = null;
             if (string.IsNullOrEmpty(_dxfFilePath))
             {
-                reason = "DXFファイルパスが未入力です";
+                reason = _languageService?.GetString("Domain.Dxf.NoDxfFilePath") ?? "DXFファイルパスが未入力です";
                 return false;
             }
 
             if (string.IsNullOrEmpty(_pngFilePath))
             {
-                reason = "Pngファイルパスが未入力です";
+                reason = _languageService?.GetString("Domain.Dxf.NoPngFilePath") ?? "Pngファイルパスが未入力です";
                 return false;
             }
 
             if (_option == null)
             {
-                reason = "設定情報が未入力です";
+                reason = _languageService?.GetString("Domain.Dxf.NoSettingsInfo") ?? "設定情報が未入力です";
                 return false;
             }
 
             if (_option.MapWidth <= 0 || _option.MapHeight <= 0)
             {
-                reason = "切り取り範囲は1以上の値を指定してください";
+                reason = _languageService?.GetString("Domain.Dxf.CropRangeAboveOne") ?? "切り取り範囲は1以上の値を指定してください";
                 return false;
             }
 
             if (_option.PixelsPerMeter <= 0)
             {
-                reason = "解像度は1以上の値を指定してください";
+                reason = _languageService?.GetString("Domain.Dxf.ResolutionAboveOne") ?? "解像度は1以上の値を指定してください";
                 return false;
             }
 
             if (string.IsNullOrEmpty(_option.Title))
             {
-                reason = "タイトルが未入力です";
+                reason = _languageService?.GetString("Domain.Dxf.NoTitle") ?? "タイトルが未入力です";
                 return false;
             }
 
