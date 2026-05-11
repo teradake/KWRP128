@@ -1,9 +1,11 @@
-﻿using KWRP.Avalonia.Backend.Enums;
+﻿using KWRP.Avalonia.Backend.Constants;
+using KWRP.Avalonia.Backend.Enums;
 using KWRP.Avalonia.Backend.Models;
 using KWRP.Avalonia.Backend.Services;
 using KWRP.Avalonia.Frontend.Models.Stores;
 using KWRP.Avalonia.Frontend.Services;
 using KWRP.Avalonia.Frontend.ViewModels.EditorPage;
+using KWRP.Backend.Services;
 using R3;
 using System;
 using System.Linq;
@@ -19,6 +21,7 @@ namespace KWRP.Avalonia.Frontend.ViewModels.StartUpPage
         private readonly IDataLoader _dataLoader;
         private readonly MachineStore _machineStore;
         private readonly DxfStore _dxfStore;
+        private readonly ILanguageService _languageService;
 
         public ReactiveCommand NextCommand { get; }
         public ReactiveCommand<FileType> LoadCommand { get; }   // ダイアログを開いてファイルを選択
@@ -29,6 +32,12 @@ namespace KWRP.Avalonia.Frontend.ViewModels.StartUpPage
         public IReadOnlyBindableReactiveProperty<string> FilePath { get; }
         public IReadOnlyBindableReactiveProperty<string> DxfTitleName { get; }
         public BindableReactiveProperty<bool> IsDxfExist { get; }
+        
+        // 日本語/英語のみ対応予定なので言語切り替えまわりはboolで管理する方針
+        public BindableReactiveProperty<bool> IsCurrentLangJa { get; }
+        public IReadOnlyBindableReactiveProperty<string> CurrentLangLabel { get; }
+        public ReactiveCommand<bool> ToggleLanguageComamnd { get; }
+        
 
         public TopPageViewModel(
             INavigationService navigationService,
@@ -37,7 +46,8 @@ namespace KWRP.Avalonia.Frontend.ViewModels.StartUpPage
             IDataLoader dataLoader,
             ApplicationStore applicationStore,
             MachineStore machineStore,
-            DxfStore dxfStore)
+            DxfStore dxfStore,
+            ILanguageService languageService)
         {
             _navigationService = navigationService;
             _notificationService = notificationService;
@@ -46,6 +56,27 @@ namespace KWRP.Avalonia.Frontend.ViewModels.StartUpPage
             _applicationStore = applicationStore;
             _machineStore = machineStore;
             _dxfStore = dxfStore;
+            _languageService = languageService;
+
+
+            IsCurrentLangJa = new BindableReactiveProperty<bool>(_languageService.CurrentLanguage.Trim().ToLower() == "ja")
+                .AddTo(Disposables);
+            CurrentLangLabel = IsCurrentLangJa.Select(b => b ? "日本語" : "English").ToReadOnlyBindableReactiveProperty(_languageService.CurrentLanguage.Trim().ToLower())
+                .AddTo(Disposables);
+            ToggleLanguageComamnd = new ReactiveCommand<bool>(b =>
+            {
+                string lang = IsCurrentLangJa.Value ? "ja" : "en";
+                _languageService.LoadLanguage(lang);
+            }).AddTo(Disposables);
+
+            Observable.FromEvent(
+                h => _languageService.LanguageChanged += h,
+                h => _languageService.LanguageChanged -= h)
+                .Subscribe(_ =>
+                {
+                    IsCurrentLangJa.Value = _languageService.CurrentLanguage.Trim().ToLower() == "ja";
+                })
+                .AddTo(Disposables);
 
             FilePath = _applicationStore
                 .SpatialDataPath
@@ -60,8 +91,8 @@ namespace KWRP.Avalonia.Frontend.ViewModels.StartUpPage
 
             DxfTitleName = _dxfStore
                 .SelectedOption
-                .Select(v => v?.Title ?? "未登録")
-                .ToReadOnlyBindableReactiveProperty(_dxfStore.SelectedOption.Value?.Title ?? "未登録")
+                .Select(v => v?.Title ?? _languageService.GetString("Domain.Front.Unregistered"))
+                .ToReadOnlyBindableReactiveProperty(_dxfStore.SelectedOption.Value?.Title ?? _languageService.GetString("Domain.Front.Unregistered"))
                 .AddTo(Disposables);
 
             ClearDxfCommand = IsDxfExist
@@ -121,7 +152,7 @@ namespace KWRP.Avalonia.Frontend.ViewModels.StartUpPage
                 })
                 .AddTo(Disposables);
 
-            _logService.SetStatusMessage("TopPage : 転圧領域xmlファイルを読込んでNextボタンを押すことで区割りを開始します");
+            _logService.SetStatusMessage("Domain.Front.TopPageDescription");
             _logService.LogDebug("init");
         }
     }

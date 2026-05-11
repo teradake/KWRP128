@@ -1,8 +1,12 @@
 ﻿using Avalonia.Notification;
+using KWRP.Avalonia.Backend.Constants;
 using KWRP.Avalonia.Backend.Services;
 using KWRP.Avalonia.Frontend.Models;
 using KWRP.Avalonia.Frontend.Models.Stores;
 using KWRP.Avalonia.Frontend.Services.Dxf;
+using KWRP.Backend.Enums;
+using KWRP.Backend.Services;
+using KWRP.Frontend.Models.Localizer;
 using R3;
 using System;
 using System.IO;
@@ -18,6 +22,7 @@ namespace KWRP.Avalonia.Frontend.ViewModels
         private readonly LogStore _logStore;
         private readonly IKWRPApplicationService _appService;
         private readonly DxfHistoryStorageService _dxfHistoryStorageService;
+        private readonly ILanguageService _languageService;
 
 
         public MainWindowViewModel(
@@ -26,7 +31,8 @@ namespace KWRP.Avalonia.Frontend.ViewModels
             LogStore logStore,
             ApplicationStore applicationStore,
             IKWRPApplicationService appService,
-            DxfHistoryStorageService dxfHistoryStorageService)
+            DxfHistoryStorageService dxfHistoryStorageService,
+            ILanguageService languageService)
         {
             _navigationStore = navigationStore;
             _notificationStore = notificationStore;
@@ -34,6 +40,7 @@ namespace KWRP.Avalonia.Frontend.ViewModels
             _applicationStore = applicationStore;
             _appService = appService;
             _dxfHistoryStorageService = dxfHistoryStorageService;
+            _languageService = languageService;
             //_appService = appService;
 
             CurrentViewModel = _navigationStore
@@ -43,6 +50,7 @@ namespace KWRP.Avalonia.Frontend.ViewModels
 
             StatusMessage = _logStore
                 .StatusMessageObservable
+                .Select(key => _languageService.GetString(key))
                 .ToReadOnlyBindableReactiveProperty("")
                 .AddTo(Disposables);
 
@@ -56,11 +64,25 @@ namespace KWRP.Avalonia.Frontend.ViewModels
                 .Select(path => Path.GetFileName(path))
                 .ToReadOnlyBindableReactiveProperty(Path.GetFileName(_applicationStore.SpatialDataPath.Value))
                 .AddTo(Disposables);
+
+            ToggleLanguageCommand = new ReactiveCommand<bool>(b =>
+            {
+                string lang = b ? "ja" : "en";
+                _languageService.LoadLanguage(lang);
+            }).AddTo(Disposables);
+
+            Observable.FromEvent(
+                h => _languageService.LanguageChanged += h,
+                h => _languageService.LanguageChanged -= h)
+                .Subscribe(_ => OnPropertyChanged(nameof(Title)))
+                .AddTo(Disposables);
         }
 
-        public string AppName => "区割りシステム";
-        public string Version => "1.2.6";
+        public string AppName => _languageService.GetString("Domain.Front.AppName");
+        public string Version => "1.2.7";
         public string Title => $"{AppName} ver {Version}";
+
+        public ReactiveCommand<bool> ToggleLanguageCommand { get; }
 
         public INotificationMessageManager Manager => _notificationStore.Manager;
         public IReadOnlyBindableReactiveProperty<ViewModelBase?> CurrentViewModel { get; }

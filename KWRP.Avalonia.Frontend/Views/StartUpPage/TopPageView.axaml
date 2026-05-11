@@ -6,6 +6,7 @@
     xmlns:enums="using:KWRP.Avalonia.Backend.Enums"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="using:KWRP.Avalonia.Frontend.ViewModels.StartUpPage"
+    xmlns:i18n="clr-namespace:KWRP.Frontend.Models.Localizer"
     d:DesignHeight="500"
     d:DesignWidth="600"
     x:CompileBindings="True"
@@ -15,18 +16,35 @@
     <UserControl.Styles />
 
     <Grid RowDefinitions="auto auto auto *">
+
         <TextBlock
             Grid.Row="0"
             Margin="20,30"
             Text="Top Page"
             Theme="{StaticResource TitleTextBlockStyle}" />
 
+        <StackPanel 
+            Orientation="Horizontal"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
+            Spacing="5"
+            Margin="10">
+            <Label Content="Lang: "/>
+            <ToggleButton 
+                Grid.Row="0"
+                Command="{Binding ToggleLanguageComamnd}"
+                Content="{Binding CurrentLangLabel.Value}"
+                IsChecked="{Binding IsCurrentLangJa.Value}"
+                CommandParameter="{Binding $self.IsChecked}"
+                Padding="10 3" />
+        </StackPanel>
+
         <StackPanel Grid.Row="1" Orientation="Horizontal">
 
             <DropDownButton
                 Classes="emp"
                 ClickMode="Press"
-                Content="転圧領域ファイルを選択">
+                Content="{i18n:Localize TopPage.OpenFile}">
                 <DropDownButton.Flyout>
                     <MenuFlyout Placement="Bottom">
                         <MenuItem
@@ -37,7 +55,7 @@
                             ToolTip.ShowDelay="1"
                             ToolTip.VerticalOffset="0">
                             <ToolTip.Tip>
-                                <TextBlock Text="座標取得システムで作成したXMLを選択してください" />
+                                <TextBlock Text="{i18n:Localize TopPage.SelectXml}" />
                             </ToolTip.Tip>
                         </MenuItem>
                         <MenuItem
@@ -50,9 +68,9 @@
                             <ToolTip.Tip>
                                 <StackPanel>
                                     <TextBlock>
-                                        <Run Text="csvフォーマット↓" />
+                                        <Run Text="{i18n:Localize TopPage.CsvFormat}" />
                                         <LineBreak />
-                                        <Run Text="先頭の「X,Y」の行は無くてもOKです" />
+                                        <Run Text="{i18n:Localize TopPage.CsvNote}" />
                                     </TextBlock>
                                     <Image Source="/Assets/Figures/csv_sample.png" Stretch="None" />
                                 </StackPanel>
@@ -120,10 +138,21 @@
             Margin="10"
             Spacing="10">
 
-            <TextBlock VerticalAlignment="Center" Text="{Binding RollerName, StringFormat='振動ローラ : {0}', FallbackValue=ローラ名}" />
+            <!--<TextBlock VerticalAlignment="Center" Text="{Binding RollerName, StringFormat='振動ローラ : {0}', FallbackValue=ローラ名}" />-->
+            <TextBlock VerticalAlignment="Center">
+                <Run Text="{i18n:Localize TopPage.RollerLabel}"/>
+                <Run Text=" : "/>
+                <Run Text="{Binding RollerName, FallbackValue=ローラ名}"/>
+            </TextBlock>
 
             <StackPanel Orientation="Horizontal" Spacing="1">
-                <TextBlock VerticalAlignment="Center" Text="{Binding DxfTitleName.Value, StringFormat='背景図 : {0}', FallbackValue=背景図}" />
+                <!--<TextBlock VerticalAlignment="Center" Text="{Binding DxfTitleName.Value, StringFormat='背景図 : {0}', FallbackValue=背景図}" />-->
+                <TextBlock VerticalAlignment="Center">
+	                <Run Text="{i18n:Localize TopPage.BackgroundLabel}"/>
+	                <Run Text=" : "/>
+                    <Run Text="{Binding DxfTitleName.Value, FallbackValue=背景図}"/>
+                </TextBlock>
+
                 <Button
                     Classes="image"
                     Command="{Binding ClearDxfCommand}"

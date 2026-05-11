@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="using:KWRP.Avalonia.Frontend.ViewModels.EditorPage"
+    xmlns:i18n="clr-namespace:KWRP.Frontend.Models.Localizer"
     MaxWidth="400"
     x:CompileBindings="True"
     x:DataType="vm:ActivityEditorViewModel"
@@ -68,8 +69,13 @@
                 Grid.Column="0"
                 Margin="10,10,0,10"
                 HorizontalAlignment="Left"
-                Command="{Binding NavigatePrevCommand}"
-                Content="&lt; 作業エリア設定" />
+                Command="{Binding NavigatePrevCommand}">
+                <Button.Content>
+                    <TextBlock>
+                    &lt;<Run Text="{i18n:Localize LaneEditor.WorkAreaSetting}"/>
+                    </TextBlock>
+                </Button.Content>
+            </Button>
         </Grid>
 
         <ScrollViewer Grid.Row="0">
@@ -80,7 +86,7 @@
                     Padding="10,5"
                     HorizontalContentAlignment="Center"
                     Background="YellowGreen"
-                    Content="アクティビティ出力"
+                    Content="{i18n:Localize ActEditor.OutputAct}"
                     FontSize="20" />
 
                 <!--  アクティビティのパラメータ設定  -->
@@ -93,8 +99,10 @@
                             VerticalAlignment="Center"
                             Spacing="2">
                             <TextBlock Classes="title">
-                                <Underline>移動</Underline>
-                                アクティビティ作成</TextBlock>
+                                <Underline>
+                                    <Run Text="{i18n:Localize ActEditor.Trans}" />
+                                </Underline><Run Text="{i18n:Localize ActEditor.Spacing}"/><Run Text="{i18n:Localize ActEditor.GenActivity}"/>
+                            </TextBlock>
                         </StackPanel>
                         <ToggleSwitch
                             Name="makeMove"
@@ -114,7 +122,7 @@
                                     Grid.Column="0"
                                     VerticalAlignment="Center"
                                     Spacing="2">
-                                    <TextBlock Classes="header" Text="初期拡幅" />
+                                    <TextBlock Classes="header" Text="{i18n:Localize ActEditor.InitialExpansion}" />
                                 </StackPanel>
                             </Grid>
 
@@ -123,7 +131,10 @@
                                     Grid.Column="0"
                                     VerticalAlignment="Center"
                                     Spacing="2">
-                                    <TextBlock Classes="header" Text="     前方 (m)" />
+                                    <TextBlock Classes="header">
+                                        <Run Text="    "/>
+                                        <Run Text="{i18n:Localize ActEditor.Front}"/>
+                                    </TextBlock>
                                 </StackPanel>
                                 <NumericUpDown
                                     Grid.Column="1"
@@ -136,7 +147,10 @@
                                     Grid.Column="0"
                                     VerticalAlignment="Center"
                                     Spacing="2">
-                                    <TextBlock Classes="header" Text="     後方 (m)" />
+                                    <TextBlock Classes="header">
+                                        <Run Text="    "/>
+                                        <Run Text="{i18n:Localize ActEditor.Rear}"/>
+                                    </TextBlock>
                                 </StackPanel>
                                 <NumericUpDown
                                     Grid.Column="1"
@@ -149,7 +163,10 @@
                                     Grid.Column="0"
                                     VerticalAlignment="Center"
                                     Spacing="2">
-                                    <TextBlock Classes="header" Text="     進捗方向側 (m)" />
+                                    <TextBlock Classes="header">
+                                        <Run Text="    "/>
+                                        <Run Text="{i18n:Localize ActEditor.Next}"/>
+                                    </TextBlock>
                                 </StackPanel>
                                 <NumericUpDown
                                     Grid.Column="1"
@@ -162,7 +179,10 @@
                                     Grid.Column="0"
                                     VerticalAlignment="Center"
                                     Spacing="2">
-                                    <TextBlock Classes="header" Text="     進捗方向手前側 (m)" />
+                                    <TextBlock Classes="header">
+                                        <Run Text="    "/>
+                                        <Run Text="{i18n:Localize ActEditor.Prev}"/>
+                                    </TextBlock>
                                 </StackPanel>
                                 <NumericUpDown
                                     Grid.Column="1"
@@ -175,7 +195,7 @@
                                     Grid.Column="0"
                                     VerticalAlignment="Center"
                                     Spacing="2">
-                                    <TextBlock Classes="header" Text="参照速度 (km/h)" />
+                                    <TextBlock Classes="header" Text="{i18n:Localize ActEditor.ReferenceSpeed}" />
                                 </StackPanel>
                                 <NumericUpDown
                                     Grid.Column="1"
@@ -188,7 +208,7 @@
                                     Grid.Column="0"
                                     VerticalAlignment="Center"
                                     Spacing="2">
-                                    <TextBlock Classes="header" Text="端部速度 (km/h)" />
+                                    <TextBlock Classes="header" Text="{i18n:Localize ActEditor.EdgeSpeed}" />
                                 </StackPanel>
                                 <NumericUpDown
                                     Grid.Column="1"
@@ -208,8 +228,10 @@
                             VerticalAlignment="Center"
                             Spacing="2">
                             <TextBlock Classes="title">
-                                <Underline>無起振</Underline>
-                                アクティビティ作成</TextBlock>
+                                <Underline>
+                                    <Run Text="{i18n:Localize ActEditor.Nocomp}"/>
+                                </Underline><Run Text="{i18n:Localize ActEditor.Spacing}"/><Run Text="{i18n:Localize ActEditor.GenActivity}"/>
+                            </TextBlock>
                         </StackPanel>
                         <ToggleSwitch
                             Name="makeNonCompaction"
@@ -231,7 +253,7 @@
                                     Grid.Column="0"
                                     VerticalAlignment="Center"
                                     Spacing="2">
-                                    <TextBlock Classes="header" Text="繰返し回数" />
+                                    <TextBlock Classes="header" Text="{i18n:Localize ActEditor.RepeatCount}" />
                                 </StackPanel>
                                 <NumericUpDown
                                     Grid.Column="1"
@@ -244,7 +266,7 @@
                                     Grid.Column="0"
                                     VerticalAlignment="Center"
                                     Spacing="2">
-                                    <TextBlock Classes="header" Text="参照速度 (km/h)" />
+                                    <TextBlock Classes="header" Text="{i18n:Localize ActEditor.ReferenceSpeed}" />
                                 </StackPanel>
                                 <NumericUpDown
                                     Grid.Column="1"
@@ -258,7 +280,7 @@
                                     Grid.Column="0"
                                     VerticalAlignment="Center"
                                     Spacing="2">
-                                    <TextBlock Classes="header" Text="端部速度 (km/h)" />
+                                    <TextBlock Classes="header" Text="{i18n:Localize ActEditor.EdgeSpeed}" />
                                 </StackPanel>
                                 <NumericUpDown
                                     Grid.Column="1"
@@ -278,8 +300,10 @@
                             VerticalAlignment="Center"
                             Spacing="2">
                             <TextBlock Classes="title">
-                                <Underline>起振</Underline>
-                                アクティビティ作成</TextBlock>
+                                <Underline>
+                                    <Run Text="{i18n:Localize ActEditor.Comp}"/>
+                                </Underline><Run Text="{i18n:Localize ActEditor.Spacing}"/><Run Text="{i18n:Localize ActEditor.GenActivity}"/>
+                            </TextBlock>
                         </StackPanel>
                         <ToggleSwitch
                             Name="makeCompaction"
@@ -300,7 +324,7 @@
                                     Grid.Column="0"
                                     VerticalAlignment="Center"
                                     Spacing="2">
-                                    <TextBlock Classes="header" Text="繰返し回数" />
+                                    <TextBlock Classes="header" Text="{i18n:Localize ActEditor.RepeatCount}" />
                                 </StackPanel>
                                 <NumericUpDown
                                     Grid.Column="1"
@@ -313,7 +337,7 @@
                                     Grid.Column="0"
                                     VerticalAlignment="Center"
                                     Spacing="2">
-                                    <TextBlock Classes="header" Text="参照速度 (km/h)" />
+                                    <TextBlock Classes="header" Text="{i18n:Localize ActEditor.ReferenceSpeed}" />
                                 </StackPanel>
                                 <NumericUpDown
                                     Grid.Column="1"
@@ -326,7 +350,7 @@
                                     Grid.Column="0"
                                     VerticalAlignment="Center"
                                     Spacing="2">
-                                    <TextBlock Classes="header" Text="端部速度 (km/h)" />
+                                    <TextBlock Classes="header" Text="{i18n:Localize ActEditor.EdgeSpeed}" />
                                 </StackPanel>
                                 <NumericUpDown
                                     Grid.Column="1"
@@ -351,7 +375,7 @@
                         Margin="5"
                         Classes="header"
                         FontSize="18"
-                        Text="アクティビティを作成" />
+                        Text="{i18n:Localize ActEditor.CreateActivity}" />
                 </Button>
 
                 <Border
@@ -371,13 +395,13 @@
                             Margin="0,-23,0,0"
                             Classes="header"
                             FontSize="18"
-                            Text="アクティビティ確認" />
+                            Text="{i18n:Localize ActEditor.ConfirmActivity}" />
 
                         <TextBlock
                             Grid.Row="1"
                             Grid.Column="0"
                             VerticalAlignment="Center"
-                            Text="作業グループ" />
+                            Text="{i18n:Localize ActEditor.WorkGroup}" />
                         <ComboBox
                             Grid.Row="1"
                             Grid.Column="1"
@@ -396,7 +420,7 @@
                             Grid.Row="2"
                             Grid.Column="0"
                             VerticalAlignment="Center"
-                            Text="アクティビティ番号" />
+                            Text="{i18n:Localize ActEditor.ActivityNumber}" />
                         <NumericUpDown
                             Grid.Row="2"
                             Grid.Column="1"
@@ -425,7 +449,7 @@
                             Margin="0,-23,0,0"
                             Classes="header"
                             FontSize="18"
-                            Text="アクティビティ出力先の設定" />
+                            Text="{i18n:Localize ActEditor.OutputDestinationSetting}" />
 
                         <TextBox
                             Grid.Row="1"
@@ -436,7 +460,7 @@
                             IsReadOnly="True"
                             Text="{Binding OutputFolderPath.Value}"
                             TextWrapping="WrapWithOverflow"
-                            Watermark="出力先フォルダを右のボタンから選択">
+                            Watermark="{i18n:Localize ActEditor.SelectOutputFolder}">
                             <TextBox.InnerRightContent>
                                 <Button Command="{Binding SetFolderCommand}" Content="...">
                                     <Button.Styles>
@@ -451,7 +475,7 @@
                             Grid.Row="2"
                             Grid.ColumnSpan="2"
                             VerticalAlignment="Center"
-                            Text="日付を挿入する" />
+                            Text="{i18n:Localize ActEditor.InsertDate}" />
                         <ToggleSwitch
                             Grid.Row="2"
                             Grid.Column="1"
@@ -463,34 +487,37 @@
                             Grid.Row="3"
                             Grid.Column="0"
                             VerticalAlignment="Center"
-                            Text="エリア名" />
+                            Text="{i18n:Localize ActEditor.AreaName}" />
                         <TextBox
                             Grid.Row="3"
                             Grid.Column="1"
                             Margin="5"
                             VerticalAlignment="Center"
                             Text="{Binding AreaName.Value}"
-                            Watermark="任意" />
+                            Watermark="{i18n:Localize ActEditor.Optional}" />
                         <TextBlock
                             Grid.Row="4"
                             Grid.Column="0"
                             VerticalAlignment="Center"
-                            Text="リフト名" />
+                            Text="{i18n:Localize ActEditor.LiftName}" />
                         <TextBox
                             Grid.Row="4"
                             Grid.Column="1"
                             Margin="5"
                             VerticalAlignment="Center"
                             Text="{Binding LiftName.Value}"
-                            Watermark="任意" />
+                            Watermark="{i18n:Localize ActEditor.Optional}" />
 
                         <TextBlock
                             Grid.Row="5"
                             Grid.ColumnSpan="2"
                             Margin="5"
                             VerticalAlignment="Center"
-                            Text="{Binding OutputFolderPrefix.Value, StringFormat='(出力フォルダ名: {0})'}"
-                            TextWrapping="WrapWithOverflow" />
+                            TextWrapping="WrapWithOverflow">
+                            (<Run Text="{i18n:Localize ActEditor.OutputFolderName}"/>
+                            :
+                            <Run Text="{Binding OutputFolderPrefix.Value}"/>)
+                        </TextBlock>
 
 
                         <Button
@@ -504,7 +531,7 @@
                                     <Run
                                         FontSize="16"
                                         FontWeight="Bold"
-                                        Text="出力する" />
+                                        Text="{i18n:Localize ActEditor.Output}" />
                                 </TextBlock>
                             </Button.Content>
                         </Button>

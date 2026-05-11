@@ -1,4 +1,5 @@
-﻿using KWRP.Avalonia.Backend;
+﻿using Avalonia.Xaml.Interactions.Custom;
+using KWRP.Avalonia.Backend;
 using KWRP.Avalonia.Backend.Model.Shapes.Activity;
 using KWRP.Avalonia.Backend.Model.Shapes.WorkArea;
 using KWRP.Avalonia.Backend.Models.Roller;
@@ -8,7 +9,7 @@ using KWRP.Avalonia.Backend.Services.Extensions;
 using KWRP.Avalonia.Frontend.Models.Stores;
 using KWRP.Backend.Model.Modlules.WorkTimeEstimator;
 using KWRP.Backend.Model.Shapes.Activity.Entity;
-using NetTopologySuite.Algorithm;
+using KWRP.Backend.Services;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -34,6 +35,7 @@ namespace KWRP.Avalonia.Frontend.Services.Activity
         private readonly CadScriptService _cadScriptService;
         private readonly CanvasItemStore _canvasItemStore;
         private readonly ParameterStore _parameterStore;
+        private readonly ILanguageService _languageService;
 
         private RollerModel VR => _machineStore.CurrentRoller;
 
@@ -47,7 +49,8 @@ namespace KWRP.Avalonia.Frontend.Services.Activity
             CaptureService captureService,
             CadScriptService cadScriptService,
             CanvasItemStore canvasItemStore,
-            ParameterStore parameterStore)
+            ParameterStore parameterStore,
+            ILanguageService languageService)
         {
             _activityStore = activityStore;
             _logService = logService;
@@ -59,13 +62,15 @@ namespace KWRP.Avalonia.Frontend.Services.Activity
             _cadScriptService = cadScriptService;
             _canvasItemStore = canvasItemStore;
             _parameterStore = parameterStore;
+            _languageService = languageService;
 
             _logService.LogDebug("init");
         }
 
         public virtual void CreateActivityGroups()
         {
-            _logService.LogInfo($"アクティビティを作成します。workArea: {_workAreaStore.WorkAreas.Count}");
+            //_logService.LogInfo($"アクティビティを作成します。workArea: {_workAreaStore.WorkAreas.Count}");
+            _logService.LogInfo(string.Format(_languageService.GetString("Domain.Front.CreateActivity"), _workAreaStore.WorkAreas.Count));
 
             // init
             _activityStore.ActivityGroups.Clear();
@@ -232,10 +237,10 @@ namespace KWRP.Avalonia.Frontend.Services.Activity
         {
             try
             {
-                var path = await _pathService.GetSaveFolderPathAsync(title: "アクティビティ出力先のフォルダを選択してください");
+                var path = await _pathService.GetSaveFolderPathAsync(title: _languageService.GetString("Domain.Front.SelectActivityOutputFolder"));
                 if (path == null)
                 {
-                    _logService.LogInfo("アクティビティ出力先のフォルダ選択をキャンセルしました");
+                    _logService.LogInfo(_languageService.GetString("Domain.Front.CancelActivityOutputFolderSelection"));
                     return;
                 }
 
@@ -244,7 +249,8 @@ namespace KWRP.Avalonia.Frontend.Services.Activity
             catch (Exception ex)
             {
                 _activityStore.OutputFolderPath.Value = string.Empty;
-                _logService.LogWarn($"アクティビティ出力先フォルダ選択時にエラーが発生しました: {ex.Message}");
+                //_logService.LogWarn($"アクティビティ出力先フォルダ選択時にエラーが発生しました: {ex.Message}");
+                _logService.LogWarn(string.Format(_languageService.GetString("Domain.Front.ErrorDuringFolderSelection"), ex.Message));
                 throw;
             }
         }
@@ -274,18 +280,17 @@ namespace KWRP.Avalonia.Frontend.Services.Activity
         {
             if (_activityStore.OutputFolderPath.Value == null)
             {
-                _logService.LogWarn("出力先フォルダが指定されていません。アクティビティ出力を中止します。");
+                _logService.LogWarn(_languageService.GetString("Domain.Front.NoOutputFolderSpecified"));
                 return;
             }
 
             var targetFolder = Path.Combine(_activityStore.OutputFolderPath.Value, _activityStore.OutputFolderPrefix.CurrentValue);
             if (Directory.Exists(targetFolder))
             {
-                _logService.LogWarn(
-                    $"フォルダ「{targetFolder}」がすでに存在します");
+                _logService.LogWarn(string.Format(_languageService.GetString("Domain.Front.FolderAlreadyExists"), targetFolder));
                 throw new IOException(
-                    $"フォルダ「{targetFolder}」がすでに存在します。\n" +
-                    $"該当するフォルダを削除するか、保存するフォルダ名を変更してください。");
+                    string.Format(_languageService.GetString("Domain.Front.FolderAlreadyExists"), targetFolder) + "\n" +
+                    _languageService.GetString("Domain.Front.DeleteOrRenameFolder"));
             }
             else
             {
@@ -294,7 +299,8 @@ namespace KWRP.Avalonia.Frontend.Services.Activity
 
             if (!_pathService.TryValidatePath(targetFolder, out string? reason))
             {
-                _logService.LogWarn($"{reason}。アクティビティ出力を中止します。");
+                //_logService.LogWarn($"{reason}。アクティビティ出力を中止します。");
+                _logService.LogWarn(string.Format(_languageService.GetString("Domain.Front.AbortDueToReason"), reason));
                 throw new IOException(reason);
             }
 
@@ -323,7 +329,8 @@ namespace KWRP.Avalonia.Frontend.Services.Activity
                     }
                     catch (Exception ex)
                     {
-                        _logService.LogError($"ファイル{fileName}保存時にエラーが発生しました。{ex}");
+                        //_logService.LogError($"ファイル{fileName}保存時にエラーが発生しました。{ex}");
+                        _logService.LogError(string.Format(_languageService.GetString("Domain.Front.FileSaveError"), fileName, ex));
                         throw;
                     }
 
@@ -366,11 +373,12 @@ namespace KWRP.Avalonia.Frontend.Services.Activity
             try
             {
                 {
-                    var fileName = $"{_activityStore.OutputFolderPrefix.CurrentValue}_作業時間.csv";
+                    //var fileName = $"{_activityStore.OutputFolderPrefix.CurrentValue}_作業時間.csv";
+                    var fileName = string.Format(_languageService.GetString("Domain.Front.ActivityOutputCsv"), _activityStore.OutputFolderPrefix.CurrentValue);
                     var path = Path.Combine(targetFolder, fileName);
 
                     var sb = new StringBuilder();
-                    sb.AppendLine("エリア名,作業時間,残時間");
+                    sb.AppendLine(_languageService.GetString("Domain.Front.AreaNameWorkTimeRemainingTime"));
                     for (int groupId = 0; groupId < _activityStore.ActivityGroupWorkTimes.Count; ++groupId)
                     {
                         var remain = TimeSpan.Zero;
@@ -393,13 +401,14 @@ namespace KWRP.Avalonia.Frontend.Services.Activity
                 }
 
                 {
-                    var fileName = $"{_activityStore.OutputFolderPrefix.CurrentValue}_作業時間.txt";
+                    //var fileName = $"{_activityStore.OutputFolderPrefix.CurrentValue}_作業時間.txt";
+                    var fileName = string.Format(_languageService.GetString("Domain.Front.ActivityOutputTxt"), _activityStore.OutputFolderPrefix.CurrentValue);
                     var path = Path.Combine(targetFolder, fileName);
 
                     var sb = new StringBuilder();
                     for (int groupId = 0; groupId < _activityStore.ActivityGroupWorkTimes.Count; ++groupId)
                     {
-                        sb.AppendLine("エリア名    作業時間    残時間");
+                        sb.AppendLine(_languageService.GetString("Domain.Front.AreaNameWorkTimeRemainingTimeTxt"));
                         sb.AppendLine("----------------------------------------");
                         var remain = TimeSpan.Zero;
                         foreach (var t in _activityStore.ActivityGroupWorkTimes[groupId])
@@ -422,7 +431,7 @@ namespace KWRP.Avalonia.Frontend.Services.Activity
             }
             catch (Exception e)
             {
-                _logService.LogWarn("作業時間の出力に失敗しました" + e);
+                _logService.LogWarn(_languageService.GetString("Domain.Front.FailedToOutputWorkTime") + e);
             }
 
 
@@ -436,7 +445,7 @@ namespace KWRP.Avalonia.Frontend.Services.Activity
             }
             catch (Exception e)
             {
-                _logService.LogWarn("キャプチャの作成に失敗しました" + e);
+                _logService.LogWarn(_languageService.GetString("Domain.Front.CaptureCreationFailed") + e);
             }
 
             // Output CadScript (scr)
@@ -448,13 +457,13 @@ namespace KWRP.Avalonia.Frontend.Services.Activity
             }
             catch (Exception e)
             {
-                _logService.LogWarn("CadScriptの作成に失敗しました" + e);
+                _logService.LogWarn(_languageService.GetString("Domain.Front.CadScriptCreationFailed") + e);
             }
 
             // Output Perimeter (csv)
             try
             {
-                var outputFolder = $"法肩ライン";
+                var outputFolder = _languageService.GetString("Domain.Front.ShoulderLine");
                 var outputDirectoryPath = Path.Combine(targetFolder, outputFolder);
                 if (!Directory.Exists(outputDirectoryPath))
                 {
@@ -462,8 +471,8 @@ namespace KWRP.Avalonia.Frontend.Services.Activity
                 }
 
                 var prefix = _activityStore.OutputFolderPrefix.CurrentValue;
-                var outputAreasTask = ExportAreasAsync(_canvasItemStore.CompactionAreas, prefix, "法肩ライン", outputDirectoryPath);
-                var outputObstacleTask = ExportAreasAsync(_canvasItemStore.Holes, prefix, "法肩ライン障害物", outputDirectoryPath);
+                var outputAreasTask = ExportAreasAsync(_canvasItemStore.CompactionAreas, prefix, _languageService.GetString("Domain.Front.ShoulderLine"), outputDirectoryPath);
+                var outputObstacleTask = ExportAreasAsync(_canvasItemStore.Holes, prefix, _languageService.GetString("Domain.Front.ShoulderLineObstacle"), outputDirectoryPath);
 
                 var occs = _activityStore
                     .ActivityGroups
@@ -471,13 +480,13 @@ namespace KWRP.Avalonia.Frontend.Services.Activity
                     .Select(g => g.First())
                     .Where(act => act.ActivityType == Backend.Enums.RollerActivityType.Move)
                     .Select(act => act.OccArea.Shape);
-                var outputStartOccAreaTask = ExportOccAreaAsync(occs, prefix, "初期移動占有エリア", outputDirectoryPath);
+                var outputStartOccAreaTask = ExportOccAreaAsync(occs, prefix, _languageService.GetString("Domain.Front.InitialMovementOccupiedArea"), outputDirectoryPath);
 
                 await Task.WhenAll(outputAreasTask, outputObstacleTask, outputStartOccAreaTask);
             }
             catch (Exception e)
             {
-                _logService.LogWarn("外形線の作成に失敗しました" + e);
+                _logService.LogWarn(_languageService.GetString("Domain.Front.OutlineCreationFailed") + "\n" + e);
             }
         }
 
@@ -495,7 +504,8 @@ namespace KWRP.Avalonia.Frontend.Services.Activity
                 }
                 catch (Exception ex)
                 {
-                    _logService.LogError($"ファイル {fileName} 保存時にエラーが発生しました。{ex}");
+                    //_logService.LogError($"ファイル {fileName} 保存時にエラーが発生しました。{ex}");
+                    _logService.LogError(string.Format(_languageService.GetString("Domain.Front.SaveError"), fileName, ex));
                     throw;
                 }
             }
@@ -515,7 +525,8 @@ namespace KWRP.Avalonia.Frontend.Services.Activity
                 }
                 catch (Exception ex)
                 {
-                    _logService.LogError($"ファイル {fileName} 保存時にエラーが発生しました。{ex}");
+                    //_logService.LogError($"ファイル {fileName} 保存時にエラーが発生しました。{ex}");
+                    _logService.LogError(string.Format(_languageService.GetString("Domain.Front.SaveError"), fileName, ex));
                     throw;
                 }
             }

@@ -5,6 +5,7 @@ using KWRP.Avalonia.Backend.Services;
 using KWRP.Avalonia.Backend.Services.Activity;
 using KWRP.Avalonia.Backend.Services.Extensions;
 using KWRP.Avalonia.Frontend.Models.Stores;
+using KWRP.Backend.Services;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -26,6 +27,7 @@ namespace KWRP.Avalonia.Frontend.Services.Activity
         private readonly CadScriptService _cadScriptService;
         private readonly CanvasItemStore _canvasItemStore;
         private readonly ParameterStore _parameterStore;
+        private readonly ILanguageService _languageService;
 
         private RollerModel VR => _machineStore.CurrentRoller;
 
@@ -39,8 +41,9 @@ namespace KWRP.Avalonia.Frontend.Services.Activity
             CaptureService captureService,
             CadScriptService cadScriptService,
             CanvasItemStore canvasItemStore,
-            ParameterStore parameterStore)
-            : base(activityStore, logService, notificationService, workAreaStore, machineStore, pathService, captureService, cadScriptService, canvasItemStore, parameterStore)
+            ParameterStore parameterStore,
+            ILanguageService languageService)
+            : base(activityStore, logService, notificationService, workAreaStore, machineStore, pathService, captureService, cadScriptService, canvasItemStore, parameterStore, languageService)
         {
             _activityStore = activityStore;
             _logService = logService;
@@ -52,6 +55,7 @@ namespace KWRP.Avalonia.Frontend.Services.Activity
             _cadScriptService = cadScriptService;
             _canvasItemStore = canvasItemStore;
             _parameterStore = parameterStore;
+            _languageService = languageService;
 
             _logService.LogDebug("init");
         }

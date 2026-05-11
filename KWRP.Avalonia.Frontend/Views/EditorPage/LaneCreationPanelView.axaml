@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:i18n="clr-namespace:KWRP.Frontend.Models.Localizer"
     xmlns:vm="using:KWRP.Avalonia.Frontend.ViewModels.EditorPage"
     Name="laneArrangementEditor"
     d:DesignHeight="650"
@@ -75,8 +76,13 @@
                     Grid.Column="1"
                     Margin="0,10,10,10"
                     HorizontalAlignment="Right"
-                    Command="{Binding NavigateNextCommand}"
-                    Content="作業エリア設定 >" />
+                    Command="{Binding NavigateNextCommand}">
+                    <Button.Content>
+                    <TextBlock>
+                    <Run Text="{i18n:Localize LaneEditor.WorkAreaSetting}"/>&gt;
+                    </TextBlock>
+                </Button.Content>
+                </Button>
 
             </Grid>
 
@@ -92,7 +98,7 @@
                         HorizontalAlignment="Stretch"
                         HorizontalContentAlignment="Center"
                         Background="AntiqueWhite"
-                        Content="区割りパラメータ"
+                        Content="{i18n:Localize LaneEditor.GenLaneParam}"
                         FontSize="20" />
 
                     <Grid
@@ -129,39 +135,39 @@
                         <TextBlock
                             Grid.Row="0"
                             Grid.Column="0"
-                            Text="鉄輪幅 (m)" />
+                            Text="{i18n:Localize LaneEditor.LaneWidth}" />
                         <TextBlock
                             Grid.Row="1"
                             Grid.Column="0"
-                            Text="前方オフセット (m)" />
+                            Text="{i18n:Localize LaneEditor.FrontOffset}" />
                         <TextBlock
                             Grid.Row="2"
                             Grid.Column="0"
-                            Text="後方オフセット (m)" />
+                            Text="{i18n:Localize LaneEditor.RearOffset}" />
                         <TextBlock
                             Grid.Row="3"
                             Grid.Column="0"
-                            Text="側方オフセット① (m)" />
+                            Text="{i18n:Localize LaneEditor.SidePrevOffset}" />
                         <TextBlock
                             Grid.Row="4"
                             Grid.Column="0"
-                            Text="側方オフセット② (m)" />
+                            Text="{i18n:Localize LaneEditor.SideNextOffset}" />
                         <TextBlock
                             Grid.Row="5"
                             Grid.Column="0"
-                            Text="レーンラップ幅 (m)" />
+                            Text="{i18n:Localize LaneEditor.LapWidth}" />
                         <TextBlock
                             Grid.Row="6"
                             Grid.Column="0"
-                            Text="作業可能長さ (m)" />
+                            Text="{i18n:Localize LaneEditor.LaneChangeLength}" />
                         <TextBlock
                             Grid.Row="7"
                             Grid.Column="0"
-                            Text="作業進捗方向 (deg.)" />
+                            Text="{i18n:Localize LaneEditor.ProgressDirectionDegree}" />
                         <TextBlock
                             Grid.Row="8"
                             Grid.Column="0"
-                            Text="振動ローラ向き (deg.)" />
+                            Text="{i18n:Localize LaneEditor.RollerHeadingDirection}" />
                         <TextBlock
                             Grid.Row="9"
                             Grid.Column="0"
@@ -225,25 +231,13 @@
                             Margin="10"
                             HorizontalAlignment="Stretch"
                             Command="{Binding ChangeHeadingCommand}"
-                            Content="ローラ向き反転" />
+                            Content="{i18n:Localize LaneEditor.ReverseRollerDirection}" />
 
-                        <!--<StackPanel
-                            Grid.Row="10"
-                            Grid.ColumnSpan="3"
-                            Margin="0,5"
-                            HorizontalAlignment="Center"
-                            Orientation="Horizontal"
-                            Spacing="10">
-                            <Button Command="{Binding AddCommand}" Content="add" />
-                            <Button Command="{Binding AddRangeCommand}" Content="addrng" />
-                            <Button Command="{Binding ClearCommand}" Content="clear" />
-                            <Button Command="{Binding LaneArrangementCommand}" Content="レーン割" />
-                        </StackPanel>-->
                         <TextBlock
                             Grid.Row="10"
                             Grid.Column="0"
                             VerticalAlignment="Center"
-                            Text="作業進捗方向変化量" />
+                            Text="{i18n:Localize LaneEditor.ProgressDirectionChange}" />
                         <ToggleSwitch
                             Name="toggleDirection"
                             Grid.Row="10"
@@ -262,7 +256,7 @@
                         HorizontalAlignment="Stretch"
                         HorizontalContentAlignment="Center"
                         Background="Aquamarine"
-                        Content="レーンのペアリング"
+                        Content="{i18n:Localize LaneEditor.GroupingParam}"
                         FontSize="20" />
 
                     <Grid
@@ -288,11 +282,11 @@
                         <TextBlock
                             Grid.Row="0"
                             Grid.Column="0"
-                            Text="最小レーン数" />
+                            Text="{i18n:Localize LaneEditor.MinLaneCount}" />
                         <TextBlock
                             Grid.Row="1"
                             Grid.Column="0"
-                            Text="最大レーン数" />
+                            Text="{i18n:Localize LaneEditor.MaxLaneCount}" />
 
                         <NumericUpDown
                             Name="pairMinCnt"

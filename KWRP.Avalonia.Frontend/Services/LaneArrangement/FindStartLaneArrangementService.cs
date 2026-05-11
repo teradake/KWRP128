@@ -5,6 +5,7 @@ using KWRP.Avalonia.Backend.Model.Modules.LaneArrangement;
 using KWRP.Avalonia.Backend.Model.Shapes;
 using KWRP.Avalonia.Backend.Services;
 using KWRP.Avalonia.Frontend.Models.Stores;
+using KWRP.Backend.Services;
 using R3;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,7 @@ namespace KWRP.Avalonia.Frontend.Services.LaneArrangement
         private readonly CanvasItemStore _canvasItemStore;
         private readonly ILogService _logService;
         private readonly ILaneArrangementEvaluationService _evaluator;
+        private readonly ILanguageService _languageService;
 
         private readonly List<double> _directions = [];
 
@@ -27,7 +29,8 @@ namespace KWRP.Avalonia.Frontend.Services.LaneArrangement
             ParameterStore parameterStore,
             CanvasItemStore canvasItemStore,
             ILogService logService,
-            ILaneArrangementEvaluationService evaluator)
+            ILaneArrangementEvaluationService evaluator,
+            ILanguageService languageService)
         {
             _parameterStore = parameterStore;
             _canvasItemStore = canvasItemStore;
@@ -35,6 +38,7 @@ namespace KWRP.Avalonia.Frontend.Services.LaneArrangement
             _evaluator = evaluator;
 
             _logService.LogDebug("init");
+            _languageService = languageService;
         }
 
         public void AllocateDirections(params double[] rotationDirectionsRadian)
@@ -47,7 +51,7 @@ namespace KWRP.Avalonia.Frontend.Services.LaneArrangement
         {
             var simulators = _directions
                 .Select(d => target.Rotate(-d))
-                .Select(p => new FindStartLaneUniformLapAdjustmentArranger(p, _logService))
+                .Select(p => new FindStartLaneUniformLapAdjustmentArranger(p, _logService, _languageService))
                 .ToArray();
 
             
@@ -103,7 +107,8 @@ namespace KWRP.Avalonia.Frontend.Services.LaneArrangement
             var pairedLanes = NaiveDfsLaneIntegrator.Integrate(
                 orthogonalLanes: lanes, 
                 minPairCount: _parameterStore.PairCountMin,
-                maxPairCount: _parameterStore.PairCountMax);
+                maxPairCount: _parameterStore.PairCountMax, 
+                _languageService: _languageService);
             var result = CreatedLaneResult.By(
                 targetPolygon: target.Rotate(_directions[best]),
                 lanes: lanes.Select(lane => LaneModel.CreateByOrthogonal(lane, _directions[best])),

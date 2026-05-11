@@ -8,6 +8,7 @@
     xmlns:shape="using:KWRP.Avalonia.Frontend.ViewModels.Shapes"
     xmlns:ui="using:FluentAvalonia.UI.Controls"
     xmlns:vm="using:KWRP.Avalonia.Frontend.ViewModels.EditorPage"
+    xmlns:i18n="clr-namespace:KWRP.Frontend.Models.Localizer"
     d:DesignHeight="650"
     d:DesignWidth="500"
     x:DataType="vm:CanvasViewModel"
@@ -430,15 +431,18 @@
                             <TextBlock
                                 Margin="-15,0,0,0"
                                 IsVisible="{Binding !#expan2.IsExpanded}"
-                                Text="統計" />
+                                Text="{i18n:Localize Canvas.StatsHeader}" />
                         </Expander.Header>
                         <SelectableTextBlock Margin="5,0,5,5" SelectionBrush="{Binding #expan2.Background}">
-                            <Run Text="{Binding AreasArea.Value, StringFormat='転圧領域: {0:0.00} m2', FallbackValue=area}" />
+                            <Run Text="{i18n:Localize Canvas.CompactionArea}"/> :
+                            <Run Text="{Binding AreasArea.Value, StringFormat='{}{0:0.00} m2', FallbackValue=area}" />
                             <LineBreak />
-                            <Run Text="{Binding LanesArea.Value, StringFormat='有効レーン: {0:0.00} m2', FallbackValue=lanearea}" />
-                            <Run Text="{Binding LanesCount.Value, StringFormat='({0:0} 本)', FallbackValue=lanecnt}" />
+                            <Run Text="{i18n:Localize Canvas.ValidLanes}"/> :
+                            <Run Text="{Binding LanesArea.Value, StringFormat='{}{0:0.00} m2', FallbackValue=lanearea}" />
+                            (N=<Run Text="{Binding LanesCount.Value, FallbackValue=lanecnt}" />)
                             <LineBreak />
-                            <Run Text="{Binding Coverage.Value, StringFormat='充填率: {0:0.00} %', FallbackValue=coverage}" />
+                            <Run Text="{i18n:Localize Canvas.Coverage}"/> :
+                            <Run Text="{Binding Coverage.Value, StringFormat='{}{0:0.00} %', FallbackValue=coverage}" />
                         </SelectableTextBlock>
                     </Expander>
 
@@ -474,34 +478,48 @@
                             <TextBlock
                                 Margin="-15,0,0,0"
                                 IsVisible="{Binding !#expaninf.IsExpanded}"
-                                Text="アクティビティ情報" />
+                                Text="{i18n:Localize Canvas.ActivityInfoHeader}" />
                         </Expander.Header>
-                        <SelectableTextBlock Margin="5,0,5,5" SelectionBrush="{Binding #expaninf.Background}">
-                            <Run Text="{Binding SelectedActivity.Value.ActivityId, StringFormat='ID: {0}', FallbackValue=id}" />
+                        <SelectableTextBlock Margin="5,0,5,5" 
+                                             SelectionBrush="{Binding #expaninf.Background}"
+                                             DataContext="{Binding SelectedActivity.Value}">
+                            <Run Text="{Binding ActivityId, StringFormat='ID : {0}', FallbackValue=id}" />
                             <LineBreak />
-                            <Run Text="{Binding SelectedActivity.Value.WorkType, StringFormat='作業: {0}', FallbackValue=work}" />
+                            <Run Text="{i18n:Localize Canvas.WorkType}"/> :
+                            <Run Text="{Binding WorkType, StringFormat='{}{0}', FallbackValue=work}" />
                             <LineBreak />
-                            <Run Text="{Binding SelectedActivity.Value.PathID, StringFormat='作業グループ: {0}', FallbackValue=groupId}" />
+                            <Run Text="{i18n:Localize Canvas.WorkGroup}"/> :
+                            <Run Text="{Binding PathID, StringFormat='{}{0}', FallbackValue=groupId}" />
                             <LineBreak />
-                            <Run Text="{Binding SelectedActivity.Value.Dir, StringFormat='VR進行方向: {0}', FallbackValue=dir}" />
+                            <Run Text="{i18n:Localize Canvas.VRDirection}"/> :
+                            <Run Text="{Binding Dir, StringFormat='{}{0}', FallbackValue=dir}" />
                             <LineBreak />
-                            <Run Text="{Binding SelectedActivity.Value.RefSpeed, StringFormat='参照速度: {0}', FallbackValue=ref}" />
+                            <Run Text="{i18n:Localize Canvas.RefSpeed}"/> :
+                            <Run Text="{Binding RefSpeed, StringFormat='{}{0}', FallbackValue=ref}" />
                             <LineBreak />
-                            <Run Text="{Binding SelectedActivity.Value.EdgeSpeed, StringFormat='端部速度: {0}', FallbackValue=edge}" />
+                            <Run Text="{i18n:Localize Canvas.EdgeSpeed}"/> :
+                            <Run Text="{Binding EdgeSpeed, StringFormat='{}{0}', FallbackValue=edge}" />
                             <LineBreak />
-                            <Run Text="{Binding SelectedActivity.Value.RepeatNum, StringFormat='転圧回数: {0}', FallbackValue=num}" />
+                            <Run Text="{i18n:Localize Canvas.RepeatNum}"/> :
+                            <Run Text="{Binding RepeatNum, StringFormat='{}{0}', FallbackValue=num}" />
                             <LineBreak />
-                            <Run Text="{Binding SelectedActivity.Value.Comp, StringFormat='起振: {0}', FallbackValue=comp}" />
+                            <Run Text="{i18n:Localize Canvas.Vibration}"/> :
+                            <Run Text="{Binding Comp, StringFormat='{}{0}', FallbackValue=comp}" />
                             <LineBreak />
-                            <Run Text="{Binding SelectedActivity.Value.EdgeFront, StringFormat='前方端部フラグ: {0}', FallbackValue=ef}" />
+                            <Run Text="{i18n:Localize Canvas.FrontEdgeFlag}"/> :
+                            <Run Text="{Binding EdgeFront, StringFormat='{}{0}', FallbackValue=ef}" />
                             <LineBreak />
-                            <Run Text="{Binding SelectedActivity.Value.EdgeRear, StringFormat='後方端部フラグ: {0}', FallbackValue=er}" />
+                            <Run Text="{i18n:Localize Canvas.RearEdgeFlag}"/> :
+                            <Run Text="{Binding EdgeRear, StringFormat='{}{0}', FallbackValue=er}" />
                             <LineBreak />
-                            <Run Text="{Binding SelectedActivity.Value.Length, StringFormat='エリア長さ: {0}', FallbackValue=len}" />
+                            <Run Text="{i18n:Localize Canvas.AreaLength}"/> :
+                            <Run Text="{Binding Length, StringFormat='{}{0}', FallbackValue=len}" />
                             <LineBreak />
-                            <Run Text="{Binding SelectedActivity.Value.Width, StringFormat='エリア幅: {0}', FallbackValue=wid}" />
+                            <Run Text="{i18n:Localize Canvas.AreaWidth}"/> :
+                            <Run Text="{Binding Width, StringFormat='{}{0}', FallbackValue=wid}" />
                             <LineBreak />
-                            <Run Text="{Binding SelectedActivity.Value.WorkTime, StringFormat='作業時間: {0}', FallbackValue=worktime}" />
+                            <Run Text="{i18n:Localize Canvas.WorkTime}"/> :
+                            <Run Text="{Binding WorkTime, StringFormat='{}{0}', FallbackValue=worktime}" />
                         </SelectableTextBlock>
                     </Expander>
 
@@ -544,7 +562,7 @@
                             <TextBlock
                                 Margin="-15,0,0,0"
                                 IsVisible="{Binding !#expan.IsExpanded}"
-                                Text="方角,表示ボタン" />
+                                Text="{i18n:Localize Canvas.CompassHeader}" />
                         </Expander.Header>
                         <StackPanel Margin="5">
                             <Grid Width="120" Margin="0,-15,0,5">
@@ -636,30 +654,30 @@
 
                             <CheckBox
                                 Name="planViewVisible"
-                                Content="背景表示"
+                                Content="{i18n:Localize Canvas.ShowBackground}"
                                 IsChecked="{Binding PlanViewVisible.Value}"
                                 IsVisible="{Binding PlanView.Value, Converter={x:Static ObjectConverters.IsNotNull}}" />
                             <CheckBox
                                 Name="laneVisible"
-                                Content="レーン表示"
+                                Content="{i18n:Localize Canvas.ShowLanes}"
                                 IsChecked="{Binding LaneVisible.Value}" />
                             <CheckBox
                                 Name="pairedLaneVisible"
-                                Content="レーンのペア表示"
+                                Content="{i18n:Localize Canvas.ShowPairedLanes}"
                                 IsChecked="{Binding PairedLaneVisible.Value}" />
                             <CheckBox
                                 Name="workAreaVisible"
-                                Content="作業エリア表示"
+                                Content="{i18n:Localize Canvas.ShowWorkAreas}"
                                 IsChecked="{Binding WorkAreaVisible.Value}"
                                 IsVisible="{Binding !IsLaneDesign.Value}" />
                             <CheckBox
                                 Name="goalAreaVisible"
-                                Content="ゴール表示"
+                                Content="{i18n:Localize Canvas.ShowGoals}"
                                 IsChecked="{Binding GoalAreaVisible.Value}"
                                 IsVisible="{Binding !IsLaneDesign.Value}" />
                             <CheckBox
                                 Name="activityVisible"
-                                Content="アクティビティ表示"
+                                Content="{i18n:Localize Canvas.ShowActivities}"
                                 IsChecked="{Binding ActivityVisible.Value}"
                                 IsVisible="{Binding IsActivityDesign.Value}" />
                         </StackPanel>
@@ -706,8 +724,7 @@
                     ToolTip.Placement="Left">
                     <Image Margin="5" Source="/Assets/Icons/photo2.png" />
                     <ToolTip.Tip>
-                        保存先を指定して画面をキャプチャし、PNG形式で保存します。
-                        Ctrl+Cキーを押すと、キャプチャをクリップボードにコピーできます。
+                        <TextBlock Text="{i18n:Localize Canvas.CaptureButtonTip}"/>
                     </ToolTip.Tip>
                 </Button>
 
@@ -723,8 +740,7 @@
                     IsEnabled="{Binding !IsOptimizing.Value}"
                     IsVisible="{Binding IsLaneDesign.Value}">
                     <ToolTip.Tip>
-                        作業進捗方向を選択するモードに切り替わります。
-                        画面を押してドラッグし、離した位置を終点として作業進捗方向を選択できます。
+                        <TextBlock Text="{i18n:Localize Canvas.SelectDirectionModeTip}"/>
                     </ToolTip.Tip>
                 </Button>
             </StackPanel>
@@ -743,13 +759,13 @@
                 <ToggleButton Name="rulerToggleButton" Classes="canvasMenu">
                     <Image Margin="2" Source="/Assets/Icons/ruler.png" />
                     <ToolTip.Tip>
-                        画面上をポチポチして2点間の距離を測定できます。
+                        <TextBlock Text="{i18n:Localize Canvas.MeasureDistanceTip}"/>
                     </ToolTip.Tip>
                 </ToggleButton>
                 <Button Name="rulerClearButton" Classes="canvasMenu">
                     <Image Margin="5" Source="/Assets/Icons/clean.png" />
                     <ToolTip.Tip>
-                        画面上のポチポチをクリアします
+                        <TextBlock Text="{i18n:Localize Canvas.ClearDotsTip}"/>
                     </ToolTip.Tip>
                 </Button>
 
@@ -803,7 +819,7 @@
                         Fill="Black"
                         Stretch="Uniform" />
                     <ToolTip.Tip>
-                        <TextBlock Text="閉じる" />
+                        <TextBlock Text="{i18n:Localize Canvas.DirModeClose}" />
                     </ToolTip.Tip>
                 </Button>
 
@@ -813,7 +829,7 @@
                     VerticalAlignment="Bottom"
                     TextAlignment="Center"
                     Theme="{StaticResource SubtitleTextBlockStyle}">
-                    <Run Text="方向を指定してください" />
+                    <Run Text="{i18n:Localize Canvas.DirModeMessage}" />
                     <LineBreak />
                     <Border
                         Background="LightGray"
@@ -824,7 +840,7 @@
                             FontWeight="Bold"
                             Text="Esc" />
                     </Border>
-                    <TextBlock Padding="0,0,0,3" Text="閉じる" />
+                    <TextBlock Padding="0,0,0,3" Text="{i18n:Localize Canvas.DirModeClose}" />
                 </TextBlock>
             </Grid>
 

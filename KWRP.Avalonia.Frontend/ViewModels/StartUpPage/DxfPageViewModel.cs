@@ -5,6 +5,7 @@ using KWRP.Avalonia.Backend.Services;
 using KWRP.Avalonia.Frontend.Models.Stores;
 using KWRP.Avalonia.Frontend.Services.Dxf;
 using KWRP.Avalonia.NetDxf;
+using KWRP.Backend.Services;
 using MsBox.Avalonia;
 using ObservableCollections;
 using R3;
@@ -23,6 +24,7 @@ namespace KWRP.Avalonia.Frontend.ViewModels.StartUpPage
         private readonly ApplicationStore _applicationStore;
         private readonly DxfConvertService _convertService;
         private readonly DxfStore _dxfStore;
+        private readonly ILanguageService _languageService;
 
         public DxfPageViewModel(
             ApplicationStore applicationStore,
@@ -30,7 +32,8 @@ namespace KWRP.Avalonia.Frontend.ViewModels.StartUpPage
             ILogService logService,
             INotificationService notificationService,
             DxfConvertService convertService,
-            DxfStore dxfStore)
+            DxfStore dxfStore,
+            ILanguageService languageService)
         {
             _applicationStore = applicationStore;
             _pathService = pathService;
@@ -38,6 +41,7 @@ namespace KWRP.Avalonia.Frontend.ViewModels.StartUpPage
             _notificationService = notificationService;
             _convertService = convertService;
             _dxfStore = dxfStore;
+            _languageService = languageService;
 
             Options = _dxfStore
                 .Options
@@ -81,7 +85,7 @@ namespace KWRP.Avalonia.Frontend.ViewModels.StartUpPage
                     await using var imageStream = File.OpenRead(png);
                     return await Task.Run(() => Bitmap.DecodeToWidth(imageStream, 400));
                 })
-                .ToBindableReactiveProperty(null) 
+                .ToBindableReactiveProperty(null)
                 .AddTo(Disposables);
 
             RunConversionCommand = SelectedOption
@@ -108,13 +112,13 @@ namespace KWRP.Avalonia.Frontend.ViewModels.StartUpPage
                             _dxfStore.SelectedOption.Value = item;
                         }
 
-                        _notificationService.Notify(KWRPNotification.Create("背景図を作成しました", Backend.Enums.NotifyMessageType.Info, 5));
-                        _logService.LogInfo($"背景図を作成しました:{savedPngPath}");
+                        _notificationService.Notify(KWRPNotification.Create(_languageService.GetString("Domain.Front.BackgroundCreated"), Backend.Enums.NotifyMessageType.Info, 5));
+                        _logService.LogInfo($"{_languageService.GetString("Domain.Front.BackgroundCreated")}:{savedPngPath}");
                     }
                     catch (Exception ex)
                     {
-                        _notificationService.Notify(KWRPNotification.Create($"背景図作成に失敗しました\n{ex.Message}", Backend.Enums.NotifyMessageType.Warn));
-                        _logService.LogError($"背景図作成に失敗しました", ex);
+                        _notificationService.Notify(KWRPNotification.Create($"{_languageService.GetString("Domain.Front.BackgroundCreationFailed")}\n{ex.Message}", Backend.Enums.NotifyMessageType.Warn));
+                        _logService.LogError(_languageService.GetString("Domain.Front.BackgroundCreationFailed"), ex);
                     }
                     finally
                     {
@@ -130,16 +134,18 @@ namespace KWRP.Avalonia.Frontend.ViewModels.StartUpPage
                     try
                     {
                         _applicationStore.IsBusy.Value = true;
-                        var path = await _pathService.GetOpenFilePathAsync(Backend.Enums.FileType.DXF, "DXFファイルを選択してください");
+                        var path = await _pathService.GetOpenFilePathAsync(Backend.Enums.FileType.DXF, _languageService.GetString("Domain.Front.SelectDxfFile"));
                         if (path != null && SelectedOption.Value != null)
                         {
                             SelectedOption.Value.DxfFilePath = path;
-                            _logService.LogInfo($"dxfファイルを選択 : {path}");
+                            //_logService.LogInfo($"dxfファイルを選択 : {path}");
+                            _logService.LogInfo(String.Format(_languageService.GetString("Domain.Front.DxfFileSelected"), path));
+
                         }
                     }
                     catch (Exception e)
                     {
-                        _logService.LogError("dxfファイル選択時エラー : " + e.Message, e);
+                        _logService.LogError(_languageService.GetString("Domain.Front.DxfFileSelectionError") + e.Message, e);
                     }
                     finally
                     {
@@ -148,7 +154,7 @@ namespace KWRP.Avalonia.Frontend.ViewModels.StartUpPage
                 })
                 .AddTo(Disposables);
 
-            _logService.SetStatusMessage("背景設定UI : 背景画像を登録・選択することができます");
+            _logService.SetStatusMessage("Domain.Front.BackgroundSettingsUIDescription");
             _logService.LogDebug("init");
         }
 

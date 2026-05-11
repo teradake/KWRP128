@@ -7,6 +7,17 @@
 - **.NET 8.0**以上がインストールされたWindows 64bit環境での使用を想定しています。
 - Avalonia MVVMで実装しています
 
+## 言語切り替え
+
+- 英語に対応しました 2026/04~
+- TopPageの右上のボタンから言語切り替えが可能です。
+
+### デフォルト言語設定
+
+- KWRP.configファイルの`DefaultLanguage`キーの値を`ja`もしくは`en`に設定すると良いです
+- `DefaultLanguage`キーが見つからない場合はOSの言語依存になります（日本語なら`ja`、それ以外なら`en`）
+
+
 ## プロジェクト概要
 
 ![依存関係](./figs/kwrp_project_dependencies.png)

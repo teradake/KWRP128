@@ -5,6 +5,7 @@
     xmlns:controls="using:Avalonia.Notification.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:i18n="clr-namespace:KWRP.Frontend.Models.Localizer"
     xmlns:vm="using:KWRP.Avalonia.Frontend.ViewModels"
     Title="{Binding Title}"
     Width="1200"
@@ -27,25 +28,29 @@
                     Height="35"
                     Background="#1a1a1b"
                     PointerPressed="TitleBarPressed">
-                    <SelectableTextBlock
-                        Grid.Row="0"
-                        HorizontalAlignment="Center"
-                        Foreground="Red"
-                        IsVisible="{Binding IsDebugMode}"
-                        Text="###### DEBUG MODE ######"
-                        Theme="{StaticResource TitleTextBlockStyle}" />
-                    <TextBlock
-                        Margin="10,2"
-                        VerticalAlignment="Center"
-                        Foreground="LightGray"
-                        IsVisible="{Binding !IsDebugMode}"
-                        Text="{Binding Title}" />
+                    <StackPanel Orientation="Horizontal" Spacing="0">
+					    <TextBlock
+                            Margin="10,2"
+                            VerticalAlignment="Center"
+                            Foreground="LightGray"
+                            Text="{Binding Title, FallbackValue=Title here}" />	
+                        <SelectableTextBlock
+                            Grid.Row="0"
+                            HorizontalAlignment="Left"
+                            Foreground="Red"
+                            IsVisible="{Binding IsDebugMode}"
+                            Text="###### DEBUG MODE ######"
+                            Theme="{StaticResource SubtitleTextBlockStyle}" />
+                        
+                    </StackPanel>
+                    
                     <StackPanel
                         Margin="0,0,10,0"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center"
                         Orientation="Horizontal"
                         Spacing="4">
+
 
                         <Button
                             Margin="0"
@@ -109,6 +114,27 @@
                     </StackPanel>
                 </Grid>
             </Border>
+
+            <Border
+                Grid.Row="3"
+                Background="#1a1a1b"
+                IsEnabled="{Binding !IsBusy.Value}">
+                
+                <Grid>
+					
+                    <!--<StackPanel Orientation="Horizontal">
+                        <ToggleButton
+                            Margin="10,5"
+                            Content=" Toggle Language "
+                            Padding="5 3"
+                            Command="{Binding ToggleLanguageCommand}"
+                            CommandParameter="{Binding $self.IsChecked}"/>
+                    </StackPanel>-->
+
+                </Grid>
+
+            </Border>
+
         </Grid>
 
         <Border Grid.Column="0" VerticalAlignment="Bottom">

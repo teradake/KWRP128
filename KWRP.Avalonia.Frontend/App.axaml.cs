@@ -27,12 +27,16 @@ using KWRP.Avalonia.Backend.Constants;
 using KWRP.Avalonia.Frontend.Services.Dxf;
 using Avalonia.Interactivity;
 using System.Threading;
+using KWRP.Backend.Services;
+using KWRP.Frontend.Services;
+using KWRP.Backend.Enums;
 
 namespace KWRP.Avalonia.Frontend
 {
     public partial class App : Application
     {
         private readonly IServiceProvider _serviceProvider;
+        private readonly ILanguageService _languageService;
 
         public App()
         {
@@ -47,6 +51,7 @@ namespace KWRP.Avalonia.Frontend
                 builder.AddSerilog(dispose: true);
             });
             _serviceProvider = collection.BuildServiceProvider();
+            _languageService = _serviceProvider.GetRequiredService<ILanguageService>();
         }
 
         public override void Initialize()
@@ -73,7 +78,10 @@ namespace KWRP.Avalonia.Frontend
                 DisableAvaloniaDataAnnotationValidation();
 
                 // 起動時のログ
-                _serviceProvider.GetRequiredService<ILogService>().LogInfo($"#############__区割りシステムを起動します{(KWRPConfigs.IsDevMode ? "(開発者モード)" : "")}__#############");
+                _serviceProvider.GetRequiredService<ILanguageService>().LoadLanguage(KWRPConfigs.DefaultLanguage.ToKey());
+                _serviceProvider.GetRequiredService<ILogService>().LogInfo(
+                    $"#############__LAUNCH KWRP" +
+                    $"{(KWRPConfigs.IsDevMode ? $"(DevMode)" : "")}__#############");
 
                 // アプリケーションウィンドウを初期化
                 desktop.MainWindow = _serviceProvider.GetRequiredService<Window>();
@@ -119,8 +127,8 @@ namespace KWRP.Avalonia.Frontend
                 {
                     e.Cancel = true;
                     var messageBox = MessageBoxManager.GetMessageBoxStandard(
-                        title: "設定の保存",
-                        text: "重機設定値が変更されています。保存しますか?",
+                        title: _languageService.GetString("Domain.Front.Confirm"),
+                        text: _languageService.GetString("Domain.Front.MachineSettingsChanged"),
                         ButtonEnum.YesNoCancel,
                         Icon.Question);
 
@@ -170,13 +178,19 @@ namespace KWRP.Avalonia.Frontend
         private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             var exception = e.ExceptionObject as Exception;
-            var message = $"予期せぬエラーが発生しました。続けて発生する場合は開発者に報告してください。";
+            //var message = $"予期せぬエラーが発生しました。続けて発生する場合は開発者に報告してください。";
+            var message = _languageService.GetString("Domain.Front.UnexpectedError");
             if (exception != null) message += $"\n({exception.Message} @ {exception.TargetSite?.Name})";
 
+            //Log.Fatal(exception, $"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
+            //                     $"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.ff")}|システムに予期せぬエラーが発生しました cu\n" +
+            //                     $"続けて発生する場合は開発者に報告してください。\n" +
+            //                     $"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
             Log.Fatal(exception, $"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
-                                 $"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.ff")}|システムに予期せぬエラーが発生しました cu\n" +
-                                 $"続けて発生する場合は開発者に報告してください。\n" +
-                                 $"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+                         $"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.ff")}|{_languageService.GetString("Domain.Front.SystemUnexpectedError")}_tu\n" +
+                         $"{_languageService.GetString("Domain.Front.ReportIfReoccurs")}\n" +
+                         $"{message}\n" +
+                         $"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 
             Environment.Exit(1);
         }
@@ -186,7 +200,7 @@ namespace KWRP.Avalonia.Frontend
             var exception = e.Exception.InnerException as Exception;
             if (exception != null)
             {
-                ConfirmUnhandledException(exception, "バックグラウンドタスク")
+                ConfirmUnhandledException(exception, _languageService.GetString("Domain.Front.BackgroundTask"))
                     .ContinueWith(task =>
                     {
                         if (task.Result)
@@ -207,18 +221,20 @@ namespace KWRP.Avalonia.Frontend
 
         async Task<bool> ConfirmUnhandledException(Exception e, string sourceName)
         {
-            var message = $"予期せぬエラーが発生しました。続けて発生する場合は開発者に報告してください。\nプログラムの実行を継続しますか？";
+            //var message = $"予期せぬエラーが発生しました。続けて発生する場合は開発者に報告してください。\nプログラムの実行を継続しますか？";
+            var message = $"{_languageService.GetString("Domain.Front.UnexpectedErrorContinue")}";
             if (e != null) message += $"\n({e.Message} @ {e.TargetSite?.Name})";
 
             Log.Fatal(e, $"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
-                         $"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.ff")}|システムに予期せぬエラーが発生しました tu\n" +
-                         $"続けて発生する場合は開発者に報告してください。\n" +
+                         $"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.ff")}|{_languageService.GetString("Domain.Front.SystemUnexpectedError")}_tu\n" +
+                         $"{_languageService.GetString("Domain.Front.ReportIfReoccurs")}\n" +
                          $"{message}\n" +
                          $"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 
             var messageBox = MessageBoxManager
                 .GetMessageBoxStandard(
-                    $"未処理例外 ({sourceName})",
+                    //$"未処理例外 ({sourceName})",
+                    string.Format(_languageService.GetString("Domain.Front.UnhandledException"), sourceName),
                     message,
                     MsBox.Avalonia.Enums.ButtonEnum.YesNo);
 
@@ -274,6 +290,7 @@ namespace KWRP.Avalonia.Frontend
             services.AddSingleton<IKWRPApplicationService, KWRPApplicationService>();
             services.AddSingleton<DxfConvertService>();
             services.AddSingleton<DxfHistoryStorageService>();
+            services.AddSingleton<ILanguageService, LanguageService>();
 
             // stores
             services.AddSingleton<NavigationStore>();

@@ -10,6 +10,7 @@
     Width="600"
     MinWidth="450"
     HorizontalAlignment="Left"
+    xmlns:i18n="clr-namespace:KWRP.Frontend.Models.Localizer"
 	Focusable="True"
     x:CompileBindings="True"
     x:DataType="vm:MachinePageViewModel"
@@ -69,12 +70,12 @@
                     HorizontalAlignment="Center"
                     FontSize="24"
                     FontWeight="Bold"
-                    Text="ローラ設定" />
+                    Text="{i18n:Localize RollerPage.Setting}" />
 
                 <ToggleSwitch
                     Name="editmode"
                     Grid.Column="1"
-                    Content="編集モード"
+                    Content="{i18n:Localize RollerPage.EditMode}"
                     OffContent="OFF"
                     OnContent="ON">
                     <ToggleSwitch.IsVisible>
@@ -93,7 +94,7 @@
                         Margin="0,10"
                         VerticalAlignment="Center"
                         Spacing="2">
-                        <TextBlock Classes="title" Text="{Binding MachineName, FallbackValue=fv重機名称}" />
+                        <TextBlock Classes="title" Text="{Binding MachineName, FallbackValue=重機名称がここに入る}" />
                         <TextBlock Classes="description" Text="{Binding Description, FallbackValue=description}" />
                     </StackPanel>
                 </Expander.Header>
@@ -105,7 +106,7 @@
                             Grid.Column="0"
                             VerticalAlignment="Center"
                             Spacing="2">
-                            <TextBlock Classes="header" Text="ローラ種別" />
+                            <TextBlock Classes="header" Text="{i18n:Localize RollerPage.RollerType}" />
                         </StackPanel>
                         <TextBlock
                             Grid.Column="1"
@@ -128,8 +129,8 @@
                     <!--  設定ファイルパス  -->
                     <Grid Margin="0,4" ColumnDefinitions="*, Auto">
                         <StackPanel Grid.Column="0" Spacing="2">
-                            <TextBlock Classes="header" Text="設定ファイルパス" />
-                            <SelectableTextBlock Classes="description" Text="{Binding FilePath, FallbackValue=fvPath}" />
+                            <TextBlock Classes="header" Text="{i18n:Localize RollerPage.ConfigFilePath}" />
+                            <SelectableTextBlock Classes="description" Text="{Binding FilePath, FallbackValue=ここに設定ファイルのパスが入る}" />
                         </StackPanel>
                     </Grid>
 
@@ -138,7 +139,7 @@
 
             <Expander IsExpanded="True">
                 <Expander.Header>
-                    <TextBlock Classes="title" Text="車体の寸法情報" />
+                    <TextBlock Classes="title" Text="{i18n:Localize RollerPage.Dimensions}" />
                 </Expander.Header>
                 <StackPanel>
 
@@ -147,7 +148,7 @@
                             Grid.Column="0"
                             VerticalAlignment="Center"
                             Spacing="2">
-                            <TextBlock Classes="header" Text="ホイールベース (m)" />
+                            <TextBlock Classes="header" Text="{i18n:Localize RollerPage.Wheelbase}" />
                         </StackPanel>
                         <NumericUpDown
                             Grid.Column="1"
@@ -160,7 +161,7 @@
                             Grid.Column="0"
                             VerticalAlignment="Center"
                             Spacing="2">
-                            <TextBlock Classes="header" Text="鉄倫幅 (m)" />
+                            <TextBlock Classes="header" Text="{i18n:Localize RollerPage.LaneWidth}" />
                         </StackPanel>
                         <NumericUpDown
                             Grid.Column="1"
@@ -173,7 +174,7 @@
                             Grid.Column="0"
                             VerticalAlignment="Center"
                             Spacing="2">
-                            <TextBlock Classes="header" Text="フロントオーバーハング (m)" />
+                            <TextBlock Classes="header" Text="{i18n:Localize RollerPage.FrontOverhang}" />
                         </StackPanel>
                         <NumericUpDown
                             Grid.Column="1"
@@ -186,7 +187,7 @@
                             Grid.Column="0"
                             VerticalAlignment="Center"
                             Spacing="2">
-                            <TextBlock Classes="header" Text="リアオーバーハング (m)" />
+                            <TextBlock Classes="header" Text="{i18n:Localize RollerPage.RearOverhang}" />
                         </StackPanel>
                         <NumericUpDown
                             Grid.Column="1"
@@ -202,7 +203,7 @@
 
             <Expander IsExpanded="True">
                 <Expander.Header>
-                    <TextBlock Classes="title" Text="計画パラメータ" />
+                    <TextBlock Classes="title" Text="{i18n:Localize RollerPage.PlanParameters}" />
                 </Expander.Header>
                 <StackPanel>
 
@@ -211,7 +212,7 @@
                             Grid.Column="0"
                             VerticalAlignment="Center"
                             Spacing="2">
-                            <TextBlock Classes="header" Text="前後方向マージン (m)" />
+                            <TextBlock Classes="header" Text="{i18n:Localize RollerPage.FrontRearMargin}" />
                         </StackPanel>
                         <NumericUpDown
                             Grid.Column="1"
@@ -224,7 +225,7 @@
                             Grid.Column="0"
                             VerticalAlignment="Center"
                             Spacing="2">
-                            <TextBlock Classes="header" Text="左右方向マージン (m)" />
+                            <TextBlock Classes="header" Text="{i18n:Localize RollerPage.LeftRightMargin}" />
                         </StackPanel>
                         <NumericUpDown
                             Grid.Column="1"
@@ -237,7 +238,7 @@
                             Grid.Column="0"
                             VerticalAlignment="Center"
                             Spacing="2">
-                            <TextBlock Classes="header" Text="レーンラップ幅 (m)" />
+                            <TextBlock Classes="header" Text="{i18n:Localize RollerPage.LapWidth}" />
                         </StackPanel>
                         <NumericUpDown
                             Grid.Column="1"
@@ -250,7 +251,7 @@
                             Grid.Column="0"
                             VerticalAlignment="Center"
                             Spacing="2">
-                            <TextBlock Classes="header" Text="作業可能長さ (m)" />
+                            <TextBlock Classes="header" Text="{i18n:Localize RollerPage.WorkableLength}" />
                         </StackPanel>
                         <NumericUpDown
                             Grid.Column="1"
@@ -263,7 +264,7 @@
                             Grid.Column="0"
                             VerticalAlignment="Center"
                             Spacing="2">
-                            <TextBlock Classes="header" Text="前方　端部余裕代 (m)" />
+                            <TextBlock Classes="header" Text="{i18n:Localize RollerPage.FrontEdgeAllowance}" />
                         </StackPanel>
                         <NumericUpDown
                             Grid.Column="1"
@@ -276,7 +277,7 @@
                             Grid.Column="0"
                             VerticalAlignment="Center"
                             Spacing="2">
-                            <TextBlock Classes="header" Text="後方　端部余裕代 (m)" />
+                            <TextBlock Classes="header" Text="{i18n:Localize RollerPage.RearEdgeAllowance}" />
                         </StackPanel>
                         <NumericUpDown
                             Grid.Column="1"
@@ -289,7 +290,7 @@
                             Grid.Column="0"
                             VerticalAlignment="Center"
                             Spacing="2">
-                            <TextBlock Classes="header" Text="転圧エリアラップ調整値 (m)" />
+                            <TextBlock Classes="header" Text="{i18n:Localize RollerPage.AreaWrapAdjustment}" />
                         </StackPanel>
                         <NumericUpDown
                             Grid.Column="1"
@@ -308,8 +309,8 @@
                         Margin="0,10"
                         VerticalAlignment="Center"
                         Spacing="2">
-                        <TextBlock Classes="title" Text="占有エリア余裕代" />
-                        <TextBlock Classes="description" Text="作業エリアに対して占有エリアをどれだけ拡幅するかの情報。計画パラメータから自動計算されます" />
+                        <TextBlock Classes="title" Text="{i18n:Localize RollerPage.OccAreaAllowance}" />
+                        <TextBlock Classes="description" Text="{i18n:Localize RollerPage.OccAreaDescription}" />
                     </StackPanel>
                 </Expander.Header>
                 <StackPanel>
@@ -319,8 +320,8 @@
                             Grid.Column="0"
                             VerticalAlignment="Center"
                             Spacing="2">
-                            <TextBlock Classes="header" Text="前方余裕代 (m)" />
-                            <TextBlock Classes="description" Text="{Binding FrontAllowanceDescription, FallbackValue=fvPath}" />
+                            <TextBlock Classes="header" Text="{i18n:Localize RollerPage.OccAreaFrontAllowance}" />
+                            <TextBlock Classes="description" Text="{Binding FrontAllowanceDescription, FallbackValue=ここに前方余裕代の説明が入る}" />
                         </StackPanel>
                         <NumericUpDown
                             Grid.Column="1"
@@ -334,8 +335,8 @@
                             Grid.Column="0"
                             VerticalAlignment="Center"
                             Spacing="2">
-                            <TextBlock Classes="header" Text="後方余裕代 (m)" />
-                            <TextBlock Classes="description" Text="{Binding RearAllowanceDescription, FallbackValue=fvPath}" />
+                            <TextBlock Classes="header" Text="{i18n:Localize RollerPage.OccAreaRearAllowance}" />
+                            <TextBlock Classes="description" Text="{Binding RearAllowanceDescription, FallbackValue=ここに後方余裕代の説明が入る}" />
                         </StackPanel>
                         <NumericUpDown
                             Grid.Column="1"
@@ -349,8 +350,8 @@
                             Grid.Column="0"
                             VerticalAlignment="Center"
                             Spacing="2">
-                            <TextBlock Classes="header" Text="左右余裕代 (m)" />
-                            <TextBlock Classes="description" Text="{Binding LeftRightAllowanceDescription, FallbackValue=fvPath}" />
+                            <TextBlock Classes="header" Text="{i18n:Localize RollerPage.OccAreaLeftRightAllowance}" />
+                            <TextBlock Classes="description" Text="{Binding LeftRightAllowanceDescription, FallbackValue=ここに左右余裕代の説明が入る}" />
                         </StackPanel>
                         <NumericUpDown
                             Grid.Column="1"
@@ -371,8 +372,8 @@
                         Margin="0,10"
                         VerticalAlignment="Center"
                         Spacing="2">
-                        <TextBlock Classes="title" Text="初期配置用 占有エリア拡幅幅" />
-                        <TextBlock Classes="description" Text="最初の移動アクティビティの占有エリアをどれだけ拡幅するかの情報" />
+                        <TextBlock Classes="title" Text="{i18n:Localize RollerPage.InitialSetupAllowance}" />
+                        <TextBlock Classes="description" Text="{i18n:Localize RollerPage.InitialSetupDescription}" />
                     </StackPanel>
                 </Expander.Header>
                 <StackPanel>
@@ -382,7 +383,7 @@
                             Grid.Column="0"
                             VerticalAlignment="Center"
                             Spacing="2">
-                            <TextBlock Classes="header" Text="前方 (m)" />
+                            <TextBlock Classes="header" Text="{i18n:Localize RollerPage.InitialFrontAllowance}" />
                         </StackPanel>
                         <NumericUpDown
                             Grid.Column="1"
@@ -395,7 +396,7 @@
                             Grid.Column="0"
                             VerticalAlignment="Center"
                             Spacing="2">
-                            <TextBlock Classes="header" Text="後方 (m)" />
+                            <TextBlock Classes="header" Text="{i18n:Localize RollerPage.InitialRearAllowance}" />
                         </StackPanel>
                         <NumericUpDown
                             Grid.Column="1"
@@ -408,7 +409,7 @@
                             Grid.Column="0"
                             VerticalAlignment="Center"
                             Spacing="2">
-                            <TextBlock Classes="header" Text="進捗方向側 (m)" />
+                            <TextBlock Classes="header" Text="{i18n:Localize RollerPage.InitialNextAllowance}" />
                         </StackPanel>
                         <NumericUpDown
                             Grid.Column="1"
@@ -421,7 +422,7 @@
                             Grid.Column="0"
                             VerticalAlignment="Center"
                             Spacing="2">
-                            <TextBlock Classes="header" Text="進捗方向反対側 (m)" />
+                            <TextBlock Classes="header" Text="{i18n:Localize RollerPage.InitialPrevAllowance}" />
                         </StackPanel>
                         <NumericUpDown
                             Grid.Column="1"

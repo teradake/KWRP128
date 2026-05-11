@@ -58,8 +58,8 @@ namespace KWRP.Infra.CSV
 
                 if (passedLineNumbers.Count > 0)
                 {
-                    _logService?.LogWarn($"ファイル「{filePath}」読み込み時に、以下の行の読込みができませんでした。1, 2列目に数値が格納されていない可能性があります。\n" +
-                        $"{string.Join(", ", passedLineNumbers.Take(C_MAX_REPORT_LINE_LENGTH).Select(s => $"{s}行目"))}" +
+                    _logService?.LogWarn($"ファイル「{filePath}」読み込み時に、以下の行の読込みができませんでした。フォーマットが正しいか確認してください\n" +
+                        $"{string.Join(", ", passedLineNumbers.Take(C_MAX_REPORT_LINE_LENGTH).Select(s => $"row {s}"))}" +
                         (passedLineNumbers.Count > C_MAX_REPORT_LINE_LENGTH ? $"..." : ""));
                     _notificationService?.Notify(KWRPNotification.Create(
                         "CSVファイルの一部の行が読込めませんでした。ログを確認してください。", Avalonia.Backend.Enums.NotifyMessageType.Warn, 10));

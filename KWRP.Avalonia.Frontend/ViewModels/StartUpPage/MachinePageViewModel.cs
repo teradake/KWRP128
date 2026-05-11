@@ -2,8 +2,10 @@
 using KWRP.Avalonia.Backend.Models.Roller;
 using KWRP.Avalonia.Backend.Services;
 using KWRP.Avalonia.Frontend.Models.Stores;
+using KWRP.Backend.Services;
 using R3;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace KWRP.Avalonia.Frontend.ViewModels.StartUpPage
 {
@@ -13,30 +15,60 @@ namespace KWRP.Avalonia.Frontend.ViewModels.StartUpPage
         private readonly ILogService _logService;
         private readonly MachineStore _machineStore;
         private readonly ParameterStore _parameterStore;
+        private readonly ILanguageService _languageService;
 
         private bool updated = false;
-        private readonly List<RollerWheelType> _wheelTypes;
-        public List<RollerWheelType> WheelTypes => _wheelTypes;
+        //private readonly List<RollerWheelType> _wheelTypes;
+        //public List<RollerWheelType> WheelTypes => _wheelTypes;
+
+
+        private ObservableCollection<RollerWheelType> _wheelTypes = [RollerWheelType.Single, RollerWheelType.Tandem];
+        public ObservableCollection<RollerWheelType> WheelTypes
+        {
+            get => _wheelTypes;
+            private set
+            {
+                _wheelTypes = value;
+                OnPropertyChanged(nameof(WheelTypes));
+            }
+        }
+
 
 
         public MachinePageViewModel(
             INotificationService notificationService,
             ILogService logService,
             MachineStore machineStore,
-            ParameterStore parameterStore)
+            ParameterStore parameterStore,
+            ILanguageService languageService)
         {
             _notificationService = notificationService;
             _logService = logService;
             _machineStore = machineStore;
             _parameterStore = parameterStore;
+            _languageService = languageService;
 
-            _wheelTypes = [RollerWheelType.Single, RollerWheelType.Tandem];
-
-            _logService.SetStatusMessage("重機情報 : 振動ローラーの寸法や自動化作業領域等に関するパラメータが参照できます");
+            _logService.SetStatusMessage("Domain.Front.MachineInfoDescription");
             _logService.LogDebug("init");
+
+            Observable.FromEvent(
+                h => _languageService.LanguageChanged += h,
+                h => _languageService.LanguageChanged -= h)
+                .Subscribe(_ =>
+                {
+                    // 言語切り替え時にUI表示を更新
+                    WheelTypes = [RollerWheelType.Single, RollerWheelType.Tandem];
+                    OnPropertyChanged(nameof(Type));
+                    OnPropertyChanged(nameof(FrontAllowanceDescription));
+                    OnPropertyChanged(nameof(RearAllowanceDescription));
+                    OnPropertyChanged(nameof(LeftRightAllowanceDescription));
+                    OnPropertyChanged(nameof(WheelType));
+                })
+                .AddTo(Disposables);
 
             this.PropertyChanged += OnMachinePageViewModelPropertyChanged;
         }
+
 
         private void OnMachinePageViewModelPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
@@ -61,7 +93,7 @@ namespace KWRP.Avalonia.Frontend.ViewModels.StartUpPage
         public virtual string FilePath => _machineStore.MachineConfigPath;
 
         public bool IsTandem => VR.MachineInfo.RollerWheelType == RollerWheelType.Tandem;
-        public string WheelType => IsTandem ? "両鉄輪" : "片鉄輪";
+        public string WheelType => IsTandem ? _languageService.GetString("Domain.Front.TandemWheel") : _languageService.GetString("Domain.Front.SingleWheel");
 
         public RollerWheelType Type
         {
@@ -244,9 +276,9 @@ namespace KWRP.Avalonia.Frontend.ViewModels.StartUpPage
         public double RearAllowance => VR.RearAllowance;
         public double LeftRightAllowance => VR.LeftRightAllowance;
 
-        public string FrontAllowanceDescription => " = 前後マージン + フロントオーバーハング";
-        public string RearAllowanceDescription => " = 前後マージン + リアオーバーハング" +
-            (IsTandem ? "" : " + ホイールベース");
-        public string LeftRightAllowanceDescription => " = 左右マージン";
+        public string FrontAllowanceDescription => _languageService.GetString("Domain.Front.FrontMarginOverhang");
+        public string RearAllowanceDescription => _languageService.GetString("Domain.Front.RearMarginOverhang") +
+            (IsTandem ? "" : _languageService.GetString("Domain.Front.PlusWheelBase"));
+        public string LeftRightAllowanceDescription => _languageService.GetString("Domain.Front.LeftRightMargin");
     }
 }

@@ -5,6 +5,7 @@ using KWRP.Avalonia.Backend.Models.Roller;
 using KWRP.Avalonia.Backend.Services;
 using KWRP.Avalonia.Frontend.Models.Stores;
 using KWRP.Avalonia.Frontend.Services;
+using KWRP.Backend.Services;
 using ObservableCollections;
 using R3;
 using System;
@@ -25,6 +26,7 @@ namespace KWRP.Avalonia.Frontend.ViewModels.EditorPage
         private readonly IActivityService _activityService;
         private readonly IPathService _pathService;
         private readonly ApplicationStore _applicationStore;
+        private readonly ILanguageService _languageService;
 
         public RollerModel Roller => _machineStore.CurrentRoller;
 
@@ -37,7 +39,8 @@ namespace KWRP.Avalonia.Frontend.ViewModels.EditorPage
             MachineStore machineStore,
             IActivityService activityService,
             IPathService pathService,
-            ApplicationStore applicationStore)
+            ApplicationStore applicationStore,
+            ILanguageService languageService)
         {
             _logService = logService;
             _navigationService = navigationService;
@@ -47,6 +50,7 @@ namespace KWRP.Avalonia.Frontend.ViewModels.EditorPage
             _pathService = pathService;
             _machineStore = machineStore;
             _applicationStore = applicationStore;
+            _languageService = languageService;
 
             // init property
             {
@@ -109,7 +113,7 @@ namespace KWRP.Avalonia.Frontend.ViewModels.EditorPage
                     .AddTo(Disposables);
 
                 GroupIds = _groupIds
-                    .CreateView(i => new GroupItem(i, $"Group {i+1}"))
+                    .CreateView(i => new GroupItem(i, $"Group {i + 1}"))
                     .ToNotifyCollectionChanged(SynchronizationContextCollectionEventDispatcher.Current)
                     .AddTo(Disposables);
                 SelectedGroupIndex = new BindableReactiveProperty<int?>(null).AddTo(Disposables);
@@ -229,14 +233,15 @@ namespace KWRP.Avalonia.Frontend.ViewModels.EditorPage
                         {
                             _applicationStore.IsBusy.Value = true;
 
-                            await Task.Run(() =>  _activityService.CreateActivityGroups());
+                            await Task.Run(() => _activityService.CreateActivityGroups());
 
                             if (_activityStore.ActivityGroups.Count > 0)
                             {
                                 SelectedGroupIndex.Value = 0;
                             }
 
-                            _notificationService.Notify(KWRPNotification.Create("アクティビティを生成しました", Backend.Enums.NotifyMessageType.Info, 5));
+                            //_notificationService.Notify(KWRPNotification.Create("アクティビティを生成しました", Backend.Enums.NotifyMessageType.Info, 5));
+                            _notificationService.Notify(KWRPNotification.Create(_languageService.GetString("Domain.Front.ActivityGenerated"), Backend.Enums.NotifyMessageType.Info, 5));
 
                             var allAcivities = _activityStore.ActivityGroups.SelectMany(act => act);
                             var moves = allAcivities.Where(act => act.ActivityType == Backend.Enums.RollerActivityType.Move).Count();
@@ -247,8 +252,8 @@ namespace KWRP.Avalonia.Frontend.ViewModels.EditorPage
                         }
                         catch (Exception ex)
                         {
-                            _logService.LogError("アクティビティの生成に失敗しました", ex);
-                            _notificationService.Notify(KWRPNotification.Create("アクティビティの生成に失敗しました", Backend.Enums.NotifyMessageType.Warn, 5));
+                            _logService.LogError(_languageService.GetString("Domain.Front.ActivityGenerationFailed"), ex);
+                            _notificationService.Notify(KWRPNotification.Create(_languageService.GetString("Domain.Front.ActivityGenerationFailed"), Backend.Enums.NotifyMessageType.Warn, 5));
                         }
                         finally
                         {
@@ -265,13 +270,14 @@ namespace KWRP.Avalonia.Frontend.ViewModels.EditorPage
                     {
                         try
                         {
-                            _applicationStore.IsBusy.Value = true; 
+                            _applicationStore.IsBusy.Value = true;
                             await _activityService.OutputActivitiesAsync();
 
-                            _logService.LogInfo($"アクティビティを保存しました: {Path.Combine(OutputFolderPath.Value!, OutputFolderPrefix.Value)}");
+                            //_logService.LogInfo($"アクティビティを保存しました: {Path.Combine(OutputFolderPath.Value!, OutputFolderPrefix.Value)}");
+                            _logService.LogInfo(string.Format(_languageService.GetString("Domain.Front.ActivitySaved"), Path.Combine(OutputFolderPath.Value!, OutputFolderPrefix.Value)));
                             _notificationService.Notify(
-                                KWRPNotification.Create("アクティビティを出力しました", Backend.Enums.NotifyMessageType.Info, 10)
-                                    .WithCommand(header: "フォルダを開く",
+                                KWRPNotification.Create(_languageService.GetString("Domain.Front.ActivityOutput"), Backend.Enums.NotifyMessageType.Info, 10)
+                                    .WithCommand(header: _languageService.GetString("Domain.Front.OpenFolder"),
                                                  command: () =>
                                                  {
                                                      if (!string.IsNullOrWhiteSpace(OutputFolderPath.Value))
@@ -284,15 +290,15 @@ namespace KWRP.Avalonia.Frontend.ViewModels.EditorPage
                                                          {
                                                              _logService.LogError("フォルダのオープンに失敗しました", ex);
                                                              _notificationService.Notify(
-                                                                 KWRPNotification.Create("フォルダを開けませんでした", NotifyMessageType.Warn, 5));
+                                                                 KWRPNotification.Create(_languageService.GetString("Domain.Front.CannotOpenFolder"), NotifyMessageType.Warn, 5));
                                                          }
                                                      }
                                                  }));
                         }
                         catch (Exception ex)
                         {
-                            _logService.LogError("アクティビティの出力に失敗しました", ex);
-                            _notificationService.Notify(KWRPNotification.Create("アクティビティの出力に失敗しました\n" + ex.Message, Backend.Enums.NotifyMessageType.Warn));
+                            _logService.LogError(_languageService.GetString("Domain.Front.ActivityOutputFailed"), ex);
+                            _notificationService.Notify(KWRPNotification.Create(_languageService.GetString("Domain.Front.ActivityOutputFailed") + "\n" + ex.Message, Backend.Enums.NotifyMessageType.Warn));
                         }
                         finally
                         {
@@ -322,7 +328,7 @@ namespace KWRP.Avalonia.Frontend.ViewModels.EditorPage
             }
 
             _logService.LogDebug("init");
-            _logService.SetStatusMessage("アクティビティ設定UI : アクティビティの設定（レーン間移動、無起振、起振）、保存先を設定します。");
+            _logService.SetStatusMessage("Domain.Front.ActivitySettingsUIDescription");
             
         }
 

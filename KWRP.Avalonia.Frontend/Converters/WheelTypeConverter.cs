@@ -2,6 +2,7 @@
 using Avalonia.Media;
 using KWRP.Avalonia.Backend.Enums;
 using KWRP.Avalonia.Backend.Model;
+using KWRP.Frontend.Models.Localizer;
 using System;
 using System.Globalization;
 
@@ -15,13 +16,13 @@ namespace KWRP.Avalonia.Frontend.Converters
             {
                 return type switch
                 {
-                    RollerWheelType.Single => "片鉄輪",
-                    RollerWheelType.Tandem => "両鉄輪",
-                    _ => Brushes.White
+                    RollerWheelType.Single => Localizer.Instance["Domain.Front.SingleWheel"],
+                    RollerWheelType.Tandem => Localizer.Instance["Domain.Front.TandemWheel"],
+                    _ => "Undefined"
                 };
             }
 
-            return Brushes.White;
+            return "Undefined";
         }
 
         public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
