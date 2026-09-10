@@ -159,6 +159,7 @@ namespace KWRP.Avalonia.Frontend.Models.Stores
         public void PublishParameterFileLoaded() => _subject.OnNext(Unit.Default);
 
 
-        public LengthUnitType CurrentLengthUnitType { get; set; } = LengthUnitType.Meter;
+        //public LengthUnitType CurrentLengthUnitType { get; set; } = LengthUnitType.Meter;
+        public ReactiveProperty<LengthUnitType> CurrentLengthUnitType { get; } = new(LengthUnitType.Meter);
     }
 }

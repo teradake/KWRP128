@@ -25,6 +25,7 @@ namespace KWRP.Avalonia.Frontend.ViewModels.StartUpPage
         private readonly MachineStore _machineStore;
         private readonly DxfStore _dxfStore;
         private readonly ILanguageService _languageService;
+        private readonly ParameterStore _parameterStore;
 
         public ReactiveCommand NextCommand { get; }
         //public ReactiveCommand<FileType> LoadCommand { get; }   // ダイアログを開いてファイルを選択
@@ -36,13 +37,14 @@ namespace KWRP.Avalonia.Frontend.ViewModels.StartUpPage
         public string RollerName => _machineStore.CurrentRoller.MachineName;
         public IReadOnlyBindableReactiveProperty<string> FilePath { get; }
         public IReadOnlyBindableReactiveProperty<string> DxfTitleName { get; }
+        public IReadOnlyBindableReactiveProperty<string> LengthUnit { get; }
         public BindableReactiveProperty<bool> IsDxfExist { get; }
         
         // 日本語/英語のみ対応予定なので言語切り替えまわりはboolで管理する方針
         public BindableReactiveProperty<bool> IsCurrentLangJa { get; }
         public IReadOnlyBindableReactiveProperty<string> CurrentLangLabel { get; }
         public ReactiveCommand<bool> ToggleLanguageComamnd { get; }
-        
+
 
         public TopPageViewModel(
             INavigationService navigationService,
@@ -52,7 +54,8 @@ namespace KWRP.Avalonia.Frontend.ViewModels.StartUpPage
             ApplicationStore applicationStore,
             MachineStore machineStore,
             DxfStore dxfStore,
-            ILanguageService languageService)
+            ILanguageService languageService,
+            ParameterStore parameterStore)
         {
             _navigationService = navigationService;
             _notificationService = notificationService;
@@ -62,6 +65,7 @@ namespace KWRP.Avalonia.Frontend.ViewModels.StartUpPage
             _machineStore = machineStore;
             _dxfStore = dxfStore;
             _languageService = languageService;
+            _parameterStore = parameterStore;
 
 
             IsCurrentLangJa = new BindableReactiveProperty<bool>(_languageService.CurrentLanguage.Trim().ToLower() == "ja")
@@ -86,6 +90,12 @@ namespace KWRP.Avalonia.Frontend.ViewModels.StartUpPage
             FilePath = _applicationStore
                 .SpatialDataPath
                 .ToReadOnlyBindableReactiveProperty(_applicationStore.SpatialDataPath.Value)
+                .AddTo(Disposables);
+
+            LengthUnit = _parameterStore
+                .CurrentLengthUnitType
+                .Select(typ => typ == LengthUnitType.Meter ? "[m]" : "[mm]")
+                .ToReadOnlyBindableReactiveProperty(_parameterStore.CurrentLengthUnitType.Value == LengthUnitType.Meter ? "[m]" : "[mm]")
                 .AddTo(Disposables);
 
             IsDxfExist = _dxfStore

@@ -86,7 +86,7 @@ namespace KWRP.Avalonia.Frontend.Services
             await LoadFileAsync(filePath, fileType, lengthUnitType);
 
             _applicationStore.SpatialDataPath.Value = filePath;
-            _parameterStore.CurrentLengthUnitType = lengthUnitType;
+            _parameterStore.CurrentLengthUnitType.Value = lengthUnitType;
         }
 
 
@@ -103,7 +103,7 @@ namespace KWRP.Avalonia.Frontend.Services
             await LoadFileAsync(filePath, fileType, LengthUnitType.Meter);
 
             _applicationStore.SpatialDataPath.Value = filePath;
-            _parameterStore.CurrentLengthUnitType = LengthUnitType.Meter;
+            _parameterStore.CurrentLengthUnitType.Value = LengthUnitType.Meter;
         }
 
         async Task LoadFileAsync(string filePath, FileType fileType, LengthUnitType lengthUnitType)

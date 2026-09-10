@@ -194,6 +194,13 @@
                 </Button>
             </StackPanel>
 
+            <!--現在の長さの単位をここで表示する-->
+            <TextBlock VerticalAlignment="Center">
+                <Run Text="{i18n:Localize TopPage.LengthUnitLabel}"/>
+                <Run Text=" : "/>
+                <Run Text="{Binding LengthUnit.Value, FallbackValue=メートル}"/>
+            </TextBlock>
+
         </StackPanel>
 
 

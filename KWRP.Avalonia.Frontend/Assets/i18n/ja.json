@@ -304,6 +304,7 @@
   "TopPage.CsvUnitNoteMiliMeter": "長さの単位: [mm]",
   "TopPage.OpenFile": "転圧領域ファイルを選択",
   "TopPage.RollerLabel": "振動ローラ",
+  "TopPage.LengthUnitLabel": "長さの単位",
   "TopPage.SelectXml": "座標取得システムで作成したXMLを選択してください",
   "TopPage.SelectXmlByMeter": "座標取得システムで作成したXMLを選択してください\\n長さの単位: [m]",
   "TopPage.SelectXmlByMiliMeter": "座標取得システムで作成したXMLを選択してください\\n長さの単位: [mm]",
