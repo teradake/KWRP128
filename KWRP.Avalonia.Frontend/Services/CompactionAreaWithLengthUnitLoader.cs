@@ -23,7 +23,7 @@ namespace KWRP.Avalonia.Frontend.Services
     /// ファイルから転圧領域に関する情報を取得し、メモリに保存するためのサービス。
     /// 情報はStoreに格納する
     /// </summary>
-    public class CompactionAreaLoader : IDataLoader
+    public class CompactionAreaWithLengthUnitLoader : IDataLoader
     {
         private readonly IPathService _pathService;
         private readonly ILogService _logService;
@@ -34,10 +34,10 @@ namespace KWRP.Avalonia.Frontend.Services
         private readonly ApplicationStore _applicationStore;
         private readonly ILanguageService _languageService;
 
-        private readonly Dictionary<FileType, Func<string, Task>> _strategies;
+        private readonly Dictionary<FileType, Func<string, LengthUnitType, Task>> _strategies;
 
 
-        public CompactionAreaLoader(
+        public CompactionAreaWithLengthUnitLoader(
             IPathService pathService,
             ILogService logService,
             CanvasItemStore itemStore,
@@ -55,7 +55,7 @@ namespace KWRP.Avalonia.Frontend.Services
             _canvasService = canvasService;
             _applicationStore = applicationStore;
 
-            _strategies = new Dictionary<FileType, Func<string, Task>>()
+            _strategies = new Dictionary<FileType, Func<string, LengthUnitType, Task>>()
             {
                 { FileType.XML, LoadXmlDataAsync },
                 { FileType.CSV, LoadCsvDataAsync },
@@ -65,8 +65,8 @@ namespace KWRP.Avalonia.Frontend.Services
             _languageService = languageService;
         }
 
-
-        public async Task ExecuteLoadFromDialogAsync(FileType fileType)
+        public async Task ExecuteLoadFromDialogAsync(FileType fileType) => await ExecuteLoadFromDialogAsync(fileType, LengthUnitType.Meter);
+        public async Task ExecuteLoadFromDialogAsync(FileType fileType, LengthUnitType lengthUnitType)
         {
             if (!_strategies.ContainsKey(fileType))
             {
@@ -83,10 +83,12 @@ namespace KWRP.Avalonia.Frontend.Services
                 return;
             }
 
-            await LoadFileAsync(filePath, fileType);
+            await LoadFileAsync(filePath, fileType, lengthUnitType);
 
             _applicationStore.SpatialDataPath.Value = filePath;
+            _parameterStore.CurrentLengthUnitType = lengthUnitType;
         }
+
 
         public async Task ExecuteLoadFromFileAsync(string filePath)
         {
@@ -98,12 +100,13 @@ namespace KWRP.Avalonia.Frontend.Services
                 _ => throw new ArgumentException(_languageService.GetString("Domain.Front.FileNotSupported")),
             };
 
-            await LoadFileAsync(filePath, fileType);
+            await LoadFileAsync(filePath, fileType, LengthUnitType.Meter);
 
             _applicationStore.SpatialDataPath.Value = filePath;
+            _parameterStore.CurrentLengthUnitType = LengthUnitType.Meter;
         }
 
-        async Task LoadFileAsync(string filePath, FileType fileType)
+        async Task LoadFileAsync(string filePath, FileType fileType, LengthUnitType lengthUnitType)
         {
             if (!File.Exists(filePath))
             {
@@ -116,7 +119,7 @@ namespace KWRP.Avalonia.Frontend.Services
                 { }
 
                 _logService.LogDebug(String.Format(_languageService.GetString("Domain.Front.SelectedAreaFile"), filePath));
-                await _strategies[fileType](filePath);
+                await _strategies[fileType](filePath, lengthUnitType);
                 _logService.LogDebug(String.Format(_languageService.GetString("Domain.Front.AreaFileLoadComplete"), filePath));
             }
             catch (IOException ex)
@@ -131,24 +134,25 @@ namespace KWRP.Avalonia.Frontend.Services
 
      
 
-        async Task LoadXmlDataAsync(string path)
+        async Task LoadXmlDataAsync(string path, LengthUnitType lengthUnitType)
         {
             try
             {
                 var serializer = SerializerFactory.Create<CompactionAreaItems>(FileType.XML);
                 var item = await serializer.LoadAsync(path) ?? throw new NullReferenceException();
+                var divisor = lengthUnitType == LengthUnitType.Meter ? 1.0 : 1000.0;
 
                 var shell = Polygon.AsCounterClockwise(item
                     .WorkArea
                     .Shell
                     .Points
-                    .Select(p => new Vec2(p.X, p.Y))
+                    .Select(p => new Vec2(p.X / divisor, p.Y / divisor))
                     .ToArray());
                 var holes = item.WorkArea.Holes.Select(hole =>
                 {
                     return Polygon.AsClockwise(hole
                         .Points
-                        .Select(p => new Vec2(p.X, p.Y))
+                        .Select(p => new Vec2(p.X / divisor, p.Y / divisor))
                         .ToArray());
                 }).ToList();
                 var direction = item.LaneProgressDirection;
@@ -166,19 +170,20 @@ namespace KWRP.Avalonia.Frontend.Services
             {
                 var serializer = SerializerFactory.Create<AutomatedConstructionAreaItems>(FileType.XML);
                 var item = await serializer.LoadAsync(path) ?? throw new NullReferenceException();
+                var divisor = lengthUnitType == LengthUnitType.Meter ? 1.0 : 1000.0;
 
                 var shell = Polygon.AsCounterClockwise(item
                     .VRData
                     .WorkArea
                     .Shell
                     .Points
-                    .Select(p => new Vec2(p.X, p.Y))
+                    .Select(p => new Vec2(p.X / divisor, p.Y / divisor))
                     .ToArray());
                 var holes = item.VRData.WorkArea.Holes.Select(hole =>
                 {
                     return Polygon.AsClockwise(hole
                         .Points
-                        .Select(p => new Vec2(p.X, p.Y))
+                        .Select(p => new Vec2(p.X / divisor, p.Y / divisor))
                         .ToArray());
                 }).ToList();
                 var direction = item.VRData.LaneProgressDirection;
@@ -196,7 +201,7 @@ namespace KWRP.Avalonia.Frontend.Services
             throw new ArgumentException(_languageService.GetString("Domain.Front.AreaDataLoadFailed"));
         }
 
-        async Task LoadCsvDataAsync(string path)
+        async Task LoadCsvDataAsync(string path, LengthUnitType lengthUnitType)
         {
             try
             {
@@ -250,9 +255,6 @@ namespace KWRP.Avalonia.Frontend.Services
             }
         }
 
-        public Task ExecuteLoadFromDialogAsync(FileType fileType, LengthUnitType lengthUnitType)
-        {
-            throw new NotImplementedException();
-        }
+        
     }
 }

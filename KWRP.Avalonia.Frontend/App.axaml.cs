@@ -274,7 +274,7 @@ namespace KWRP.Avalonia.Frontend
             services.AddSingleton<ILogService, LogService>();
             services.AddSingleton<INotificationService, NotificationService>();
             services.AddSingleton<ICanvasService, CanvasService>();
-            services.AddSingleton<IDataLoader, CompactionAreaLoader>();
+            services.AddSingleton<IDataLoader, CompactionAreaWithLengthUnitLoader>();
             services.AddSingleton<PolygonCsvParser>();
             services.AddSingleton<ILaneArrangementService, FindStartLaneArrangementPairToleranceService>();
             services.AddSingleton<ILaneArrangementEvaluationService, LaneArrangementDiffEvaluationService>();
