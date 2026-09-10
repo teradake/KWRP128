@@ -18,6 +18,7 @@ using Avalonia.Media.Imaging;
 using KWRP.Avalonia.Frontend.Services.Dxf;
 using System.Threading.Tasks;
 using System.IO;
+using KWRP.Avalonia.Backend.Enums;
 
 namespace KWRP.Avalonia.Frontend.ViewModels.EditorPage
 {
@@ -266,7 +267,22 @@ namespace KWRP.Avalonia.Frontend.ViewModels.EditorPage
             CanvasHeight = _canvasStateStore.CanvasHeight.ToReadOnlyBindableReactiveProperty();
             CanvasWidth = _canvasStateStore.CanvasWidth.ToReadOnlyBindableReactiveProperty();
             CanvasRotation = _canvasStateStore.Rot.ThrottleLast(TimeSpan.FromMilliseconds(50)).ToReadOnlyBindableReactiveProperty(_canvasStateStore.Rot.CurrentValue);
-            ProgressDir = _parameterStore.ProgresssDirectionRadian.Select(radian => Direction2.ByRadian(radian)).ToReadOnlyBindableReactiveProperty(Direction2.ByRadian(_parameterStore.ProgresssDirectionRadian.Value));
+            ProgressDir = _parameterStore
+                .ProgresssDirectionRadian
+                .Select(radian => Direction2.ByRadian(radian))
+                .ToReadOnlyBindableReactiveProperty(Direction2.ByRadian(_parameterStore.ProgresssDirectionRadian.Value));
+            //RollerHeadDir = _parameterStore
+            //    .RollerHeadType
+            //    .Select(typ => _parameterStore.ProgresssDirectionRadian.Value + typ.ToAngleRadian())
+            //    .Select(radian => Direction2.ByRadian(radian))
+            //    .ToReadOnlyBindableReactiveProperty(Direction2.ByRadian(_parameterStore.ProgresssDirectionRadian.Value + _parameterStore.RollerHeadType.Value.ToAngleRadian()));
+            RollerHeadDir = _parameterStore
+                .RollerHeadType
+                .Select(typ => typ.ToAngleRadian())
+                .Select(radian => Direction2.ByRadian(radian))
+                .ToReadOnlyBindableReactiveProperty(Direction2.ByRadian(_parameterStore.RollerHeadType.Value.ToAngleRadian()));
+
+
 
             Affine = _canvasStateStore.Affine
                 .Select(m => new MatrixTransform(m))
@@ -390,6 +406,7 @@ namespace KWRP.Avalonia.Frontend.ViewModels.EditorPage
         public IReadOnlyBindableReactiveProperty<BoundingBoxViewModel?> Box { get; }
         public IReadOnlyBindableReactiveProperty<Direction2> CanvasRotation { get; }
         public IReadOnlyBindableReactiveProperty<Direction2> ProgressDir { get; }
+        public IReadOnlyBindableReactiveProperty<Direction2> RollerHeadDir { get; }
 
         public IReadOnlyBindableReactiveProperty<double> SidePrevOffset { get; }
         public BindableReactiveProperty<double> SideNextOffset { get; }
