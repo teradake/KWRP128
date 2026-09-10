@@ -50,18 +50,29 @@
                         <MenuItem
                             Command="{Binding LoadCommand}"
                             CommandParameter="{x:Static enums:FileType.XML}"
-                            Header="XML"
+                            Header="XML [m]"
                             ToolTip.HorizontalOffset="15"
                             ToolTip.ShowDelay="1"
                             ToolTip.VerticalOffset="0">
                             <ToolTip.Tip>
-                                <TextBlock Text="{i18n:Localize TopPage.SelectXml}" />
+                                <TextBlock Text="{i18n:Localize TopPage.SelectXmlByMeter}" />
+                            </ToolTip.Tip>
+                        </MenuItem>
+                        <MenuItem
+                            Command="{Binding LoadCommand}"
+                            CommandParameter="{x:Static enums:FileType.XML}"
+                            Header="XML [mm]"
+                            ToolTip.HorizontalOffset="15"
+                            ToolTip.ShowDelay="1"
+                            ToolTip.VerticalOffset="0">
+                            <ToolTip.Tip>
+                                <TextBlock Text="{i18n:Localize TopPage.SelectXmlByMiliMeter}" />
                             </ToolTip.Tip>
                         </MenuItem>
                         <MenuItem
                             Command="{Binding LoadCommand}"
                             CommandParameter="{x:Static enums:FileType.CSV}"
-                            Header="CSV"
+                            Header="CSV [m]"
                             ToolTip.HorizontalOffset="35"
                             ToolTip.ShowDelay="10"
                             ToolTip.VerticalOffset="10">
@@ -71,6 +82,28 @@
                                         <Run Text="{i18n:Localize TopPage.CsvFormat}" />
                                         <LineBreak />
                                         <Run Text="{i18n:Localize TopPage.CsvNote}" />
+                                        <LineBreak />
+                                        <Run Text="{i18n:Localize TopPage.CsvUnitNoteMeter}" />
+                                    </TextBlock>
+                                    <Image Source="/Assets/Figures/csv_sample.png" Stretch="None" />
+                                </StackPanel>
+                            </ToolTip.Tip>
+                        </MenuItem>
+                        <MenuItem
+                            Command="{Binding LoadCommand}"
+                            CommandParameter="{x:Static enums:FileType.CSV}"
+                            Header="CSV [mm]"
+                            ToolTip.HorizontalOffset="35"
+                            ToolTip.ShowDelay="10"
+                            ToolTip.VerticalOffset="10">
+                            <ToolTip.Tip>
+                                <StackPanel>
+                                    <TextBlock>
+                                        <Run Text="{i18n:Localize TopPage.CsvFormat}" />
+                                        <LineBreak />
+                                        <Run Text="{i18n:Localize TopPage.CsvNote}" />
+                                        <LineBreak />
+                                        <Run Text="{i18n:Localize TopPage.CsvUnitNoteMiliMeter}" />
                                     </TextBlock>
                                     <Image Source="/Assets/Figures/csv_sample.png" Stretch="None" />
                                 </StackPanel>
