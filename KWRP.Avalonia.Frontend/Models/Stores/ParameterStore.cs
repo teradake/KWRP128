@@ -2,6 +2,7 @@
 using KWRP.Avalonia.Backend.Enums;
 using KWRP.Avalonia.Backend.Models.Roller;
 using KWRP.Avalonia.Backend.Services;
+using KWRP.Backend.Enums;
 using R3;
 using System;
 using System.Collections.Generic;
@@ -158,6 +159,6 @@ namespace KWRP.Avalonia.Frontend.Models.Stores
         public void PublishParameterFileLoaded() => _subject.OnNext(Unit.Default);
 
 
-
+        public LengthUnitType CurrentLengthUnitType { get; set; } = LengthUnitType.Meter;
     }
 }
