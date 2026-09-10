@@ -5,10 +5,13 @@ using KWRP.Avalonia.Backend.Services;
 using KWRP.Avalonia.Frontend.Models.Stores;
 using KWRP.Avalonia.Frontend.Services;
 using KWRP.Avalonia.Frontend.ViewModels.EditorPage;
+using KWRP.Backend.Enums;
 using KWRP.Backend.Services;
 using R3;
 using System;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace KWRP.Avalonia.Frontend.ViewModels.StartUpPage
 {
@@ -24,7 +27,9 @@ namespace KWRP.Avalonia.Frontend.ViewModels.StartUpPage
         private readonly ILanguageService _languageService;
 
         public ReactiveCommand NextCommand { get; }
-        public ReactiveCommand<FileType> LoadCommand { get; }   // ダイアログを開いてファイルを選択
+        //public ReactiveCommand<FileType> LoadCommand { get; }   // ダイアログを開いてファイルを選択
+        public ReactiveCommand<FileType> LoadByMeterCommand { get; }
+        public ReactiveCommand<FileType> LoadByMilliMeterCommand { get; }
         public ReactiveCommand<string> LoadFromPathCommand { get; } // デバッグ用。xamlから渡されたパスのファイルを選択する
         public ReactiveCommand ClearDxfCommand { get; }
 
@@ -108,27 +113,30 @@ namespace KWRP.Avalonia.Frontend.ViewModels.StartUpPage
                 })
                 .AddTo(Disposables);
 
-            LoadCommand = _applicationStore
-                .IsBusy
-                .Select(b => !b)
-                .ToReactiveCommand<FileType>(async (type, ct) =>
-                {
-                    try
-                    {
-                        _applicationStore.IsBusy.Value = true;
-                        await _dataLoader.ExecuteLoadFromDialogAsync(type);
-                    }
-                    catch (Exception ex)
-                    {
-                        _logService.LogError($"error", ex);
-                        _notificationService.Notify(KWRPNotification.Create(ex.Message, NotifyMessageType.Warn, 6));
-                    }
-                    finally
-                    {
-                        _applicationStore.IsBusy.Value = false;
-                    }
-                })
-                .AddTo(Disposables);
+            //LoadCommand = _applicationStore
+            //    .IsBusy
+            //    .Select(b => !b)
+            //    .ToReactiveCommand<FileType>(async (type, ct) =>
+            //    {
+            //        try
+            //        {
+            //            _applicationStore.IsBusy.Value = true;
+            //            await _dataLoader.ExecuteLoadFromDialogAsync(type);
+            //        }
+            //        catch (Exception ex)
+            //        {
+            //            _logService.LogError($"error", ex);
+            //            _notificationService.Notify(KWRPNotification.Create(ex.Message, NotifyMessageType.Warn, 6));
+            //        }
+            //        finally
+            //        {
+            //            _applicationStore.IsBusy.Value = false;
+            //        }
+            //    })
+            //    .AddTo(Disposables);
+
+            LoadByMeterCommand = CreateLoadCommand(LengthUnitType.Meter);
+            LoadByMilliMeterCommand = CreateLoadCommand(LengthUnitType.Millimeter);
 
             LoadFromPathCommand = _applicationStore
                 .IsBusy
@@ -154,6 +162,34 @@ namespace KWRP.Avalonia.Frontend.ViewModels.StartUpPage
 
             _logService.SetStatusMessage("Domain.Front.TopPageDescription");
             _logService.LogDebug("init");
+        }
+
+        private ReactiveCommand<FileType> CreateLoadCommand(LengthUnitType unitType)
+        {
+            return _applicationStore
+                .IsBusy
+                .Select(b => !b)
+                .ToReactiveCommand<FileType>((type, ct) => LoadAsync(type, unitType, ct))
+                .AddTo(Disposables);
+        }
+
+        private async ValueTask LoadAsync(FileType type, LengthUnitType unitType, CancellationToken ct)
+        {
+            try
+            {
+                _applicationStore.IsBusy.Value = true;
+                await _dataLoader.ExecuteLoadFromDialogAsync(type, unitType);
+            }
+            catch (Exception ex)
+            {
+                _logService.LogError("error", ex);
+                _notificationService.Notify(
+                    KWRPNotification.Create(ex.Message, NotifyMessageType.Warn, 6));
+            }
+            finally
+            {
+                _applicationStore.IsBusy.Value = false;
+            }
         }
     }
 }
