@@ -101,7 +101,7 @@ namespace KWRP.Avalonia.Frontend.Services.LaneArrangement
                 .AdjustLength(
                     shortenFront: _parameterStore.FrontAllowance + _parameterStore.FrontOffset - _parameterStore.PerimeterAllowance,
                     shortenRear: _parameterStore.RearAllowance + _parameterStore.RearOffset - _parameterStore.PerimeterAllowance,
-                    headToRight: _parameterStore.RollerHeadType == Backend.Enums.RollerHeadingType.ToRight)
+                    headToRight: _parameterStore.RollerHeadType.Value == Backend.Enums.RollerHeadingType.ToRight)
                 .Where(lane => lane.Ymax - lane.Ymin >= _parameterStore.LaneChangeLength)
                 .Select(box => box.ToPolygon()).ToArray();
             var pairedLanes = NaiveDfsLaneIntegrator.Integrate(
@@ -115,7 +115,7 @@ namespace KWRP.Avalonia.Frontend.Services.LaneArrangement
                 pairedLanes: pairedLanes.Select(p => PairedLaneModel.CreateByOrthogonalWithArrow(
                     orthogonalLanes: p,
                     progressDirectionRad: _directions[best],
-                    headToRight: _parameterStore.RollerHeadType == Backend.Enums.RollerHeadingType.ToRight)));
+                    headToRight: _parameterStore.RollerHeadType.Value == Backend.Enums.RollerHeadingType.ToRight)));
                     
 
             // 結果を格納する

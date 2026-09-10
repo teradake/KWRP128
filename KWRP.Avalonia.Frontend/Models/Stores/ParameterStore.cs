@@ -52,7 +52,7 @@ namespace KWRP.Avalonia.Frontend.Models.Stores
                 LapLength = vr.Zone.WorkAreaLapLength;
                 LaneChangeLength = vr.Zone.LaneChangeLength;
 
-                RollerHeadType = RollerHeadingType.ToLeft;
+                RollerHeadType.Value = RollerHeadingType.ToLeft;
                 FrontOffset = 0.0;
                 RearOffset = 0.0;
                 SidePrevOffset = new(0.0);
@@ -116,12 +116,13 @@ namespace KWRP.Avalonia.Frontend.Models.Stores
         ///// </summary>
 
 
-        public RollerHeadingType RollerHeadType { get; set; }
+        //public RollerHeadingType RollerHeadType { get; set; }
+        public ReactiveProperty<RollerHeadingType> RollerHeadType { get; } = new(RollerHeadingType.ToLeft);
 
         /// <summary>
         /// ローラの向いている方向。東を0度としてcounterclockwise
         /// </summary>
-        public double RollerHeading => ProgresssDirectionRadian.Value + RollerHeadType.ToAngleRadian();
+        public double RollerHeading => ProgresssDirectionRadian.Value + RollerHeadType.Value.ToAngleRadian();
 
         /// <summary>
         /// レーンペアリング時のペア数最小値

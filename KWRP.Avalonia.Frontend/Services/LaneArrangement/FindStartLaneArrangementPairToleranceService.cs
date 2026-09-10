@@ -122,7 +122,7 @@ namespace KWRP.Avalonia.Frontend.Services.LaneArrangement
                 .AdjustLength(
                     shortenFront: _parameterStore.FrontAllowance + _parameterStore.FrontOffset - _parameterStore.PerimeterAllowance,
                     shortenRear: _parameterStore.RearAllowance + _parameterStore.RearOffset - _parameterStore.PerimeterAllowance,
-                    headToRight: _parameterStore.RollerHeadType == Backend.Enums.RollerHeadingType.ToRight)
+                    headToRight: _parameterStore.RollerHeadType.Value == Backend.Enums.RollerHeadingType.ToRight)
                 .Where(lane => lane.Ymax - lane.Ymin >= _parameterStore.LaneChangeLength)
                 .Select(box => box.ToPolygon()).ToArray();
             var pairedLanes = _laneIntegrator.Integrate(
@@ -131,14 +131,14 @@ namespace KWRP.Avalonia.Frontend.Services.LaneArrangement
                 maxPairCount: _parameterStore.PairCountMax,
                 laneGapToleranceFront: _applicationStore.LaneArrangementConfigs.LaneGapToleranceFront,
                 laneGapToleranceRear: _applicationStore.LaneArrangementConfigs.LaneGapToleranceRear,
-                headToRight: _parameterStore.RollerHeadType == Backend.Enums.RollerHeadingType.ToRight);
+                headToRight: _parameterStore.RollerHeadType.Value == Backend.Enums.RollerHeadingType.ToRight);
             var result = CreatedLaneResult.By(
                 targetPolygon: target.Rotate(_directions[best]),
                 lanes: lanes.Select(lane => LaneModel.CreateByOrthogonal(lane, _directions[best])),
                 pairedLanes: pairedLanes.Select(p => PairedLaneModel.CreateByOrthogonalWithArrow(
                     orthogonalLanes: p,
                     progressDirectionRad: _directions[best],
-                    headToRight: _parameterStore.RollerHeadType == Backend.Enums.RollerHeadingType.ToRight)));
+                    headToRight: _parameterStore.RollerHeadType.Value == Backend.Enums.RollerHeadingType.ToRight)));
 
             // レーンが生成できなかった場合は通知
             if (lanes.Length == 0 || !pairedLanes.Any())

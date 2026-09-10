@@ -235,7 +235,7 @@ namespace KWRP.Avalonia.Frontend.Services
                 }
 
                 _parameterStore.ProgresssDirectionRadian.Value = direction;
-                _parameterStore.RollerHeadType = headingToRight
+                _parameterStore.RollerHeadType.Value = headingToRight
                     ? RollerHeadingType.ToRight
                     : RollerHeadingType.ToLeft;
                 _canvasService.AdjustAffine();

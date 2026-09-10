@@ -87,7 +87,7 @@ namespace KWRP.Avalonia.Frontend.Services
                     //_parameterStore.PerimeterAllowance = param.VrParams.SideAllowance;
                     //_parameterStore.LaneChangeLength = param.VrParams.LaneChangeLength;       // ローラに依存するパラメータは更新しない
                     
-                    _parameterStore.RollerHeadType = param.VrParams.IsRollerHeadingRight ? Backend.Enums.RollerHeadingType.ToRight : Backend.Enums.RollerHeadingType.ToLeft;
+                    _parameterStore.RollerHeadType.Value = param.VrParams.IsRollerHeadingRight ? Backend.Enums.RollerHeadingType.ToRight : Backend.Enums.RollerHeadingType.ToLeft;
                     _parameterStore.FrontOffset = param.VrParams.FrontAllowance - _machineStore.CurrentRoller.FrontAllowance;
                     _parameterStore.RearOffset = param.VrParams.RearAllowance - _machineStore.CurrentRoller.RearAllowance;
                     _parameterStore.SidePrevOffset.Value = param.VrParams.Offset;
@@ -145,7 +145,7 @@ namespace KWRP.Avalonia.Frontend.Services
                 LapWidth = _parameterStore.LapWidth,
                 LaneChangeLength = _parameterStore.LaneChangeLength,
                 LaneProgressDirection = _parameterStore.ProgresssDirectionRadian.Value * 180 / Math.PI,
-                IsRollerHeadingRight = _parameterStore.RollerHeadType == Backend.Enums.RollerHeadingType.ToRight,
+                IsRollerHeadingRight = _parameterStore.RollerHeadType.Value == Backend.Enums.RollerHeadingType.ToRight,
             };
 
             var pair = new PairingParameterModel

@@ -141,7 +141,7 @@ namespace KWRP.Avalonia.Frontend.Services
                         newWorkAreas.Add(new WorkAreaModel(
                             orthogonalLanesOriginal: clamped,
                             attribute: attr.SetIsSelected(false),
-                            headToRight: _parameterStore.RollerHeadType == Backend.Enums.RollerHeadingType.ToRight,
+                            headToRight: _parameterStore.RollerHeadType.Value == Backend.Enums.RollerHeadingType.ToRight,
                             progressDirectionRad: _parameterStore.ProgresssDirectionRadian.Value,
                             wheelType: _machineStore.CurrentRoller.MachineInfo.RollerWheelType,
                             wheelbase: _machineStore.CurrentRoller.MachineInfo.Wheelbase,

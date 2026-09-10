@@ -84,7 +84,7 @@ namespace KWRP.Avalonia.Frontend.ViewModels.EditorPage
                 SideNextOffset = _parameterStore.SideNextOffset.ToBindableReactiveProperty(_parameterStore.SideNextOffset.Value).AddTo(Disposables);
                 LapWidth = new BindableReactiveProperty<double>(_parameterStore.LapWidth).AddTo(Disposables);
                 LaneChangeLength = new BindableReactiveProperty<double>(_parameterStore.LaneChangeLength).AddTo(Disposables);
-                RollerHeadType = new BindableReactiveProperty<RollerHeadingType>(_parameterStore.RollerHeadType).AddTo(Disposables);
+                RollerHeadType = new BindableReactiveProperty<RollerHeadingType>(_parameterStore.RollerHeadType.Value).AddTo(Disposables);
                 ProgressDirectionDegree = _parameterStore
                     .ProgresssDirectionRadian
                     .Select(d => Utils.RoundDegree(d * 180.0 / Math.PI))
@@ -162,7 +162,7 @@ namespace KWRP.Avalonia.Frontend.ViewModels.EditorPage
                     SideNextOffset.Where(_ => CanArrangeLane.Value).Do(v => _parameterStore.SideNextOffset.Value = v).Select(v => Unit.Default),
                     LapWidth.Where(_ => CanArrangeLane.Value).Do(v => _parameterStore.LapWidth = v).Select(v => Unit.Default),
                     LaneChangeLength.Where(_ => CanArrangeLane.Value).Do(v => _parameterStore.LaneChangeLength = v).Select(v => Unit.Default),
-                    RollerHeadType.Where(_ => CanArrangeLane.Value).Do(v => _parameterStore.RollerHeadType = v).Select(v => Unit.Default),
+                    RollerHeadType.Where(_ => CanArrangeLane.Value).Do(v => _parameterStore.RollerHeadType.Value = v).Select(v => Unit.Default),
                     ProgressDirectionDegree.Where(_ => CanArrangeLane.Value).Do(v => _parameterStore.ProgresssDirectionRadian.Value = v * Math.PI / 180).Select(v => Unit.Default),
                     PairMinCount.Where(_ => CanArrangeLane.Value).Do(v => _parameterStore.PairCountMin = v).Select(v => Unit.Default),
                     PairMaxCount.Where(_ => CanArrangeLane.Value).Do(v => _parameterStore.PairCountMax = v).Select(v => Unit.Default))
@@ -191,7 +191,7 @@ namespace KWRP.Avalonia.Frontend.ViewModels.EditorPage
                             SidePrevOffset.Value = _parameterStore.SidePrevOffset.Value;
                             LapWidth.Value = _parameterStore.LapWidth;
                             LaneChangeLength.Value = _parameterStore.LaneChangeLength;
-                            RollerHeadType.Value = _parameterStore.RollerHeadType;
+                            RollerHeadType.Value = _parameterStore.RollerHeadType.Value;
                             ProgressDirectionDegree.Value = _parameterStore.ProgresssDirectionRadian.Value * 180 / Math.PI;
                             PairMinCount.Value = _parameterStore.PairCountMin;
                             PairMaxCount.Value = _parameterStore.PairCountMax;
