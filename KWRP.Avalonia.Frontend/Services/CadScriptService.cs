@@ -1,4 +1,5 @@
 ﻿using KWRP.Avalonia.Backend.Services;
+using KWRP.Avalonia.Backend.Model.Shapes.Activity;
 using KWRP.Avalonia.Frontend.Models.Stores;
 using KWRP.Backend.Services;
 using System;
@@ -7,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Trdk.Geometry;
 
 namespace KWRP.Avalonia.Frontend.Services
 {
@@ -52,7 +54,7 @@ namespace KWRP.Avalonia.Frontend.Services
 
             foreach (var act in acts)
             {
-                sb.AppendLine(act.ToCadScript());
+                sb.AppendLine(CreateActivityCadScript(act));
             }
 
 
@@ -67,6 +69,48 @@ namespace KWRP.Avalonia.Frontend.Services
                 _logService.LogError(_languageService.GetString("Domain.Front.CadScriptSaveFailed"), ex);
                 throw;
             }
+        }
+
+        private static string CreateActivityCadScript(ActivityModel activity)
+        {
+            if (activity.OccArea == null || activity.GoalArea == null || activity.WorkArea == null)
+                throw new NullReferenceException("エリア設定ができていません");
+
+            var sb = new StringBuilder();
+
+            double lineWidth = 0.2;
+            sb.AppendLine("PLINE");
+            for (int i = 0; i < activity.WorkArea.Shape.Points.Count; i++)
+            {
+                sb.AppendLine($"{activity.WorkArea.Shape.Points[i].X:F5},{activity.WorkArea.Shape.Points[i].Y:F5}");
+                if (i == 0)
+                    sb.AppendLine($"w {lineWidth} {lineWidth}");
+            }
+            sb.AppendLine("c");
+
+            var c = activity.WorkArea.Shape.Centroid;
+
+            var seg = Seg2.Create(c, 3.0, activity.Dir);
+            var from = seg.Src;
+            var to = from + new Vec2(activity.Dir) * 3;
+            sb.AppendLine("PLINE");
+            sb.AppendLine(from.ToString());
+            sb.AppendLine("w 1.85 0");
+            sb.AppendLine(to.ToString());
+            sb.AppendLine();
+
+            var width = 3;
+            var mTextCorner = Seg2.Create(c, 3.1, activity.Dir).Src + new Vec2(activity.Dir + Math.PI * 0.5) * (width * 0.5);
+            sb.AppendLine("MTEXT");
+            sb.AppendLine(mTextCorner.ToString());
+            sb.AppendLine($"r {activity.Dir * 180 / Math.PI - 90:0.00}");
+            sb.AppendLine("h 0.71");
+            sb.AppendLine($"w {width:0.0}");
+            sb.AppendLine($"{activity.GroupId}-{activity.AreaID}");
+            sb.AppendLine($"L{activity.Length:0.0}");
+            sb.AppendLine($"W{activity.Width:0.0}");
+
+            return sb.ToString();
         }
     }
 }

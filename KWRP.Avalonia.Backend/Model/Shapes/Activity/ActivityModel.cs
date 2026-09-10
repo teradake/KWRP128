@@ -73,51 +73,6 @@ namespace KWRP.Avalonia.Backend.Model.Shapes.Activity
         }
 
         static string TorF(bool ok) => ok ? "TRUE" : "FALSE";
-
-        public string ToCadScript()
-        {
-            if (OccArea == null || GoalArea == null || WorkArea == null)
-                throw new NullReferenceException("エリア設定ができていません");
-
-            var sb = new StringBuilder();
-
-            // PolyLine
-            double lineWidth = 0.2;
-            sb.AppendLine("PLINE");
-            for (int i = 0; i < WorkArea.Shape.Points.Count; i++)
-            {
-                sb.AppendLine($"{WorkArea.Shape.Points[i].X:F5},{WorkArea.Shape.Points[i].Y:F5}");
-                if (i == 0)
-                    sb.AppendLine($"w {lineWidth} {lineWidth}");
-            }
-            sb.AppendLine("c");
-
-            var c = WorkArea.Shape.Centroid;
-
-            // Arrow
-            var seg = Seg2.Create(c, 3.0, Dir);
-            var from = seg.Src;
-            var to = from + new Vec2(Dir) * 3;
-            sb.AppendLine("PLINE");
-            sb.AppendLine(from.ToString());
-            sb.AppendLine("w 1.85 0");
-            sb.AppendLine(to.ToString());
-            sb.AppendLine();
-
-            // MultiText
-            var width = 3;
-            var mTextCorner = Seg2.Create(c, 3.1, Dir).Src + new Vec2(Dir + Math.PI * 0.5) * (width * 0.5);
-            sb.AppendLine("MTEXT");
-            sb.AppendLine(mTextCorner.ToString());
-            sb.AppendLine($"r {Dir * 180 / Math.PI - 90:0.00}");
-            sb.AppendLine($"h 0.71");
-            sb.AppendLine($"w {width:0.0}");
-            sb.AppendLine($"{GroupId}-{AreaID}");
-            sb.AppendLine($"L{Length:0.0}");
-            sb.AppendLine($"W{Width:0.0}");
-
-            return sb.ToString();
-        }
     }
 
 
