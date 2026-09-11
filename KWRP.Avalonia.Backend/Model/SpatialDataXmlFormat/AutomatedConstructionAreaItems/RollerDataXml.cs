@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 namespace KWRP.Avalonia.Backend.Models.AutomatedConstructionAreaItems
 {
@@ -17,5 +12,11 @@ namespace KWRP.Avalonia.Backend.Models.AutomatedConstructionAreaItems
 
         [XmlElement("CompactionArea")]
         public PolylineWithHoles WorkArea { get; set; } = new PolylineWithHoles();
+
+        [XmlElement("BaseLinePoint")]
+        public Point3D BaseLinePoint { get; set; } = new Point3D { X = KWRPConstants.C_INF, Y = KWRPConstants.C_INF, Z = KWRPConstants.C_INF, };
+
+        [XmlElement("RollerHeadingPattern")]
+        public string RollerHeadingPattern { get; set; } = "L";
     }
 }
