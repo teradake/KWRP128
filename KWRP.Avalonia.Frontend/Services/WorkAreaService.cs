@@ -53,7 +53,7 @@ namespace KWRP.Avalonia.Frontend.Services
             {
                 try
                 {
-                    var headToRight = _parameterStore.RollerHeadType.Value == Backend.Enums.RollerHeadingType.ToRight;
+                    var headToRight = _parameterStore.RollerHeadType.Value == Backend.Enums.RollerHeadingType.Right;
                     var frontMargin = _parameterStore.FrontAllowance + _parameterStore.FrontOffset - _parameterStore.PerimeterAllowance;
                     var rearMargin = _parameterStore.RearAllowance + _parameterStore.RearOffset - _parameterStore.PerimeterAllowance;
                     if (headToRight)

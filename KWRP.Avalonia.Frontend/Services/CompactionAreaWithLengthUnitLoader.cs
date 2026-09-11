@@ -246,8 +246,8 @@ namespace KWRP.Avalonia.Frontend.Services
 
                 _parameterStore.ProgresssDirectionRadian.Value = direction;
                 _parameterStore.RollerHeadType.Value = headingToRight
-                    ? RollerHeadingType.ToRight
-                    : RollerHeadingType.ToLeft;
+                    ? RollerHeadingType.Right
+                    : RollerHeadingType.Left;
                 _canvasService.AdjustAffine();
 
                 var area = _canvasItemStore.TargetPolygons.Sum(p => p.Area);

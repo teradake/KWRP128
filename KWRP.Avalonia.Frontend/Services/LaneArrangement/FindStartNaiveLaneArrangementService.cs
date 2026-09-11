@@ -102,7 +102,7 @@ namespace KWRP.Avalonia.Frontend.Services.LaneArrangement
                 pairedLanes: pairedLanes.Select(p => PairedLaneModel.CreateByOrthogonalWithArrow(
                     orthogonalLanes: p,
                     progressDirectionRad: _directions[best],
-                    headToRight: _parameterStore.RollerHeadType.Value == Backend.Enums.RollerHeadingType.ToRight)));
+                    headToRight: _parameterStore.RollerHeadType.Value == Backend.Enums.RollerHeadingType.Right)));
 
             // 結果を格納する
             _canvasItemStore.CreatedLaneResults.Add(result);

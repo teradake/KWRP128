@@ -2,9 +2,10 @@
 {
     public enum RollerHeadingType
     {
-        ToRight = 1 << 0,    // 作業進捗方向が下から上に向かうとして、ローラが右向きであることを示す
-        ToLeft = 1 << 1,     // 作業進捗方向が下から上に向かうとして、ローラが左向きであることを示す
-        Straight = 1 << 2,  // ローラの向きが作業進捗方向と一致することを示す
+        Right = 1 << 0,    // 作業進捗方向が下から上に向かうとして、ローラが右向きであることを示す
+        Left = 1 << 1,     // 作業進捗方向が下から上に向かうとして、ローラが左向きであることを示す
+        Forward = 1 << 2,  // ローラの向きが作業進捗方向と一致することを示す
+        Backward = 1 << 3,
     }
 
     public static class RollerHeadingTypeExtensions
@@ -13,9 +14,10 @@
         {
             return type switch
             {
-                RollerHeadingType.ToRight => -Math.PI * 0.5,
-                RollerHeadingType.ToLeft => Math.PI * 0.5,
-                RollerHeadingType.Straight => 0.0,
+                RollerHeadingType.Right => -Math.PI * 0.5,
+                RollerHeadingType.Left => Math.PI * 0.5,
+                RollerHeadingType.Forward => 0.0,
+                RollerHeadingType.Backward => Math.PI,
                 _ => throw new NotImplementedException(),
             };
         }

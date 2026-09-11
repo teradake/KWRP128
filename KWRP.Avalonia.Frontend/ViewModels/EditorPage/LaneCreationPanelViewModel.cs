@@ -138,13 +138,13 @@ namespace KWRP.Avalonia.Frontend.ViewModels.EditorPage
                 ChangeHeadingCommand = TargetRegisterd
                     .ToReactiveCommand(_ =>
                     {
-                        if (RollerHeadType.Value == RollerHeadingType.ToLeft)
+                        if (RollerHeadType.Value == RollerHeadingType.Left)
                         {
-                            RollerHeadType.Value = RollerHeadingType.ToRight;
+                            RollerHeadType.Value = RollerHeadingType.Right;
                         }
-                        else if (RollerHeadType.Value == RollerHeadingType.ToRight)
+                        else if (RollerHeadType.Value == RollerHeadingType.Right)
                         {
-                            RollerHeadType.Value = RollerHeadingType.ToLeft;
+                            RollerHeadType.Value = RollerHeadingType.Left;
                         }
                     })
                     .AddTo(Disposables);
