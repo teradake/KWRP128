@@ -88,8 +88,6 @@ namespace KWRP.Avalonia.Frontend.Services
             _applicationStore.SpatialDataPath.Value = filePath;
             _parameterStore.CurrentLengthUnitType.Value = lengthUnitType;
         }
-
-
         public async Task ExecuteLoadFromFileAsync(string filePath)
         {
             var ext = Path.GetExtension(filePath);
@@ -206,6 +204,13 @@ namespace KWRP.Avalonia.Frontend.Services
             try
             {
                 var shell = await _polygonCsvParser.LoadAsync(path);
+
+                if (lengthUnitType == LengthUnitType.Millimeter && shell != null)
+                {
+                    var pnts = shell.Points.Select(p => new Vec2(p.X / 1000.0, p.Y / 1000.0));
+                    shell = Polygon.AsCounterClockwise(pnts.ToArray());
+                }
+
                 var holes = new List<Polygon>();
                 double direction = 0.0;
                 RegisterData(shell!, holes, direction, false);
