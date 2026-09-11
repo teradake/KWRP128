@@ -14,9 +14,15 @@ namespace KWRP.Avalonia.Backend.Models.AutomatedConstructionAreaItems
         public PolylineWithHoles WorkArea { get; set; } = new PolylineWithHoles();
 
         [XmlElement("BaseLinePoint")]
-        public Point3D BaseLinePoint { get; set; } = new Point3D { X = KWRPConstants.C_INF, Y = KWRPConstants.C_INF, Z = KWRPConstants.C_INF, };
+        public Point3D? BaseLinePoint { get; set; } 
 
         [XmlElement("RollerHeadingPattern")]
-        public string RollerHeadingPattern { get; set; } = "L";
+        public string? RollerHeadingPattern { get; set; }
+
+        [XmlIgnore]
+        public bool HasBaseLinePoint => BaseLinePoint is not null;
+
+        [XmlIgnore]
+        public bool HasRollerHeadingPattern => RollerHeadingPattern is not null;
     }
 }
