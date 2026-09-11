@@ -45,6 +45,12 @@
                 _ => throw new NotImplementedException(),
             };
         }
+
+        public static bool IsParpendicular(this RollerHeadingType head)
+            => head == RollerHeadingType.Left || head == RollerHeadingType.Right;
+
+        public static bool IsParallel(this RollerHeadingType head)
+            => head == RollerHeadingType.Forward || head == RollerHeadingType.Backward;
     }
 
     public static class RollerHeadingPatternExtensions
