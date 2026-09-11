@@ -618,12 +618,11 @@
                                         </Interaction.Behaviors>
                                     </Polygon>
                                     <Image
-                                        Height="15"
+                                        Height="25"
                                         Focusable="False"
-                                        Source="/Assets/Figures/rollerDir.png">
+                                        Source="/Assets/Figures/rollerDir2.png">
                                         <Image.RenderTransform>
                                             <TransformGroup>
-                                                <ScaleTransform ScaleX="1.1" ScaleY="1.1" />
                                                 <RotateTransform Angle="{Binding RollerHeadDir.Value.DegreeValue}" />
                                                 <TranslateTransform X="-20" />
                                                 <RotateTransform Angle="{Binding ProgressDir.Value.DegreeValue}" />
