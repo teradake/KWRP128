@@ -86,7 +86,6 @@ namespace KWRP.Avalonia.Frontend.Services
             await LoadFileAsync(filePath, fileType, lengthUnitType);
 
             _applicationStore.SpatialDataPath.Value = filePath;
-            _parameterStore.CurrentLengthUnitType.Value = lengthUnitType;
         }
         public async Task ExecuteLoadFromFileAsync(string filePath)
         {
@@ -101,7 +100,6 @@ namespace KWRP.Avalonia.Frontend.Services
             await LoadFileAsync(filePath, fileType, LengthUnitType.Meter);
 
             _applicationStore.SpatialDataPath.Value = filePath;
-            _parameterStore.CurrentLengthUnitType.Value = LengthUnitType.Meter;
         }
 
         async Task LoadFileAsync(string filePath, FileType fileType, LengthUnitType lengthUnitType)
@@ -154,8 +152,9 @@ namespace KWRP.Avalonia.Frontend.Services
                         .ToArray());
                 }).ToList();
                 var direction = item.LaneProgressDirection;
+                var headingType = item.IsRollerHeadingRight ? RollerHeadingType.Right : RollerHeadingType.Left;
 
-                RegisterData(shell, holes, direction, false);
+                RegisterData(shell, holes, direction, lengthUnitType, headingType, null);
                 return;
             }
             catch (Exception ex)
@@ -186,7 +185,21 @@ namespace KWRP.Avalonia.Frontend.Services
                 }).ToList();
                 var direction = item.VRData.LaneProgressDirection;
 
-                RegisterData(shell, holes, direction, false);
+                var headingType = item.VRData.IsRollerHeadingRight ? RollerHeadingType.Right : RollerHeadingType.Left;
+                if (item.VRData.HasRollerHeadingPattern)
+                {
+                    headingType = item.VRData.RollerHeadingPattern.ToRollerHeadingType();
+                }
+
+                Vec2? baseline = null;
+                if (item.VRData.HasBaseLinePoint)
+                {
+                    baseline = new Vec2(
+                        x: item.VRData.BaseLinePoint!.X,
+                        y: item.VRData.BaseLinePoint!.Y);
+                }
+                
+                RegisterData(shell, holes, direction, lengthUnitType, headingType, baseline);
                 return;
             }
             catch (Exception ex)
@@ -213,7 +226,7 @@ namespace KWRP.Avalonia.Frontend.Services
 
                 var holes = new List<Polygon>();
                 double direction = 0.0;
-                RegisterData(shell!, holes, direction, false);
+                RegisterData(shell!, holes, direction, lengthUnitType, RollerHeadingType.Left, null);
                 return;
             }
             catch (Exception ex)
@@ -224,7 +237,7 @@ namespace KWRP.Avalonia.Frontend.Services
             }
         }
 
-        void RegisterData(Polygon shell, IList<Polygon> holes, double direction, bool headingToRight)
+        void RegisterData(Polygon shell, IList<Polygon> holes, double direction, LengthUnitType lengthUnitType, RollerHeadingType rollerHeadingType, Vec2? baseline)
         {
             try
             {
@@ -245,9 +258,9 @@ namespace KWRP.Avalonia.Frontend.Services
                 }
 
                 _parameterStore.ProgresssDirectionRadian.Value = direction;
-                _parameterStore.RollerHeadType.Value = headingToRight
-                    ? RollerHeadingType.Right
-                    : RollerHeadingType.Left;
+                _parameterStore.CurrentLengthUnitType.Value = lengthUnitType;
+                _parameterStore.RollerHeadType.Value = rollerHeadingType;
+
                 _canvasService.AdjustAffine();
 
                 var area = _canvasItemStore.TargetPolygons.Sum(p => p.Area);
@@ -259,7 +272,5 @@ namespace KWRP.Avalonia.Frontend.Services
                 throw new Exception(String.Format(_languageService.GetString("Domain.Front.AreaDataRegistrationException"), ex.Message), ex);
             }
         }
-
-        
     }
 }

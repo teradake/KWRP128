@@ -21,5 +21,44 @@
                 _ => throw new NotImplementedException(),
             };
         }
+
+        public static RollerHeadingType RotateClockwise(this RollerHeadingType head)
+        {
+            return head switch
+            {
+                RollerHeadingType.Left => RollerHeadingType.Forward,
+                RollerHeadingType.Forward => RollerHeadingType.Right,
+                RollerHeadingType.Right => RollerHeadingType.Backward,
+                RollerHeadingType.Backward => RollerHeadingType.Left,
+                _ => throw new NotImplementedException(),
+            };
+        }
+
+        public static RollerHeadingType RotateCounterclockwise(this RollerHeadingType head)
+        {
+            return head switch
+            {
+                RollerHeadingType.Left => RollerHeadingType.Backward,
+                RollerHeadingType.Backward => RollerHeadingType.Right,
+                RollerHeadingType.Right => RollerHeadingType.Forward,
+                RollerHeadingType.Forward => RollerHeadingType.Left,
+                _ => throw new NotImplementedException(),
+            };
+        }
+    }
+
+    public static class RollerHeadingPatternExtensions
+    {
+        public static RollerHeadingType ToRollerHeadingType(this string? pattern)
+        {
+            return pattern?.FirstOrDefault() switch
+            {
+                'r' or 'R' => RollerHeadingType.Right,
+                'l' or 'L' => RollerHeadingType.Left,
+                'f' or 'F' => RollerHeadingType.Forward,
+                'b' or 'B' => RollerHeadingType.Backward,
+                _ => RollerHeadingType.Right,
+            };
+        }
     }
 }
