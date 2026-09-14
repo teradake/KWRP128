@@ -237,7 +237,13 @@ namespace KWRP.Avalonia.Frontend.Services
             }
         }
 
-        void RegisterData(Polygon shell, IList<Polygon> holes, double direction, LengthUnitType lengthUnitType, RollerHeadingType rollerHeadingType, Vec2? baseline)
+        void RegisterData(
+            Polygon shell, 
+            IList<Polygon> holes, 
+            double direction, 
+            LengthUnitType lengthUnitType, 
+            RollerHeadingType rollerHeadingType, 
+            Vec2? baseline)
         {
             try
             {
