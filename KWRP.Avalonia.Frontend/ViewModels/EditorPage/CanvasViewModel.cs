@@ -74,6 +74,17 @@ namespace KWRP.Avalonia.Frontend.ViewModels.EditorPage
             _convertService = dxfConvertService;
 
 
+            IsParallelMode = _parameterStore
+                .CurrentWorkingDirection
+                .Select(typ => typ == RollerWorkingDirectionType.Parallel)
+                .ToReadOnlyBindableReactiveProperty()
+                .AddTo(Disposables);
+
+            IsParpendicularMode = _parameterStore
+                .CurrentWorkingDirection
+                .Select(typ => typ == RollerWorkingDirectionType.Parpendicular)
+                .ToReadOnlyBindableReactiveProperty()
+                .AddTo(Disposables);
 
             CanvasScaleInv = _canvasStateStore
                 .Scale
@@ -421,6 +432,9 @@ namespace KWRP.Avalonia.Frontend.ViewModels.EditorPage
         public IReadOnlyBindableReactiveProperty<bool> IsOptimizing { get; }
         public IReadOnlyBindableReactiveProperty<bool> IsDirectionSelectionMode { get; }
         public IReadOnlyBindableReactiveProperty<ArrowViewModel> DirectionArrow { get; }
+
+        public IReadOnlyBindableReactiveProperty<bool> IsParallelMode { get; }
+        public IReadOnlyBindableReactiveProperty<bool> IsParpendicularMode { get; }
 
         public IReadOnlyBindableReactiveProperty<int> LanesCount { get; }    // 生成されたレーン本数
         public IReadOnlyBindableReactiveProperty<double> LanesArea { get; }     // 生成されたレーンの総面積

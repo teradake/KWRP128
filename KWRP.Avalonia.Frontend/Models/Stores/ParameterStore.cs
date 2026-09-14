@@ -52,7 +52,6 @@ namespace KWRP.Avalonia.Frontend.Models.Stores
                 LapLength = vr.Zone.WorkAreaLapLength;
                 LaneChangeLength = vr.Zone.LaneChangeLength;
 
-                RollerHeadType.Value = RollerHeadingType.Left;
                 FrontOffset = 0.0;
                 RearOffset = 0.0;
                 SidePrevOffset = new(0.0);
@@ -62,6 +61,10 @@ namespace KWRP.Avalonia.Frontend.Models.Stores
                 _pairCountMin = KWRPConstants.C_DEFAULT_PAIRCOUNT_MIN;
                 _pairCountMax = KWRPConstants.C_DEFAULT_PAIRCOUNT_MAX;
             }
+
+            RollerHeadType = new(RollerHeadingType.Left);
+            CurrentLengthUnitType = new(LengthUnitType.Meter);
+            CurrentWorkingDirection = RollerHeadType.Select(typ => typ.ToWorkingDirectionType()).ToReadOnlyReactiveProperty();
 
             _logService.LogDebug("init");
         }
@@ -109,16 +112,14 @@ namespace KWRP.Avalonia.Frontend.Models.Stores
         /// <summary>
         /// 作業進捗方向(deg) : 作業がこの方向に進むイメージ。東を0度としてcounterclockwise
         /// </summary>
-        public ReactiveProperty<double> ProgresssDirectionRadian { get;  }
+        public ReactiveProperty<double> ProgresssDirectionRadian { get; }
 
         ///// <summary>
         ///// 作業進捗方向を北方向としたときに、ローラの向きが右か
         ///// </summary>
 
 
-        //public RollerHeadingType RollerHeadType { get; set; }
-        public ReactiveProperty<RollerHeadingType> RollerHeadType { get; } = new(RollerHeadingType.Left);
-
+        
         /// <summary>
         /// ローラの向いている方向。東を0度としてcounterclockwise
         /// </summary>
@@ -160,6 +161,9 @@ namespace KWRP.Avalonia.Frontend.Models.Stores
         public void PublishParameterFileLoaded() => _subject.OnNext(Unit.Default);
 
 
-        public ReactiveProperty<LengthUnitType> CurrentLengthUnitType { get; } = new(LengthUnitType.Meter);
+        public ReactiveProperty<LengthUnitType> CurrentLengthUnitType { get; }
+        public ReactiveProperty<RollerHeadingType> RollerHeadType { get; }
+        public ReadOnlyReactiveProperty<RollerWorkingDirectionType> CurrentWorkingDirection { get; }
+
     }
 }

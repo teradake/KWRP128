@@ -98,6 +98,18 @@ namespace KWRP.Avalonia.Frontend.ViewModels.EditorPage
                 PairMinCount = new BindableReactiveProperty<int>(_parameterStore.PairCountMin).AddTo(Disposables);
                 PairMaxCount = new BindableReactiveProperty<int>(_parameterStore.PairCountMax).AddTo(Disposables);
 
+                IsParallelMode = _parameterStore
+                    .CurrentWorkingDirection
+                    .Select(typ => typ == RollerWorkingDirectionType.Parallel)
+                    .ToReadOnlyBindableReactiveProperty()
+                    .AddTo(Disposables);
+
+                IsParpendicularMode = _parameterStore
+                    .CurrentWorkingDirection
+                    .Select(typ => typ == RollerWorkingDirectionType.Parpendicular)
+                    .ToReadOnlyBindableReactiveProperty()
+                    .AddTo(Disposables);
+
                 _logService.LogDebug("init params");
             }
 
@@ -213,6 +225,9 @@ namespace KWRP.Avalonia.Frontend.ViewModels.EditorPage
         public BindableReactiveProperty<bool> CanArrangeLane { get; }   // レーン割計算を実行して良いか
         public IReadOnlyBindableReactiveProperty<bool> IsDirectionSelectionMode { get; }    // UI方向選択モードか
         public IReadOnlyBindableReactiveProperty<bool> IsOptimizing { get; }
+        public IReadOnlyBindableReactiveProperty<bool> IsParallelMode { get; }
+        public IReadOnlyBindableReactiveProperty<bool> IsParpendicularMode { get; }
+
 
         public ReactiveCommand NavigateNextCommand { get; }
         public ReactiveCommand ChangeHeadingCommand { get; }

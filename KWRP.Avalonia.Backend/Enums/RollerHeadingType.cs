@@ -8,6 +8,14 @@
         Backward = 1 << 3,
     }
 
+    public enum RollerWorkingDirectionType
+    {
+        Parallel,
+        Parpendicular,
+    }
+
+
+
     public static class RollerHeadingTypeExtensions
     {
         public static double ToAngleRadian(this RollerHeadingType type)
@@ -46,11 +54,14 @@
             };
         }
 
-        public static bool IsParpendicular(this RollerHeadingType head)
-            => head == RollerHeadingType.Left || head == RollerHeadingType.Right;
+        static bool IsParpendicular(this RollerHeadingType head) => head == RollerHeadingType.Left || head == RollerHeadingType.Right;
+        static bool IsParallel(this RollerHeadingType head) => head == RollerHeadingType.Forward || head == RollerHeadingType.Backward;
 
-        public static bool IsParallel(this RollerHeadingType head)
-            => head == RollerHeadingType.Forward || head == RollerHeadingType.Backward;
+        public static RollerWorkingDirectionType ToWorkingDirectionType(this RollerHeadingType head)
+        {
+            if (head.IsParallel()) return RollerWorkingDirectionType.Parallel;
+            else return RollerWorkingDirectionType.Parpendicular;
+        }
     }
 
     public static class RollerHeadingPatternExtensions
