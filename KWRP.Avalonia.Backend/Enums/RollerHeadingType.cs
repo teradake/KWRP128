@@ -54,8 +54,20 @@
             };
         }
 
-        static bool IsParpendicular(this RollerHeadingType head) => head == RollerHeadingType.Left || head == RollerHeadingType.Right;
-        static bool IsParallel(this RollerHeadingType head) => head == RollerHeadingType.Forward || head == RollerHeadingType.Backward;
+        public static RollerHeadingType ReverseDirection(this RollerHeadingType head)
+        {
+            return head switch
+            {
+                RollerHeadingType.Left => RollerHeadingType.Right,
+                RollerHeadingType.Backward => RollerHeadingType.Forward,
+                RollerHeadingType.Right => RollerHeadingType.Left,
+                RollerHeadingType.Forward => RollerHeadingType.Backward,
+                _ => throw new NotImplementedException(),
+            };
+        }
+
+        public static bool IsParpendicular(this RollerHeadingType head) => head == RollerHeadingType.Left || head == RollerHeadingType.Right;
+        public static bool IsParallel(this RollerHeadingType head) => head == RollerHeadingType.Forward || head == RollerHeadingType.Backward;
 
         public static RollerWorkingDirectionType ToWorkingDirectionType(this RollerHeadingType head)
         {
