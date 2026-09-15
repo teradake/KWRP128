@@ -319,7 +319,7 @@
                         HorizontalAlignment="Stretch"
                         HorizontalContentAlignment="Center"
                         Background="Azure"
-                        Content="{i18n:Localize LaneEditor. }"
+                        Content="{i18n:Localize LaneEditor.ParallelParam }"
                         IsVisible="{Binding IsParallelMode.Value}"
                         FontSize="20" />
 

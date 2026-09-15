@@ -50,7 +50,28 @@
                         Padding="15,5"
                         Command="{Binding LaneArrangementCommand}"
                         Content="{i18n:Localize LaneEditor.Calculate}" />
+                    <ToggleSwitch
+                        Name="togglePattern"
+                        HorizontalAlignment="Center"
+                        IsChecked="{Binding IsParpendicularMode.Value}"
+                        OffContent="{i18n:Localize LaneEditor.ParallelMode}"
+                        OnContent="{i18n:Localize LaneEditor.PerpendicularMode}" />
 
+                </StackPanel>
+
+                <StackPanel
+                    Grid.Column="1"
+                    Margin="10,10,10,2"
+                    FlowDirection="RightToLeft"
+                    IsVisible="{Binding !IsLaneEditor.Value}"
+                    Orientation="Horizontal"
+                    Spacing="5">
+                    <ToggleSwitch
+                        HorizontalAlignment="Center"
+                        IsEnabled="{Binding IsLaneEditor.Value}"
+                        IsChecked="{Binding IsParpendicularMode.Value}"
+                        OffContent="{i18n:Localize LaneEditor.ParallelMode}"
+                        OnContent="{i18n:Localize LaneEditor.PerpendicularMode}" />
                 </StackPanel>
 
             </Grid>
