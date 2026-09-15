@@ -274,6 +274,8 @@
   "LaneEditor.AreaPitch": "エリアピッチ (m)",
   "LaneEditor.BaselineWidth": "作業可能幅 (m)",
   "LaneEditor.WorkAreaSetting": "作業エリア設定",
+  "LaneEditor.PerpendicularMode": "ローラ向き：直交",
+  "LaneEditor.ParallelMode": "ローラ向き：並行",
   "RollerPage.AreaWrapAdjustment": "転圧エリアラップ調整値 (m)",
   "RollerPage.ConfigFilePath": "設定ファイルパス",
   "RollerPage.Dimensions": "車体の寸法情報",

@@ -274,6 +274,8 @@
   "LaneEditor.AreaPitch": "Subsequent Lanes Pitch (m)",
   "LaneEditor.BaselineWidth": "Baseline width (m)",
   "LaneEditor.WorkAreaSetting": "Work Area Settings",
+  "LaneEditor.PerpendicularMode": "Parpendicular",
+  "LaneEditor.ParallelMode": "Parallel",
   "RollerPage.AreaWrapAdjustment": "Compaction Area Wrap Adjustment (m)",
   "RollerPage.ConfigFilePath": "Configuration File Path",
   "RollerPage.Dimensions": "Machine Dimensions",
