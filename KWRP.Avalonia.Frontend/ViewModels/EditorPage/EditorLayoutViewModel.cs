@@ -22,6 +22,7 @@ namespace KWRP.Avalonia.Frontend.ViewModels.EditorPage
         private readonly ApplicationStore _applicationStore;
         private readonly INotificationService _notificationService;
         private readonly ILanguageService _languageService;
+        private readonly ParameterStore _parameterStore;
 
         public EditorLayoutViewModel(
             NavigationTwoPanelStore navigationTwoPanelStore,
@@ -32,7 +33,8 @@ namespace KWRP.Avalonia.Frontend.ViewModels.EditorPage
             IPathService pathService,
             ApplicationStore applicationStore,
             INotificationService notificationService,
-            ILanguageService languageService)
+            ILanguageService languageService,
+            ParameterStore parameterStore)
         {
             _navigationTwoPanelStore = navigationTwoPanelStore;
             _navigationService = navigationService;
@@ -43,6 +45,7 @@ namespace KWRP.Avalonia.Frontend.ViewModels.EditorPage
             _applicationStore = applicationStore;
             _laneArrangementParameterService = laneArrangementParameterService;
             _languageService = languageService;
+            _parameterStore = parameterStore;
 
             LeftViewModel = _navigationTwoPanelStore
                 .ObservableLeftViewModel
@@ -71,6 +74,14 @@ namespace KWRP.Avalonia.Frontend.ViewModels.EditorPage
                     .Select(cnt => cnt > 0)
                     .ToBindableReactiveProperty(_canvasItemStore.TargetPolygons.Count > 0)
                     .AddTo(Disposables);
+
+            IsParpendicularMode = _parameterStore
+                .IsParpendicularMode
+                .ToBindableReactiveProperty(_parameterStore.IsParpendicularMode.Value)
+                .AddTo(Disposables);
+            IsParpendicularMode
+                .Subscribe(b => _parameterStore.IsParpendicularMode.Value = b)
+                .AddTo(Disposables);
 
             LaneArrangementCommand = IsLaneEditor.CombineLatest(TargetRegistered, (a, b) => a && b)
                 .ToReactiveCommand(_ =>
@@ -175,6 +186,7 @@ namespace KWRP.Avalonia.Frontend.ViewModels.EditorPage
         public BindableReactiveProperty<bool> IsWorkAreaEditor { get; }
         public BindableReactiveProperty<bool> IsActivityEditor { get; }
 
+        public BindableReactiveProperty<bool> IsParpendicularMode { get; }
 
 
 

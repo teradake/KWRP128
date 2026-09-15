@@ -66,6 +66,13 @@ namespace KWRP.Avalonia.Frontend.Models.Stores
             CurrentLengthUnitType = new(LengthUnitType.Meter);
             CurrentWorkingDirection = RollerHeadType.Select(typ => typ.ToWorkingDirectionType()).ToReadOnlyReactiveProperty();
 
+            IsParpendicularMode
+                .Subscribe(isParpendicular =>
+                {
+                    if (isParpendicular) RollerHeadType.Value = RollerHeadingType.Left;
+                    else RollerHeadType.Value = RollerHeadingType.Forward;
+                });
+
             _logService.LogDebug("init");
         }
 
@@ -164,6 +171,6 @@ namespace KWRP.Avalonia.Frontend.Models.Stores
         public ReactiveProperty<LengthUnitType> CurrentLengthUnitType { get; }
         public ReactiveProperty<RollerHeadingType> RollerHeadType { get; }
         public ReadOnlyReactiveProperty<RollerWorkingDirectionType> CurrentWorkingDirection { get; }
-
+        public ReactiveProperty<bool> IsParpendicularMode { get; } = new();
     }
 }

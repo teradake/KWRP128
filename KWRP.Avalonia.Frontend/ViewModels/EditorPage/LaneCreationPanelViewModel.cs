@@ -84,7 +84,7 @@ namespace KWRP.Avalonia.Frontend.ViewModels.EditorPage
                 SideNextOffset = _parameterStore.SideNextOffset.ToBindableReactiveProperty(_parameterStore.SideNextOffset.Value).AddTo(Disposables);
                 LapWidth = new BindableReactiveProperty<double>(_parameterStore.LapWidth).AddTo(Disposables);
                 LaneChangeLength = new BindableReactiveProperty<double>(_parameterStore.LaneChangeLength).AddTo(Disposables);
-                RollerHeadType = new BindableReactiveProperty<RollerHeadingType>(_parameterStore.RollerHeadType.Value).AddTo(Disposables);
+                RollerHeadType = _parameterStore.RollerHeadType.ToBindableReactiveProperty(_parameterStore.RollerHeadType.Value).AddTo(Disposables);
                 ProgressDirectionDegree = _parameterStore
                     .ProgresssDirectionRadian
                     .Select(d => Utils.RoundDegree(d * 180.0 / Math.PI))
@@ -99,15 +99,14 @@ namespace KWRP.Avalonia.Frontend.ViewModels.EditorPage
                 PairMaxCount = new BindableReactiveProperty<int>(_parameterStore.PairCountMax).AddTo(Disposables);
 
                 IsParallelMode = _parameterStore
-                    .CurrentWorkingDirection
-                    .Select(typ => typ == RollerWorkingDirectionType.Parallel)
-                    .ToReadOnlyBindableReactiveProperty()
+                    .IsParpendicularMode
+                    .Select(b => !b)
+                    .ToReadOnlyBindableReactiveProperty(!_parameterStore.IsParpendicularMode.Value)
                     .AddTo(Disposables);
 
                 IsParpendicularMode = _parameterStore
-                    .CurrentWorkingDirection
-                    .Select(typ => typ == RollerWorkingDirectionType.Parpendicular)
-                    .ToReadOnlyBindableReactiveProperty()
+                    .IsParpendicularMode
+                    .ToReadOnlyBindableReactiveProperty(_parameterStore.IsParpendicularMode.Value)
                     .AddTo(Disposables);
 
                 _logService.LogDebug("init params");
@@ -148,7 +147,7 @@ namespace KWRP.Avalonia.Frontend.ViewModels.EditorPage
                     .AddTo(Disposables);
 
                 ChangeHeadingCommand = TargetRegisterd
-                    .ToReactiveCommand(_ => RollerHeadType.Value = RollerHeadType.Value.RotateClockwise())
+                    .ToReactiveCommand(_ => RollerHeadType.Value = RollerHeadType.Value.ReverseDirection())
                     .AddTo(Disposables);
             }
 

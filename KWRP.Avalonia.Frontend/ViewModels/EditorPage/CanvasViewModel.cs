@@ -75,16 +75,16 @@ namespace KWRP.Avalonia.Frontend.ViewModels.EditorPage
 
 
             IsParallelMode = _parameterStore
-                .CurrentWorkingDirection
-                .Select(typ => typ == RollerWorkingDirectionType.Parallel)
-                .ToReadOnlyBindableReactiveProperty()
+                .IsParpendicularMode
+                .Select(b => !b)
+                .ToReadOnlyBindableReactiveProperty(!_parameterStore.IsParpendicularMode.Value)
                 .AddTo(Disposables);
 
             IsParpendicularMode = _parameterStore
-                .CurrentWorkingDirection
-                .Select(typ => typ == RollerWorkingDirectionType.Parpendicular)
-                .ToReadOnlyBindableReactiveProperty()
+                .IsParpendicularMode
+                .ToReadOnlyBindableReactiveProperty(_parameterStore.IsParpendicularMode.Value)
                 .AddTo(Disposables);
+
 
             CanvasScaleInv = _canvasStateStore
                 .Scale
@@ -451,6 +451,7 @@ namespace KWRP.Avalonia.Frontend.ViewModels.EditorPage
         public BindableReactiveProperty<bool> GoalAreaVisible { get; } = new(true);
         public BindableReactiveProperty<bool> ActivityVisible { get; } = new(true);
 
+        
         public void AddPochi(double x, double y)
         {
             var pochi = new Vec2(x, y);
