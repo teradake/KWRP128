@@ -265,6 +265,7 @@ namespace KWRP.Avalonia.Frontend.Services
 
                 _parameterStore.ProgresssDirectionRadian.Value = direction;
                 _parameterStore.CurrentLengthUnitType.Value = lengthUnitType;
+                _parameterStore.IsParpendicularMode.Value = rollerHeadingType.IsParpendicular();
                 _parameterStore.RollerHeadType.Value = rollerHeadingType;
 
                 _canvasService.AdjustAffine();
